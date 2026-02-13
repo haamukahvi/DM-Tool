@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARCANE SURGE</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at center, #000000 0%, #0d0017 50%, #18003D 75%, #2F0094 100%);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: 'Cinzel', serif;
+      color: #e0e0ff;
+      overflow: hidden;
+      position: relative;
+      text-transform: uppercase;
+      transition: background 2s ease;
+    }
+
+    button {
+      position: absolute;
+      bottom: 100px;
+      padding: 15px 30px;
+      font-size: 24px;
+      background: linear-gradient(135deg, #7b00ff, #e100ff);
+      border: none;
+      border-radius: 32px;
+      color: white;
+      box-shadow: 0 0 50px #611FD1;
+      cursor: pointer;
+      transition: opacity 1.5s ease, transform 0.4s ease;
+      z-index: 2;
+    }
+
+    button:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 80px #611FD1, 0 0 15px #844DE3;
+    }
+
+    #result {
+      margin-top: -80px;
+      width: 80%;
+      text-align: center;
+      font-size: 36px;
+      min-height: 120px;
+      opacity: 0;
+      transform: scale(0.7);
+      background: linear-gradient(270deg, #d100ff, #7a00ff, #00c3ff, #d100ff);
+      background-size: 400% 400%;
+      background-position: center;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientFlow 10s linear infinite, pulseGlow 4s infinite;
+      transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+      z-index: 2;
+    }
+
+    #criticalLabel {
+      position: absolute;
+      top: 40px;
+      font-size: 48px;
+      color: #ff00ff;
+      opacity: 0;
+      text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+      transition: opacity 1s ease;
+      z-index: 3;
+    }
+
+    #forceCriticalBox {
+      position: absolute;
+      bottom: 40px;
+      font-size: 16px;
+      color: #bbb;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    /* Gradient animation for result text */
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { text-shadow: 0 0 30px #9b00ff, 0 0 70px #9b00ff; }
+      50% { text-shadow: 0 0 70px #00bfff, 0 0 100px #00bfff; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="criticalLabel">CRITICAL</div>
+  <button id="magicButton" onclick="rollSurge()">ARCANE SURGE</button>
+  <div id="forceCriticalBox">
+    <input type="checkbox" id="forceCritical"> DESPERATE
+  </div>
+  <div id="result"></div>
+
+  <script>
+    const effects = [
+      "CRUSHING FORCE DAMAGES YOU EQUAL TO 1D4 × SPELL LEVEL",
+      "YOU GROW DEMONIC FOR 1 MIN; ADVANTAGE ON INTIMIDATION, DISADVANTAGE ON PERSUASION",
+      "A RANDOM ELEMENTAL SURGE BURSTS WITHIN 10 FEET",
+      "YOU AND A CLOSEST CREATURE BLINK OUT OF EXISTENCE FOR 1D4 ROUNDS",
+      "MANA WRAITH APPEARS AND ATTACKS YOU",
+      "YOUR NEXT SPELL IS CAST 1 LEVEL HIGHER BUT DEALS SPELL LEVEL DAMAGE TO YOU",
+      "VOID TAINT: SMALL CREATURES ARE FRIGHTENED BY YOU FOR 24 HOURS",
+      "ARCANE EXPLOSION: 10 FEET, DEX SAVE OR TAKE FORCE DAMAGE = CASTER LEVEL",
+      "FRIENDLY WISP GRANTS ADVANTAGE ON YOUR NEXT SAVING THROW",
+      "LEY LINE BURNOUT: YOU CAN'T CAST SPELLS UNTIL LONG REST",
+      "YOU AND ONE RANDOM ENEMY SWITCH PLACES INSTANTLY",
+      "A RAIN OF FEL FIRE FALLS IN A 10 FT RADIUS; ALL IN AREA TAKE 2D6 FIRE DAMAGE",
+      "YOU GAIN WEAKNESS TO ONE RANDOM DAMAGE TYPE FOR 1 MINUTE",
+      "YOUR SPELL REBOUNDS ONTO YOURSELF IF IT TARGETS A CREATURE",
+      "YOU TURN INVISIBLE FOR 1D4 ROUNDS OR UNTIL YOU ATTACK/CAST AGAIN",
+      "ARCANE TENDRILS RESTRAIN EVERYONE IN 10 FEET (STR SAVE)",
+      "GRAVITY INTENSIFIES: CREATURES WITHIN 30 FEET HAVE SPEED HALVED",
+      "YOUR HAIR AND CLOTHES FLOAT WILDLY FOR 1 HOUR",
+      "NEXT SPELL CAST WITHIN 1 MINUTE IS FREE (NO MANA COST)",
+      "ALL OF YOUR CANTRIPS ARE CAST INSTANTLY TO RANDOM TARGETS",
+      "FEL CORRUPTION: WIS SAVE OR DISADVANTAGE ON SAVES FOR 1 MINUTE",
+      "A PORTAL OPENS, SUMMONING A HARMLESS CREATURE",
+      "SWIRLING ARCANE BUTTERFLIES APPEAR FOR 1D6 MINUTES",
+      "NEAREST TREE/PLANT ANIMATES AND HUGS YOU FOR 1D4 ROUNDS",
+      "SKIN SHIMMERS; EMIT BRIGHT LIGHT FOR 10 MINUTES",
+      "HOVER 5 FOOT IN AIR FOR 1 MINUTE",
+      "GAIN TRUESIGHT OUT TO 60 FEET FOR 1 MINUTE",
+      "FORCEDLY SPEAK THOUGHTS OUT FOR 1 HOUR",
+      "TREMOR SHAKES GROUND; CREATURES WITHIN 30 FT DEX SAVE OR FALL PRONE",
+      "MIRROR IMAGE APPEARS AND MIMICS YOU FOR 1 MINUTE",
+      "MOUTH BURNS IN FEL FLAMES FOR 1 MINUTE; 1D4 DMG EACH ROUND",
+      "RECOVER 1D8 MANA IMMEDIATELY",
+      "AGE OR DE-AGE 1D10 YEARS (50/50 CHANCE)",
+      "NEXT ATTACK OR SPELL ATTACK AUTOMATICALLY MISSES",
+      "YOU BECOME EXTREMELY HUNGRY; MUST EAT WITHIN 1 HOUR OR TAKE EXHAUSTION",
+      "GLIMPSE TWISTING NETHER; STUNNED FOR 1 ROUND",
+      "SHADOW DETACHES AND DANCES FOR 1 MINUTE",
+      "PULLED 30 FEET IN A RANDOM DIRECTION",
+      "ALLERGIC TO MAGIC: DISADVANTAGE ON SPELL SAVES FOR 1D4 ROUNDS",
+      "MINOR LEY LINE AWAKENS: ALL CASTERS REGAIN 1D8 MANA",
+      "EXPLODE WITH LIGHT; HEAL ALL WITHIN 30 FEET FOR 10 HP",
+	  "YOUR SPOKEN WORD BECOMES GHOSTLY AND UNINTELLIGIBLE FOR 1 HOUR",
+	  "YOU VOMIT VIOLENTLY, BECOMING PRONE AND INCAPACITATED FOR 1 ROUND",
+	  "ARCANE MISSILES LAUNCH AT EVERY CREATURE WITHIN 30 FEET (1D8 DAMAGE EACH)",
+	  "YOU BECOME MAGICALLY BLINDED FOR 1D4 ROUNDS",
+	  "YOUR HANDS GROW MASSIVE AND FOR 1 MIN (DISADVANTAGE WITH HAND PRECISION)",
+	  "YOU SHRINK TO 1/4 SIZE FOR 1D6 MINUTES",
+	  "ITEM IN HAND EXPLODES IN A PUFF OF PURPLE SMOKE (NO DAMAGE, JUST GONE)",
+	  "YOU BEGIN FLOATING UPSIDE DOWN 3 FEET ABOVE THE GROUND FOR 1 MINUTE",
+	  "YOUR NEXT SPELL IS REVERSED IN EFFECT (GM DETERMINES OUTCOME)",
+	  "A SMALL PORTAL OPENS AND A RANDOM PIECE OF FURNITURE FALLS ON YOU (1D6 DAMAGE)",
+	  "YOU BECOME A RANDOM ANIMAL FOR 1D4 MINUTES",
+	  "ALL TEXT AND SYMBOLS AROUND YOU REARRANGE INTO NONSENSE FOR 10 MINUTES",
+	  "A MYSTERIOUS ARCANE HAND SLAPS YOU (1D4 DAMAGE, NO SAVE)",
+	  "YOU RANDOMLY SWAP BODIES WITH AN ALLY FOR 1D4 ROUNDS (MENTAL STATS STAY, PHYSICAL CHANGE)",
+	  "A RANDOM WILD BEAST (CR 4) IS SUMMONED NEAR YOU AND STARTLES EVERYONE",
+	  "YOU BECOME ETHEREAL FOR 1 ROUND, UNABLE TO TOUCH OR BE TOUCHED",
+	  "YOU CHANT THE NAME OF YOUR DEITY LOUDLY AND INCOHERENTLY FOR 1D4 ROUNDS",
+	  "YOUR ARMOR OR CLOTHES SEPARATE AND BEGIN DANCING FOR 1 MINUTE",
+	  "YOUR BODY CHANGES GENDER FOR 24 HOURS",
+	  "EVERYTHING YOU TOUCH FEELS EXTREMELY SLIPPERY FOR 10 MINUTES",
+	  "TRAPPED IN A MAGICAL BUBBLE; FLOAT 10 FEET UP FOR 1 MINUTE",
+	  "A SPECTER OF YOUR FAMILY MEMBER APPEARS AND REACTS TO YOUR NEXT ACTION",
+	  "YOUR FEET LIGHT ON FIRE, CAUSING YOU TO RUN RANDOMLY FOR 1 ROUND (NO DAMAGE)",
+      "SPELL WILDLY SUCCESSFUL: DOUBLE RANGE, DURATION, OR POWER (YOUR CHOICE)",
+      "YOU DISINTEGRATE INTO PURE ARCANE ENERGY UNTIL SOMEONE CASTS A SPELL"
+    ];
+
+    const criticalEffects = [
+      "ALL CREATURES WITHIN 120 FEET ARE TELEPORTED RANDOMLY UP TO 1 MILE AWAY",
+      "TIME WARPS: EVERY CREATURE IN 30 FEET TAKES 1 EXTRA TURN IMMEDIATELY",
+      "A BLACK HOLE FORMS, GROWING 10 FEET EACH TURN FOR 1 HOUR",
+      "ALL MAGICAL EFFECTS IN 1000 FEET ARE IMMEDIATELY DISPELLED",
+      "YOUR MIND BRIEFLY TOUCHES THE VOID: YOU GAIN A MADNESS EFFECT",
+      "YOU GAIN A SINGLE USE OF WISH, FOR A PRICE",
+      "YOU FLOOD WITH RAW MAGIC: ARCANE SURGE EVERY ROUND FOR 1D6 ROUNDS",
+	  "A COLLAPSE IN REALITY ERASES 30 FT OF TERRAIN INTO NOTHINGNESS",
+	  "YOU ARE GRANTED POWERS OF A DEMIGOD FOR 1 MINUTE (ALL ABILITY SCORES SET TO 24)",
+	  "TIME FREEZES FOR ALL CREATURES EXCEPT YOU FOR 1 ROUND",
+	  "A RANDOM ALLY WITHIN 60 FEET IS TURNED TO STONE FOR 1D6 ROUNDS (NO SAVE)",
+	  "YOU BECOME A LIVING ARCANE STORM; 3D10 LIGHTNING DAMAGE TO ALL CREATURES WITHIN 30 FEET EACH ROUND FOR 1 MIN",
+	  "YOU ARE FULLY HEALED AND REGAIN ALL MANA - IMMEDIATELY SUFFER 1D4 LEVEL OF EXHAUSTION",
+	  "PLANES COLLIDE: 10D10 PLANAR RIFTS APPEAR",
+	  "THE NEXT SPELL YOU CAST INSTANTLY MAXIMIZES DAMAGE, RANGE, AND DURATION - BUT YOU TAKE HALF THE DAMAGE YOURSELF",
+	  "A MASSIVE EARTHQUAKE ERUPTS CENTERED ON YOU (DMG EARTHQUAKE SPELL EFFECTS)",
+	  "YOU LOSE ALL SENSE OF SELF: CONTROL OF YOUR CHARACTER PASSES TO THE GM FOR 1D4 ROUNDS",
+	  "TWISTING NETHER APPEARS IN THE SKY FOR 1D6 HOURS, CAUSING MASSIVE ENVIRONMENTAL CHAOS",
+	  "THE BARRIER BETWEEN LIFE AND DEATH WEAKENS: 1D100 DEAD CREATURES WITHIN 1 KM RISE AS UNDEAD FOR 24 HOURS"
+	];
+
+    function rollSurge() {
+      const resultDiv = document.getElementById("result");
+      const button = document.getElementById("magicButton");
+      const criticalLabel = document.getElementById("criticalLabel");
+      const body = document.body;
+      const forceCritical = document.getElementById("forceCritical").checked;
+
+      const isCritical = forceCritical || Math.random() < 0.1; // 10% critical chance
+
+      // Fade out old text
+      resultDiv.style.opacity = 0;
+      resultDiv.style.transform = 'scale(0.5)';
+      criticalLabel.style.opacity = 0;
+
+      setTimeout(() => {
+        if (isCritical) {
+          const roll = Math.floor(Math.random() * criticalEffects.length);
+          const text = criticalEffects[roll];
+
+          // Show Critical!
+          criticalLabel.style.opacity = 1;
+          resultDiv.innerText = text;
+          resultDiv.style.fontSize = "52px";
+          resultDiv.style.opacity = 1;
+          resultDiv.style.transform = 'scale(1.2)';
+
+          // Animate background
+          body.classList.add('critical-background');
+
+          setTimeout(() => {
+            body.classList.remove('critical-background');
+          }, 2500);
+        } else {
+          const roll = Math.floor(Math.random() * effects.length);
+          const text = effects[roll];
+
+          criticalLabel.style.opacity = 0;
+          resultDiv.innerText = text;
+          resultDiv.style.fontSize = "36px";
+          resultDiv.style.opacity = 1;
+          resultDiv.style.transform = 'scale(1)';
+        }
+      }, 400);
+
+      // Dim the button
+      button.style.opacity = 0.2;
+      button.disabled = true;
+
+      setTimeout(() => {
+        button.style.opacity = 1;
+        button.disabled = false;
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>

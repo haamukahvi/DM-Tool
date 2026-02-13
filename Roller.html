@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>mood</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Saira:wght@200;400&display=swap" rel="stylesheet">
+    
+        <style>
+            :root {
+                --bg-color: #001622;
+                --primary-color: #2c3e50;
+                --secondary-color: #34495e;
+                --accent-color: #008080;
+                --accent-secondary-color: #009e9e;
+                --text-color: #d0dadd;
+                --shadow-color: rgba(0, 0, 0, 0.5);
+            }
+        
+            body {
+                font-family: 'Saira', sans-serif;
+                font-weight: 200;
+                text-transform: uppercase;
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                margin: 0;
+                padding: 2rem;
+                text-align: center;
+            }
+        
+            /* MODIFIED: Converted to flexbox for button alignment */
+            h1 {
+                color: var(--accent-color);
+                font-weight: 200;
+                letter-spacing: 4px;
+                font-size: 3em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative; /* Needed for absolute positioning of the button */
+            }
+        
+            /* NEW: Styles for the sleep timer button */
+            #sleepTimerButton {
+                font-family: 'Saira', sans-serif;
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-size: 0.4em; /* Relative to the h1 font size */
+                background-color: transparent;
+                border: 2px solid var(--secondary-color);
+                color: var(--secondary-color);
+                border-radius: 50px;
+                padding: 0.5em 1em;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: absolute; /* Position it on the right */
+                right: 0;
+            }
+        
+            #sleepTimerButton:hover {
+                border-color: var(--accent-color);
+                color: var(--accent-color);
+            }
+        
+            /* NEW: Style for when the timer is active */
+            #sleepTimerButton.active {
+                border-color: var(--accent-color);
+                color: var(--bg-color);
+                background-color: var(--accent-color);
+                cursor: default;
+            }
+
+            #controls {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 1rem;
+                margin: 1.5rem auto 0;
+                max-width: 720px;
+                padding: 0 1rem;
+            }
+
+            .volume-label {
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+                color: var(--secondary-color);
+                font-weight: 400;
+            }
+
+            #volumeSlider {
+                width: min(420px, 70vw);
+                accent-color: var(--accent-color);
+            }
+
+            #volumeValue {
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+                color: var(--text-color);
+                font-weight: 400;
+                min-width: 3rem;
+                text-align: left;
+            }
+        
+            #soundboard {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+                text-transform: uppercase;
+                max-width: 1400px; 
+                margin: 2rem auto;
+            }
+        
+            .track-button {
+                background-color: var(--primary-color);
+                border: 2px solid var(--secondary-color);
+                color: var(--text-color);
+                padding: 1.25rem 1rem;
+                cursor: pointer;
+                border-radius: 30px; 
+                font-size: 0.75rem;
+                font-weight: 400;
+                letter-spacing: 1px;
+                transition: all 0.5s ease;
+                box-shadow: 0 4px 8px var(--shadow-color);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                text-transform: uppercase;
+            }
+        
+            .track-button:hover:not(:disabled):not(.active) {
+                background-color: var(--secondary-color);
+                transform: translateY(-8px);
+                box-shadow: 0 6px 12px var(--shadow-color);
+            }
+        
+            .track-button.active {
+                background-color: var(--accent-color);
+                color: var(--bg-color);
+                font-weight: 400;
+                box-shadow: 0 0 15px var(--accent-color);
+                border-color: var(--accent-color);
+            }
+        
+            .track-button.active:hover {
+                background-color: var(--accent-secondary-color);
+                transform: translateY(-8px);
+            }
+            
+            .track-button:disabled {
+                background-color: transparent;
+                border: 2px dashed var(--accent-color);
+                color: var(--accent-color);
+                opacity: 0.7;
+                transform: none;
+                box-shadow: none;
+            }
+        </style>
+    </head>
+<body>
+
+    <h1>
+        mood
+        <button id="sleepTimerButton">30:00</button>
+    </h1>
+    <div id="controls">
+        <span class="volume-label">Volume</span>
+        <input id="volumeSlider" type="range" min="0" max="100" value="70" aria-label="Master volume">
+        <span id="volumeValue">70%</span>
+    </div>
+    <div id="soundboard">
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const soundboard = document.getElementById('soundboard');
+                const sleepTimerButton = document.getElementById('sleepTimerButton');
+                const volumeSlider = document.getElementById('volumeSlider');
+                const volumeValue = document.getElementById('volumeValue');
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const masterGain = audioContext.createGain();
+                masterGain.gain.setValueAtTime(0.7, audioContext.currentTime);
+                masterGain.connect(audioContext.destination);
+                const activeTracks = {};
+        
+                // NEW: Variables to manage the timer state
+                let sleepTimeoutId = null;
+                let countdownIntervalId = null;
+                let timeRemaining = 30 * 60; // 30 minutes in seconds
+        
+                const repoOwner = 'haamukahvi';
+                const repoName = 'mood';
+                const tracksPath = 'tracks';
+                
+                const FADE_DURATION = 4.5; 
+        
+                // --- TIMER LOGIC ---
+        
+                function updateCountdownDisplay() {
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    // Pad seconds with a leading zero if needed
+                    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+                    sleepTimerButton.textContent = `${minutes}:${formattedSeconds}`;
+                }
+        
+                function startSleepTimer() {
+                    if (sleepTimeoutId) return; // Already running
+        
+                    sleepTimerButton.classList.add('active');
+                    
+                    // Start the final fade-out timer
+                    sleepTimeoutId = setTimeout(fadeOutAllTracks, timeRemaining * 1000);
+        
+                    // Start the visual countdown interval
+                    countdownIntervalId = setInterval(() => {
+                        timeRemaining--;
+                        updateCountdownDisplay();
+                        if (timeRemaining <= 0) {
+                            stopSleepTimer(); // Clears interval and resets button
+                        }
+                    }, 1000);
+                }
+        
+                function stopSleepTimer() {
+                    clearTimeout(sleepTimeoutId);
+                    clearInterval(countdownIntervalId);
+        
+                    sleepTimeoutId = null;
+                    countdownIntervalId = null;
+                    timeRemaining = 30 * 60; // Reset time
+        
+                    sleepTimerButton.classList.remove('active');
+                    updateCountdownDisplay(); // Reset the text to 30:00
+                }
+        
+                function toggleSleepTimer() {
+                    if (countdownIntervalId) {
+                        // If the interval is running, stop the timer
+                        stopSleepTimer();
+                    } else {
+                        // Otherwise, start it
+                        startSleepTimer();
+                    }
+                }
+        
+                function fadeOutAllTracks() {
+                    const FADEOUT_DURATION = 60; // 1 minute fade-out
+                    for (const url in activeTracks) {
+                        const track = activeTracks[url];
+                        const now = audioContext.currentTime;
+                        track.gainNode.gain.cancelScheduledValues(now);
+                        track.gainNode.gain.setValueAtTime(track.gainNode.gain.value, now);
+                        track.gainNode.gain.linearRampToValueAtTime(0, now + FADEOUT_DURATION);
+        
+                        setTimeout(() => {
+                            track.audio.pause();
+                            track.source.disconnect();
+                            track.button.classList.remove('active');
+                            delete activeTracks[url];
+                        }, FADEOUT_DURATION * 1000);
+                    }
+                }
+        
+        
+                // --- SOUNDBOARD LOGIC (Unchanged) ---
+        
+                async function getTrackList() {
+                    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${tracksPath}`;
+                    try {
+                        const response = await fetch(apiUrl);
+                        const data = await response.json();
+                        return data
+                            .filter(file => file.type === 'file' && /\.(mp3|ogg|wav)$/i.test(file.name))
+                            .map(file => file.download_url);
+                    } catch (error) {
+                        console.error('Error fetching track list:', error);
+                        soundboard.innerHTML = `<p style="color: #e74c3c;">Failed to load tracks from GitHub. Please check the repository path and make sure it's public.</p>`;
+                        return [];
+                    }
+                }
+        
+                function createTrackButton(url) {
+                    const fileName = decodeURIComponent(url.split('/').pop().replace(/\.\w+$/, ''));
+                    const button = document.createElement('button');
+                    button.className = 'track-button';
+                    button.textContent = fileName.replace(/_/g, ' ');
+                    button.dataset.url = url;
+        
+                    button.addEventListener('click', () => {
+                        if (audioContext.state === 'suspended') {
+                            audioContext.resume();
+                        }
+        
+                        if (activeTracks[url]) {
+                            stopTrack(url);
+                        } else {
+                            playTrack(url, button);
+                        }
+                    });
+        
+                    soundboard.appendChild(button);
+                }
+        
+                async function playTrack(url, button) {
+                    button.disabled = true;
+
+                    const audio = new Audio(url);
+                    audio.crossOrigin = "anonymous";
+                    audio.loop = true;
+        
+                    const source = audioContext.createMediaElementSource(audio);
+                    const gainNode = audioContext.createGain();
+                    
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+
+                    source.connect(gainNode);
+                    gainNode.connect(masterGain);
+        
+                    try {
+                        await audio.play();
+                        
+                        gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + FADE_DURATION);
+        
+                        activeTracks[url] = { audio, source, gainNode, button };
+                        button.classList.add('active');
+        
+                        setTimeout(() => {
+                            if (activeTracks[url]) {
+                                button.disabled = false;
+                            }
+                        }, FADE_DURATION * 1000);
+        
+                    } catch (err) {
+                        console.error("Playback failed:", err);
+                        button.disabled = false; 
+                    }
+                }
+        
+                function stopTrack(url) {
+                    const track = activeTracks[url];
+                    if (!track) return;
+
+                    track.button.disabled = true;
+                    track.button.classList.remove('active');
+                    const now = audioContext.currentTime;
+                    track.gainNode.gain.cancelScheduledValues(now);
+                    track.gainNode.gain.setValueAtTime(track.gainNode.gain.value, now);
+                    track.gainNode.gain.linearRampToValueAtTime(0, now + FADE_DURATION);
+                    
+                    setTimeout(() => {
+                        track.audio.pause();
+                        track.source.disconnect();
+                        
+                        delete activeTracks[url];
+                        
+                        track.button.disabled = false; 
+                    }, FADE_DURATION * 1000);
+                }
+        
+                async function init() {
+                    // CHANGED: The button now toggles the timer
+                    sleepTimerButton.addEventListener('click', toggleSleepTimer);
+                    volumeSlider.addEventListener('input', () => {
+                        const value = Number(volumeSlider.value) / 100;
+                        masterGain.gain.setValueAtTime(value, audioContext.currentTime);
+                        volumeValue.textContent = `${volumeSlider.value}%`;
+                    });
+
+                    const trackUrls = await getTrackList();
+                    if (trackUrls.length > 0) {
+                        trackUrls.forEach(createTrackButton);
+                    } else if (!soundboard.innerHTML) {
+                         soundboard.innerHTML = `<p>No audio tracks found in the specified folder.</p>`;
+                    }
+                }
+        
+                init();
+            });
+        </script>
+
+</body>
+</html>
