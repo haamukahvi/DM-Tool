@@ -1,0 +1,47 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+
+# Browser profile/cache artifacts accidentally created in repo root
+Default/
+Crashpad/
+GrShaderCache/
+ShaderCache/
+GraphiteDawnCache/
+component_crx_cache/
+extensions_crx_cache/
+AmountExtractionHeuristicRegexes/
+AutofillStates/
+CertificateRevocation/
+CookieReadinessList/
+Crowd Deny/
+FileTypePolicies/
+FirstPartySetsPreloaded/
+hyphen-data/
+MEIPreload/
+OnDeviceHeadSuggestModel/
+OpenCookieDatabase/
+OriginTrials/
+PKIMetadata/
+ProbabilisticRevealTokenRegistry/
+Safe Browsing/
+SafetyTips/
+Snapshots/
+SSLErrorAssistant/
+Subresource Filter/
+TpcdMetadata/
+TrustTokenKeyCommitments/
+WidevineCdm/
+ZxcvbnData/
+Local State
+First Run
+Last Version
