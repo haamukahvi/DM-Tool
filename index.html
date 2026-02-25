@@ -246,7 +246,8 @@
       { id: "surge", label: "Arcane Surge", icon: Sparkles },
       { id: "notes", label: "Notes", icon: FileText },
       { id: "background", label: "Background", icon: ImageIcon },
-      { id: "portrait", label: "Portrait", icon: ImageIcon }
+      { id: "portrait", label: "Portrait", icon: ImageIcon },
+      { id: "character-forge", label: "Character Forge", icon: Sparkles }
     ];
 
     const AMBIENCE_TRACKS = [
@@ -497,10 +498,20 @@
       raceId: "dm_portrait_race_id",
       prompt: "dm_portrait_prompt"
     };
+    const CHARACTER_FORGE_STORAGE_KEYS = {
+      selectedRaceIds: "character_forge_selected_race_ids",
+      selectedClassIds: "character_forge_selected_class_ids",
+      activeStep: "character_forge_active_step"
+    };
+    const CHARACTER_FORGE_STEPS = [
+      { id: "races", label: "Races" },
+      { id: "classes", label: "Classes" },
+      { id: "compare", label: "Compare" }
+    ];
+    const CHARACTER_FORGE_DATA_FILE = "data/wow-character-options.json";
 
     const App = () => {
       const [activeView, setActiveView] = useState(() => localStorage.getItem("dm_dashboard_view") || "ambience");
-      const activeMeta = NAV_ITEMS.find((item) => item.id === activeView) || NAV_ITEMS[0];
 
       useEffect(() => {
         localStorage.setItem("dm_dashboard_view", activeView);
@@ -540,17 +551,6 @@
 
           <main className="flex-1 h-screen overflow-y-auto">
             <div className="p-6 lg:p-10">
-              <header className="flex flex-col gap-2 mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-white/5 border border-white/10">
-                    <activeMeta.icon className="w-5 h-5 text-white/80" />
-                  </div>
-                  <div>
-                    <div className="title-font text-2xl tracking-[0.2em]">{activeMeta.label}</div>
-                  </div>
-                </div>
-              </header>
-
               <div className={activeView === "ambience" ? "block" : "hidden"}>
                 <AmbiencePanel />
               </div>
@@ -568,6 +568,9 @@
               </div>
               <div className={activeView === "portrait" ? "block" : "hidden"}>
                 <PortraitPanel />
+              </div>
+              <div className={activeView === "character-forge" ? "block" : "hidden"}>
+                <CharacterForgePanel />
               </div>
             </div>
           </main>
@@ -2793,6 +2796,916 @@
               )}
             </div>
           </div>
+        </div>
+      );
+    };
+
+    const parseStoredIdList = (key) => {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(parsed) ? parsed.filter((id) => typeof id === "string" && id.trim().length > 0) : [];
+      } catch (err) {
+        return [];
+      }
+    };
+
+    const validateCharacterItems = (rawItems, kind) => {
+      if (!Array.isArray(rawItems)) {
+        throw new Error(`Invalid ${kind} JSON: expected an array.`);
+      }
+
+      const parseBonusEntry = (entry) => {
+        if (entry && typeof entry === "object" && !Array.isArray(entry)) {
+          const stat = typeof entry.stat === "string" ? entry.stat.trim().toUpperCase() : "";
+          const value = Number(entry.value);
+          if (stat && Number.isFinite(value) && value !== 0) return { stat, value };
+          return null;
+        }
+        if (typeof entry === "string") {
+          const raw = entry.trim().toUpperCase();
+          const match = raw.match(/^([+-]{1,2}|[+-]?\d+)\s*([A-Z]{3,})$/);
+          if (!match) return null;
+          const token = match[1];
+          const stat = match[2];
+          let value = Number(token);
+          if (!Number.isFinite(value)) {
+            if (token === "+") value = 1;
+            if (token === "++") value = 2;
+            if (token === "-") value = -1;
+            if (token === "--") value = -2;
+          }
+          if (!Number.isFinite(value) || value === 0) return null;
+          return { stat, value };
+        }
+        return null;
+      };
+
+      const idSet = new Set();
+      const normalized = rawItems.map((raw) => {
+        const id = typeof raw?.id === "string" ? raw.id.trim() : "";
+        const name = typeof raw?.name === "string" ? raw.name.trim() : "";
+        const image = typeof raw?.image === "string" ? raw.image.trim() : "";
+        const description = typeof raw?.description === "string" ? raw.description.trim() : "";
+        const parentId = raw?.parentId === null || raw?.parentId === undefined ? null : String(raw.parentId).trim();
+        const bonuses = Array.isArray(raw?.bonuses)
+          ? raw.bonuses.map(parseBonusEntry).filter(Boolean)
+          : [];
+        const traits = Array.isArray(raw?.traits)
+          ? raw.traits
+              .map((trait) => (typeof trait === "string" ? trait.trim() : ""))
+              .filter((trait) => trait.length > 0)
+          : [];
+        const dataChips = Array.isArray(raw?.dataChips)
+          ? raw.dataChips
+              .map((chip) => (typeof chip === "string" ? chip.trim() : ""))
+              .filter((chip) => chip.length > 0)
+          : [];
+        const isAdditional = raw?.isAdditional === true;
+
+        if (!id || !name || !image || !description) {
+          throw new Error(`Invalid ${kind} item: required fields are id, name, image, description.`);
+        }
+        if (idSet.has(id)) {
+          throw new Error(`Duplicate ${kind} id "${id}" in dataset.`);
+        }
+        idSet.add(id);
+
+        return { id, name, image, description, parentId, bonuses, traits, dataChips, isAdditional };
+      });
+
+      const availableIds = new Set(normalized.map((item) => item.id));
+      normalized.forEach((item) => {
+        if (item.parentId && !availableIds.has(item.parentId)) {
+          throw new Error(`Invalid ${kind} item "${item.id}": parentId "${item.parentId}" does not exist.`);
+        }
+      });
+
+      return normalized;
+    };
+
+    const getBonusPrefix = (value) => {
+      if (value === 1) return "+";
+      if (value === 2) return "++";
+      if (value === -1) return "-";
+      if (value === -2) return "--";
+      return value > 0 ? `+${value}` : `${value}`;
+    };
+
+    const mergeBonuses = (bonusArrays) => {
+      const totals = new Map();
+      bonusArrays.flat().forEach((bonus) => {
+        if (!bonus || !bonus.stat || !Number.isFinite(bonus.value)) return;
+        totals.set(bonus.stat, (totals.get(bonus.stat) || 0) + bonus.value);
+      });
+      return Array.from(totals.entries())
+        .map(([stat, value]) => ({ stat, value }))
+        .filter((bonus) => bonus.value !== 0)
+        .sort((a, b) => b.value - a.value || a.stat.localeCompare(b.stat));
+    };
+
+    const mergeTraits = (traitArrays) => {
+      const seen = new Set();
+      const merged = [];
+      traitArrays.flat().forEach((trait) => {
+        if (!trait || typeof trait !== "string") return;
+        const normalized = trait.trim();
+        if (!normalized) return;
+        const key = normalized.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(normalized);
+      });
+      return merged;
+    };
+
+    const mergeDataChips = (chipArrays) => {
+      const seen = new Set();
+      const merged = [];
+      chipArrays.flat().forEach((chip) => {
+        if (!chip || typeof chip !== "string") return;
+        const normalized = chip.trim();
+        if (!normalized) return;
+        const key = normalized.toLowerCase();
+        if (seen.has(key)) return;
+        seen.add(key);
+        merged.push(normalized);
+      });
+      return merged;
+    };
+
+    const extractAgeInfoFromChips = (chips = []) => {
+      const ageInfo = [];
+      const remaining = [];
+      chips.forEach((chip) => {
+        if (!chip || typeof chip !== "string") return;
+        const trimmed = chip.trim();
+        if (/^"?\s*Maturity:/i.test(trimmed)) {
+          const normalized = trimmed
+            .replace(/^"+|"+$/g, "")
+            .replace(/\s*\|\s*/g, ". ")
+            .trim();
+          const lifespanMatch = normalized.match(/Lifespan:\s*[^.]+/i);
+          if (lifespanMatch) {
+            ageInfo.push(lifespanMatch[0].trim());
+          }
+        } else {
+          remaining.push(trimmed);
+        }
+      });
+      return { ageInfo, remaining };
+    };
+
+    const BonusChips = ({ bonuses = [], className = "" }) => (
+      <div className={`flex flex-wrap gap-2 ${className}`}>
+        {bonuses.map((bonus) => (
+          <span
+            key={`${bonus.stat}-${bonus.value}`}
+            className={`px-2.5 py-1 rounded-full border text-[11px] font-bold tracking-[0.12em] ${
+              bonus.value >= 3
+                ? "bg-lime-400/30 border-lime-200/90 text-lime-50"
+                : bonus.value === 2
+                  ? "bg-green-400/30 border-green-200/90 text-green-50"
+                  : bonus.value === 1
+                    ? "bg-emerald-500/20 border-emerald-300/60 text-emerald-100"
+                    : "bg-rose-500/20 border-rose-300/60 text-rose-100"
+            }`}
+          >
+            {getBonusPrefix(bonus.value)} {bonus.stat}
+          </span>
+        ))}
+      </div>
+    );
+
+    const TraitChips = ({ traits = [], className = "" }) => (
+      <div className={`flex flex-wrap gap-2 ${className}`}>
+        {traits.map((trait) => (
+          <span
+            key={trait}
+            className="px-2.5 py-1 rounded-full border border-white/20 bg-white/5 text-[11px] font-semibold tracking-[0.06em] text-white/85"
+          >
+            {trait}
+          </span>
+        ))}
+      </div>
+    );
+
+    const getSelectableCharacterIds = (items) => {
+      const parentsWithChildren = new Set(items.filter((item) => item.parentId).map((item) => item.parentId));
+      return new Set(
+        items
+          .filter((item) => item.parentId || !parentsWithChildren.has(item.id))
+          .map((item) => item.id)
+      );
+    };
+
+    const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem }) => {
+      const [expandedParentIds, setExpandedParentIds] = useState(() => new Set());
+      const isRaceSelector = title.toLowerCase().includes("race");
+      const additionalLabel = isRaceSelector ? "Additional Races" : "Additional Classes";
+      const additionalPlaceholders = useMemo(
+        () => Array.from({ length: 4 }, (_, idx) => ({ id: `additional-${idx}` })),
+        []
+      );
+      const mainItems = useMemo(() => items.filter((item) => !item.isAdditional), [items]);
+      const additionalItems = useMemo(() => items.filter((item) => item.isAdditional), [items]);
+      const childrenByParent = useMemo(() => {
+        const map = new Map();
+        mainItems.forEach((item) => {
+          if (!item.parentId) return;
+          const arr = map.get(item.parentId) || [];
+          arr.push(item);
+          map.set(item.parentId, arr);
+        });
+        map.forEach((arr) => arr.sort((a, b) => a.name.localeCompare(b.name)));
+        return map;
+      }, [mainItems]);
+      const orderedItems = useMemo(() => {
+        const baseItems = mainItems.filter((item) => !item.parentId).sort((a, b) => a.name.localeCompare(b.name));
+        const ordered = [];
+
+        baseItems.forEach((parent) => {
+          ordered.push(parent);
+          const variants = childrenByParent.get(parent.id) || [];
+          if (variants.length > 0 && expandedParentIds.has(parent.id)) {
+            ordered.push(...variants.map((variant) => ({ ...variant, _isExpandedChild: true })));
+          }
+        });
+
+        const parentIds = new Set(baseItems.map((p) => p.id));
+        const orphanVariants = mainItems
+          .filter((item) => item.parentId && !parentIds.has(item.parentId))
+          .sort((a, b) => a.name.localeCompare(b.name));
+        ordered.push(...orphanVariants);
+        return ordered;
+      }, [mainItems, childrenByParent, expandedParentIds]);
+
+      useEffect(() => {
+        const validParentIds = new Set(mainItems.filter((item) => !item.parentId).map((item) => item.id));
+        setExpandedParentIds((prev) => {
+          const next = new Set();
+          prev.forEach((id) => {
+            if (validParentIds.has(id)) next.add(id);
+          });
+          return next;
+        });
+      }, [mainItems]);
+
+      const getFamilyColor = (rootId) => {
+        let hash = 0;
+        for (let i = 0; i < rootId.length; i++) {
+          hash = ((hash << 5) - hash) + rootId.charCodeAt(i);
+          hash |= 0;
+        }
+        const hue = Math.abs(hash) % 360;
+        return {
+          line: `hsla(${hue}, 72%, 62%, 0.95)`
+        };
+      };
+
+      const renderCard = (item) => {
+        const selected = selectedIds.includes(item.id);
+        const rootId = item.parentId || item.id;
+        const hasChildren = !item.parentId && (childrenByParent.get(item.id)?.length || 0) > 0;
+        const isExpanded = hasChildren && expandedParentIds.has(item.id);
+        const familyColor = getFamilyColor(rootId);
+
+        const handleOpenOrToggle = (rect = null) => {
+          if (hasChildren) {
+            setExpandedParentIds((prev) => {
+              const next = new Set(prev);
+              if (next.has(item.id)) next.delete(item.id);
+              else next.add(item.id);
+              return next;
+            });
+            return;
+          }
+          onOpenItem(item, rect);
+        };
+
+        return (
+          <div
+            key={item.id}
+            onClick={(event) => handleOpenOrToggle(event.currentTarget.getBoundingClientRect())}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleOpenOrToggle(null);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            className={`group text-left rounded-2xl border overflow-hidden transition-all ${
+              selected
+                ? "border-pink-400/80 shadow-[0_0_25px_rgba(236,72,153,0.25)]"
+                : "border-white/10 hover:border-white/30"
+            } ${item._isExpandedChild ? "animate-fade-in-up" : ""} ${
+              hasChildren ? (isExpanded ? "opacity-80 brightness-75" : "opacity-90 brightness-90") : ""
+            }`}
+          >
+            <div className="relative aspect-[3/4] bg-black/40">
+              <div className="absolute left-0 right-0 top-0 h-1 z-10" style={{ backgroundColor: familyColor.line }}></div>
+              <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+              <div className={`absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent ${hasChildren ? (isExpanded ? "bg-black/35" : "bg-black/20") : ""}`}></div>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  if (hasChildren) return;
+                  onToggleItem(item.id);
+                }}
+                className={`absolute top-2 right-2 px-2 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold border transition ${
+                  selected
+                    ? "bg-pink-500/90 border-pink-300/70 text-white"
+                    : "bg-black/30 border-white/40 text-white/90 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                } ${hasChildren ? "hidden" : ""}`}
+              >
+                {selected ? "Selected" : "Select"}
+              </button>
+              {hasChildren && (
+                <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-black/45 border border-white/20 inline-flex items-center justify-center">
+                  <ChevronDown className={`w-3 h-3 text-white/80 transition-transform ${isExpanded ? "rotate-90" : "-rotate-90"}`} />
+                </div>
+              )}
+              <div className="absolute inset-x-0 bottom-0 p-3">
+                <div className="text-sm font-semibold text-white">{item.name}</div>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="flex flex-col gap-5">
+          <div className="text-xs uppercase tracking-[0.3em] text-white/50">
+            {title}
+          </div>
+
+          {orderedItems.length === 0 ? (
+            <div className="text-sm text-white/40">No entries found.</div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {orderedItems.map(renderCard)}
+            </div>
+          )}
+
+          <div className="pt-2 flex flex-col gap-3">
+            <div className="text-xs uppercase tracking-[0.3em] text-white/45">{additionalLabel}</div>
+            {isRaceSelector && additionalItems.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {additionalItems
+                  .slice()
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map(renderCard)}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {additionalPlaceholders.map((box) => (
+                  <div
+                    key={box.id}
+                    className="relative aspect-[3/4] rounded-2xl border border-dashed border-white/20 bg-white/[0.02]"
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-white/30">Empty</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const CharacterItemModal = ({ item, kindLabel, selected, onClose, onToggle, originRect }) => {
+      const [entered, setEntered] = useState(false);
+      const panelRef = useRef(null);
+      const { ageInfo, remaining: dataChips } = useMemo(
+        () => extractAgeInfoFromChips(item.dataChips || []),
+        [item.dataChips]
+      );
+      const [panelStyle, setPanelStyle] = useState({
+        transform: "translate(0px, 0px) scale(1)",
+        opacity: 0.35,
+        transition: "none"
+      });
+
+      useEffect(() => {
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+      }, [onClose]);
+
+      useEffect(() => {
+        const panel = panelRef.current;
+        if (!panel) return;
+        if (!originRect) {
+          setEntered(true);
+          setPanelStyle({
+            transform: "translate(0px, 8px) scale(0.98)",
+            opacity: 0,
+            transition: "none"
+          });
+          requestAnimationFrame(() => {
+            setPanelStyle({
+              transform: "translate(0px, 0px) scale(1)",
+              opacity: 1,
+              transition: "transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease"
+            });
+          });
+          return;
+        }
+
+        const finalRect = panel.getBoundingClientRect();
+        const originCenterX = originRect.left + originRect.width / 2;
+        const originCenterY = originRect.top + originRect.height / 2;
+        const finalCenterX = finalRect.left + finalRect.width / 2;
+        const finalCenterY = finalRect.top + finalRect.height / 2;
+
+        const deltaX = originCenterX - finalCenterX;
+        const deltaY = originCenterY - finalCenterY;
+        const scaleX = Math.max(0.2, Math.min(1, originRect.width / finalRect.width));
+        const scaleY = Math.max(0.2, Math.min(1, originRect.height / finalRect.height));
+
+        setEntered(true);
+        setPanelStyle({
+          transform: `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`,
+          opacity: 0.35,
+          transition: "none"
+        });
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setPanelStyle({
+              transform: "translate(0px, 0px) scale(1, 1)",
+              opacity: 1,
+              transition: "transform 280ms cubic-bezier(0.2, 0.85, 0.2, 1), opacity 240ms ease"
+            });
+          });
+        });
+      }, [originRect]);
+
+      return (
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-200 ${entered ? "bg-black/80 opacity-100" : "bg-black/0 opacity-0"}`}
+        onMouseDown={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
+        <div
+          ref={panelRef}
+          style={panelStyle}
+          className="w-full max-w-4xl bg-[#13131a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.2fr]">
+            <div className="relative bg-black/50">
+              <div className="aspect-[3/4] md:h-full">
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+              </div>
+            </div>
+            <div className="p-6 flex flex-col gap-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">{kindLabel}</div>
+                  <h3 className="text-2xl font-semibold text-white/95 mt-1">{item.name}</h3>
+                </div>
+                <button type="button" onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-sm leading-relaxed text-white/70">{item.description}</p>
+              {item.bonuses?.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Bonuses</div>
+                  <BonusChips bonuses={item.bonuses} />
+                </div>
+              )}
+              {item.traits?.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Racial Abilities</div>
+                  <TraitChips traits={item.traits} />
+                </div>
+              )}
+              {ageInfo.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <div className="text-sm text-white/75 leading-relaxed">{ageInfo.join(" ")}</div>
+                </div>
+              )}
+              {dataChips.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Class Data</div>
+                  <TraitChips traits={dataChips} />
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={onToggle}
+                className={`mt-auto px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] font-semibold transition ${
+                  selected
+                    ? "border-pink-400 bg-pink-500/20 text-pink-100"
+                    : "border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:bg-white/10"
+                }`}
+              >
+                {selected ? "Selected" : "Select"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+    };
+
+    const VerticalCompareSpinner = ({ title, items, onActiveChange }) => {
+      const containerRef = useRef(null);
+      const [activeIndex, setActiveIndex] = useState(0);
+
+      useEffect(() => {
+        setActiveIndex(0);
+        requestAnimationFrame(() => {
+          if (containerRef.current) {
+            containerRef.current.scrollTo({ top: 0, behavior: "auto" });
+          }
+        });
+      }, [items]);
+
+      useEffect(() => {
+        if (!items.length) return;
+        onActiveChange(items[activeIndex] || null);
+      }, [activeIndex, items, onActiveChange]);
+
+      const updateActiveIndex = () => {
+        const container = containerRef.current;
+        if (!container) return;
+        const cards = Array.from(container.querySelectorAll("[data-spinner-item='true']"));
+        if (!cards.length) return;
+        const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
+        let nearestIndex = 0;
+        let nearestDistance = Infinity;
+        cards.forEach((card, index) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(cardCenter - centerY);
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestIndex = index;
+          }
+        });
+        setActiveIndex(nearestIndex);
+      };
+
+      return (
+        <div className="bg-black/30 border border-white/10 rounded-2xl p-4">
+          <div className="text-[11px] uppercase tracking-[0.25em] text-white/50 mb-3">{title}</div>
+          <div
+            ref={containerRef}
+            onScroll={updateActiveIndex}
+            className="h-[430px] overflow-y-auto custom-scrollbar scroll-smooth snap-y snap-mandatory pr-1"
+          >
+            <div className="h-[160px]"></div>
+            <div className="flex flex-col gap-3">
+              {items.map((item, index) => {
+                const isActive = index === activeIndex;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    data-spinner-item="true"
+                    onClick={(event) => event.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })}
+                    className={`w-full text-left snap-center rounded-2xl border overflow-hidden transition-all ${
+                      isActive
+                        ? "border-pink-400/80 shadow-[0_0_30px_rgba(236,72,153,0.2)]"
+                        : "border-white/10 opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <div className="grid grid-cols-[76px_1fr] items-center gap-3 p-2 bg-white/[0.03]">
+                      <div className="aspect-[3/4] rounded-lg overflow-hidden border border-white/10">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                      <div className="text-sm font-semibold text-white/90 leading-tight">{item.name}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="h-[160px]"></div>
+          </div>
+        </div>
+      );
+    };
+
+    const CharacterForgePanel = () => {
+      const isFileProtocol = window.location.protocol === "file:";
+      const [activeStep, setActiveStep] = useState(() => {
+        const saved = localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.activeStep) || "races";
+        return CHARACTER_FORGE_STEPS.some((step) => step.id === saved) ? saved : "races";
+      });
+      const [selectedRaceIds, setSelectedRaceIds] = useState(() => parseStoredIdList(CHARACTER_FORGE_STORAGE_KEYS.selectedRaceIds));
+      const [selectedClassIds, setSelectedClassIds] = useState(() => parseStoredIdList(CHARACTER_FORGE_STORAGE_KEYS.selectedClassIds));
+      const [races, setRaces] = useState([]);
+      const [classes, setClasses] = useState([]);
+      const [isLoading, setIsLoading] = useState(true);
+      const [loadError, setLoadError] = useState("");
+      const [modalState, setModalState] = useState(null);
+      const [activeRace, setActiveRace] = useState(null);
+      const [activeClass, setActiveClass] = useState(null);
+      const dataFileInputRef = useRef(null);
+
+      const loadData = async () => {
+        setIsLoading(true);
+        setLoadError("");
+        if (isFileProtocol) {
+          setIsLoading(false);
+          setLoadError("Local file mode blocks fetch. Import the combined character JSON below or run a local server.");
+          return;
+        }
+        try {
+          const response = await fetch(CHARACTER_FORGE_DATA_FILE);
+          if (!response.ok) {
+            throw new Error("Could not load character data JSON.");
+          }
+
+          const data = await response.json();
+          if (!data || !Array.isArray(data.races) || !Array.isArray(data.classes)) {
+            throw new Error("Invalid character JSON: expected { races: [], classes: [] }.");
+          }
+
+          setRaces(validateCharacterItems(data.races, "races"));
+          setClasses(validateCharacterItems(data.classes, "classes"));
+        } catch (err) {
+          setLoadError(err.message || "Failed to load character data.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      const handleManualImport = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const text = typeof reader.result === "string" ? reader.result : "";
+            const parsed = JSON.parse(text);
+            if (!parsed || !Array.isArray(parsed.races) || !Array.isArray(parsed.classes)) {
+              throw new Error("Invalid character JSON: expected { races: [], classes: [] }.");
+            }
+            setRaces(validateCharacterItems(parsed.races, "races"));
+            setClasses(validateCharacterItems(parsed.classes, "classes"));
+            if (dataFileInputRef.current) dataFileInputRef.current.value = "";
+            setLoadError("");
+          } catch (err) {
+            setLoadError(err.message || "Failed to parse JSON file.");
+          }
+        };
+        reader.onerror = () => {
+          setLoadError("Failed to read JSON file.");
+        };
+        reader.readAsText(file);
+      };
+
+      useEffect(() => {
+        loadData();
+      }, []);
+
+      useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.activeStep, activeStep);
+      }, [activeStep]);
+
+      useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.selectedRaceIds, JSON.stringify(selectedRaceIds));
+      }, [selectedRaceIds]);
+
+      useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.selectedClassIds, JSON.stringify(selectedClassIds));
+      }, [selectedClassIds]);
+
+      useEffect(() => {
+        if (!races.length) return;
+        const validIds = getSelectableCharacterIds(races);
+        setSelectedRaceIds((prev) => prev.filter((id) => validIds.has(id)));
+      }, [races]);
+
+      useEffect(() => {
+        if (!classes.length) return;
+        const validIds = getSelectableCharacterIds(classes);
+        setSelectedClassIds((prev) => prev.filter((id) => validIds.has(id)));
+      }, [classes]);
+
+      const selectedRaces = useMemo(() => {
+        const validIds = getSelectableCharacterIds(races);
+        return races.filter((item) => validIds.has(item.id) && selectedRaceIds.includes(item.id));
+      }, [races, selectedRaceIds]);
+      const selectedClasses = useMemo(() => {
+        const validIds = getSelectableCharacterIds(classes);
+        return classes.filter((item) => validIds.has(item.id) && selectedClassIds.includes(item.id));
+      }, [classes, selectedClassIds]);
+
+      const toggleSelection = (kind, itemId) => {
+        const sourceItems = kind === "race" ? races : classes;
+        const validIds = getSelectableCharacterIds(sourceItems);
+        if (!validIds.has(itemId)) return;
+        const setter = kind === "race" ? setSelectedRaceIds : setSelectedClassIds;
+        setter((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]));
+      };
+
+      const openItemModal = (kind, item, rect = null) => {
+        setModalState({ kind, item, rect });
+      };
+
+      const renderLoadingSkeleton = () => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {Array.from({ length: 10 }).map((_, idx) => (
+            <div key={`skeleton-${idx}`} className="aspect-[3/4] rounded-2xl border border-white/10 bg-white/5 animate-pulse"></div>
+          ))}
+        </div>
+      );
+
+      const renderCompare = () => {
+        if (!selectedRaces.length || !selectedClasses.length) {
+          return (
+            <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-8 panel-glow flex flex-col gap-4">
+              <div className="text-sm text-white/70">
+                Select at least one race and one class to use compare mode.
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveStep("races")}
+                  className="px-4 py-2 rounded-xl border border-white/15 bg-white/5 text-xs uppercase tracking-[0.25em] hover:border-white/30 hover:bg-white/10 transition"
+                >
+                  Go to Races
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveStep("classes")}
+                  className="px-4 py-2 rounded-xl border border-white/15 bg-white/5 text-xs uppercase tracking-[0.25em] hover:border-white/30 hover:bg-white/10 transition"
+                >
+                  Go to Classes
+                </button>
+              </div>
+            </div>
+          );
+        }
+
+        const currentRace = activeRace || selectedRaces[0] || null;
+        const currentClass = activeClass || selectedClasses[0] || null;
+        const comboName = [currentRace?.name, currentClass?.name].filter(Boolean).join(" ");
+        const comboBonuses = mergeBonuses([
+          currentRace?.bonuses || [],
+          currentClass?.bonuses || []
+        ]);
+        const comboTraits = mergeTraits([
+          currentRace?.traits || [],
+          currentClass?.traits || []
+        ]);
+        const comboDataChips = mergeDataChips([
+          currentRace?.dataChips || [],
+          currentClass?.dataChips || []
+        ]);
+        const { ageInfo: comboAgeInfo, remaining: comboChips } = extractAgeInfoFromChips(comboDataChips);
+
+        return (
+          <div className="flex flex-col gap-5">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <VerticalCompareSpinner title="Races" items={selectedRaces} onActiveChange={setActiveRace} />
+              <VerticalCompareSpinner title="Classes" items={selectedClasses} onActiveChange={setActiveClass} />
+            </div>
+            <div className="px-1 flex flex-col gap-3">
+              <div className="text-lg md:text-xl font-semibold text-white/95">{comboName}</div>
+              {comboBonuses.length > 0 ? (
+                <BonusChips bonuses={comboBonuses} />
+              ) : (
+                <div className="text-sm text-white/45">No bonuses defined for this combination yet.</div>
+              )}
+              {comboTraits.length > 0 && (
+                <div className="pt-1">
+                  <TraitChips traits={comboTraits} />
+                </div>
+              )}
+              {comboAgeInfo.length > 0 && (
+                <div className="pt-1 text-sm text-white/75 leading-relaxed">
+                  {comboAgeInfo.join(" ")}
+                </div>
+              )}
+              {comboChips.length > 0 && (
+                <div className="pt-1">
+                  <TraitChips traits={comboChips} />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-5">
+            {CHARACTER_FORGE_STEPS.map((step) => (
+              <button
+                key={step.id}
+                type="button"
+                onClick={() => setActiveStep(step.id)}
+                className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border transition-all ${
+                  activeStep === step.id
+                    ? "bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-105"
+                    : "bg-white/5 text-white/40 border-transparent hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {step.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow">
+            <input
+              ref={dataFileInputRef}
+              type="file"
+              accept=".json,application/json"
+              onChange={handleManualImport}
+              className="hidden"
+            />
+
+            {isLoading && renderLoadingSkeleton()}
+
+            {!isLoading && loadError && (
+              <div className="bg-rose-500/10 border border-rose-500/30 text-rose-200 rounded-2xl p-4 text-sm flex flex-col gap-3">
+                <span>{loadError}</span>
+                <div className="flex flex-wrap gap-2">
+                  {!isFileProtocol && (
+                    <button
+                      type="button"
+                      onClick={loadData}
+                      className="px-4 py-2 rounded-xl border border-rose-300/30 bg-rose-300/10 text-[11px] uppercase tracking-[0.25em] hover:bg-rose-300/20 transition"
+                    >
+                      Retry
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => dataFileInputRef.current?.click()}
+                    className="px-4 py-2 rounded-xl border border-white/20 bg-white/5 text-[11px] uppercase tracking-[0.25em] text-white/90 hover:border-white/40 hover:bg-white/10 transition"
+                  >
+                    Import Character JSON
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {!isLoading && !loadError && (races.length === 0 || classes.length === 0) && (
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-white/80 flex flex-col gap-3">
+                <span>Import character JSON to continue.</span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => dataFileInputRef.current?.click()}
+                    className="px-4 py-2 rounded-xl border border-white/20 bg-white/5 text-[11px] uppercase tracking-[0.25em] text-white/90 hover:border-white/40 hover:bg-white/10 transition"
+                  >
+                    Import Character JSON
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "races" && (
+              <CharacterPickerSection
+                title="Choose Races"
+                items={races}
+                selectedIds={selectedRaceIds}
+                onOpenItem={(item, rect) => openItemModal("race", item, rect)}
+                onToggleItem={(itemId) => toggleSelection("race", itemId)}
+              />
+            )}
+
+            {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "classes" && (
+              <CharacterPickerSection
+                title="Choose Classes"
+                items={classes}
+                selectedIds={selectedClassIds}
+                onOpenItem={(item, rect) => openItemModal("class", item, rect)}
+                onToggleItem={(itemId) => toggleSelection("class", itemId)}
+              />
+            )}
+
+            {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "compare" && renderCompare()}
+          </div>
+
+          {modalState && (
+            <CharacterItemModal
+              item={modalState.item}
+              kindLabel={modalState.kind === "race" ? "Race" : "Class"}
+              selected={
+                modalState.kind === "race"
+                  ? selectedRaceIds.includes(modalState.item.id)
+                  : selectedClassIds.includes(modalState.item.id)
+              }
+              originRect={modalState.rect}
+              onClose={() => setModalState(null)}
+              onToggle={() => {
+                toggleSelection(modalState.kind, modalState.item.id);
+              }}
+            />
+          )}
         </div>
       );
     };
