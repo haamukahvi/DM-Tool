@@ -13,6 +13,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin="anonymous"></script>
+  <script src="data/wow-character-options.js"></script>
 
   <style>
     :root {
@@ -509,45 +510,59 @@
       { id: "compare", label: "Compare" }
     ];
     const CHARACTER_FORGE_DATA_FILE = "data/wow-character-options.json";
+    const CHARACTER_FORGE_DATA_GLOBAL_KEY = "WOW_CHARACTER_OPTIONS";
 
     const App = () => {
       const [activeView, setActiveView] = useState(() => localStorage.getItem("dm_dashboard_view") || "ambience");
+      const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+        const saved = localStorage.getItem("dm_sidebar_open");
+        return saved === null ? true : saved === "true";
+      });
 
       useEffect(() => {
         localStorage.setItem("dm_dashboard_view", activeView);
       }, [activeView]);
 
+      useEffect(() => {
+        localStorage.setItem("dm_sidebar_open", String(isSidebarOpen));
+      }, [isSidebarOpen]);
+
       return (
         <div className="min-h-screen flex ambient-bg">
-          <aside className="w-64 bg-[#0d0d14]/90 border-r border-white/5 p-6 flex flex-col gap-8">
-            <div>
-              <div className="text-xs uppercase tracking-[0.4em] text-white/40">DM</div>
-              <div className="title-font text-lg text-white tracking-[0.25em]">Dashboard</div>
-            </div>
+          <button
+            type="button"
+            onClick={() => setIsSidebarOpen((prev) => !prev)}
+            className="fixed top-4 left-4 z-40 h-10 w-10 rounded-xl border border-white/15 bg-[#0d0d14]/90 hover:bg-[#171723] text-white/80 hover:text-white transition inline-flex items-center justify-center"
+            aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+            title={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
+          >
+            <ChevronDown className={`w-4 h-4 transition-transform ${isSidebarOpen ? "rotate-90" : "-rotate-90"}`} />
+          </button>
 
-            <nav className="flex flex-col gap-2">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                const isActive = item.id === activeView;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveView(item.id)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-sm ${
-                      isActive
-                        ? "bg-white text-black border-white shadow-lg shadow-white/10"
-                        : "bg-white/5 text-white/70 border-transparent hover:bg-white/10 hover:text-white"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="uppercase tracking-widest">{item.label}</span>
-                  </button>
-                );
-              })}
-            </nav>
+          {isSidebarOpen && (
+            <aside className="w-64 bg-[#0d0d14]/90 border-r border-white/5 p-6 flex flex-col gap-8">
+              <nav className="flex flex-col gap-2">
+                {NAV_ITEMS.map((item) => {
+                  const isActive = item.id === activeView;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveView(item.id)}
+                      className={`w-full text-left px-4 py-3 rounded-xl border transition-all text-sm ${
+                        isActive
+                          ? "bg-white text-black border-white shadow-lg shadow-white/10"
+                          : "bg-white/5 text-white/70 border-transparent hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      <span className="uppercase tracking-widest">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
 
-            <HpTracker />
-          </aside>
+              <HpTracker />
+            </aside>
+          )}
 
           <main className="flex-1 h-screen overflow-y-auto">
             <div className="p-6 lg:p-10">
@@ -2883,6 +2898,43 @@
       return normalized;
     };
 
+    const RACE_LOCAL_IMAGE_EXTENSIONS = ["webp", "png", "jpg", "jpeg"];
+
+    const getCharacterImageCandidates = (item, kind) => {
+      const fallback = typeof item?.image === "string" ? item.image.trim() : "";
+      if (kind !== "race") return fallback ? [fallback] : [];
+      const id = typeof item?.id === "string" ? item.id.trim() : "";
+      if (!id) return fallback ? [fallback] : [];
+      const encodedId = encodeURIComponent(id);
+      const localCandidates = RACE_LOCAL_IMAGE_EXTENSIONS.map((ext) => `img/race/${encodedId}.${ext}`);
+      return fallback ? [...localCandidates, fallback] : localCandidates;
+    };
+
+    const CharacterItemImage = ({ item, kind, alt, className = "", loading = undefined }) => {
+      const candidates = useMemo(
+        () => getCharacterImageCandidates(item, kind),
+        [item?.id, item?.image, kind]
+      );
+      const [candidateIndex, setCandidateIndex] = useState(0);
+
+      useEffect(() => {
+        setCandidateIndex(0);
+      }, [candidates.join("|")]);
+
+      const src = candidates[candidateIndex] || "";
+      const canFallback = candidateIndex < candidates.length - 1;
+
+      return (
+        <img
+          src={src}
+          alt={alt || item?.name || ""}
+          className={className}
+          loading={loading}
+          onError={canFallback ? () => setCandidateIndex((prev) => prev + 1) : undefined}
+        />
+      );
+    };
+
     const getBonusPrefix = (value) => {
       if (value === 1) return "+";
       if (value === 2) return "++";
@@ -3001,6 +3053,7 @@
     const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem }) => {
       const [expandedParentIds, setExpandedParentIds] = useState(() => new Set());
       const isRaceSelector = title.toLowerCase().includes("race");
+      const useParentGrouping = !isRaceSelector;
       const additionalLabel = isRaceSelector ? "Additional Races" : "Additional Classes";
       const additionalPlaceholders = useMemo(
         () => Array.from({ length: 4 }, (_, idx) => ({ id: `additional-${idx}` })),
@@ -3008,6 +3061,7 @@
       );
       const mainItems = useMemo(() => items.filter((item) => !item.isAdditional), [items]);
       const additionalItems = useMemo(() => items.filter((item) => item.isAdditional), [items]);
+      const selectableMainIds = useMemo(() => getSelectableCharacterIds(mainItems), [mainItems]);
       const childrenByParent = useMemo(() => {
         const map = new Map();
         mainItems.forEach((item) => {
@@ -3016,11 +3070,17 @@
           arr.push(item);
           map.set(item.parentId, arr);
         });
-        map.forEach((arr) => arr.sort((a, b) => a.name.localeCompare(b.name)));
+        map.forEach((arr) => arr.sort((a, b) => a.id.localeCompare(b.id)));
         return map;
       }, [mainItems]);
       const orderedItems = useMemo(() => {
-        const baseItems = mainItems.filter((item) => !item.parentId).sort((a, b) => a.name.localeCompare(b.name));
+        if (!useParentGrouping) {
+          return mainItems
+            .filter((item) => selectableMainIds.has(item.id))
+            .sort((a, b) => a.id.localeCompare(b.id));
+        }
+
+        const baseItems = mainItems.filter((item) => !item.parentId).sort((a, b) => a.id.localeCompare(b.id));
         const ordered = [];
 
         baseItems.forEach((parent) => {
@@ -3034,12 +3094,16 @@
         const parentIds = new Set(baseItems.map((p) => p.id));
         const orphanVariants = mainItems
           .filter((item) => item.parentId && !parentIds.has(item.parentId))
-          .sort((a, b) => a.name.localeCompare(b.name));
+          .sort((a, b) => a.id.localeCompare(b.id));
         ordered.push(...orphanVariants);
         return ordered;
-      }, [mainItems, childrenByParent, expandedParentIds]);
+      }, [mainItems, childrenByParent, expandedParentIds, useParentGrouping, selectableMainIds]);
 
       useEffect(() => {
+        if (!useParentGrouping) {
+          setExpandedParentIds(new Set());
+          return;
+        }
         const validParentIds = new Set(mainItems.filter((item) => !item.parentId).map((item) => item.id));
         setExpandedParentIds((prev) => {
           const next = new Set();
@@ -3048,7 +3112,7 @@
           });
           return next;
         });
-      }, [mainItems]);
+      }, [mainItems, useParentGrouping]);
 
       const getFamilyColor = (rootId) => {
         let hash = 0;
@@ -3062,12 +3126,13 @@
         };
       };
 
-      const renderCard = (item) => {
+      const renderCard = (item, index = 0) => {
         const selected = selectedIds.includes(item.id);
         const rootId = item.parentId || item.id;
-        const hasChildren = !item.parentId && (childrenByParent.get(item.id)?.length || 0) > 0;
+        const hasChildren = useParentGrouping && !item.parentId && (childrenByParent.get(item.id)?.length || 0) > 0;
         const isExpanded = hasChildren && expandedParentIds.has(item.id);
         const familyColor = getFamilyColor(rootId);
+        const staggerDelayMs = Math.min(index, 24) * 35;
 
         const handleOpenOrToggle = (rect = null) => {
           if (hasChildren) {
@@ -3094,17 +3159,26 @@
             }}
             role="button"
             tabIndex={0}
-            className={`group text-left rounded-2xl border overflow-hidden transition-all ${
+            className={`group text-left rounded-2xl border overflow-hidden transition-all animate-fade-in-up ${
               selected
                 ? "border-pink-400/80 shadow-[0_0_25px_rgba(236,72,153,0.25)]"
                 : "border-white/10 hover:border-white/30"
-            } ${item._isExpandedChild ? "animate-fade-in-up" : ""} ${
+            } ${
               hasChildren ? (isExpanded ? "opacity-80 brightness-75" : "opacity-90 brightness-90") : ""
             }`}
+            style={{ animationDelay: `${staggerDelayMs}ms` }}
           >
             <div className="relative aspect-[3/4] bg-black/40">
-              <div className="absolute left-0 right-0 top-0 h-1 z-10" style={{ backgroundColor: familyColor.line }}></div>
-              <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+              {!isRaceSelector && (
+                <div className="absolute left-0 right-0 top-0 h-1 z-10" style={{ backgroundColor: familyColor.line }}></div>
+              )}
+              <CharacterItemImage
+                item={item}
+                kind={isRaceSelector ? "race" : "class"}
+                alt={item.name}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
               <div className={`absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent ${hasChildren ? (isExpanded ? "bg-black/35" : "bg-black/20") : ""}`}></div>
               <button
                 type="button"
@@ -3113,7 +3187,7 @@
                   if (hasChildren) return;
                   onToggleItem(item.id);
                 }}
-                className={`absolute top-2 right-2 px-2 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold border transition ${
+                className={`absolute top-2 right-2 px-4 py-1.5 rounded-full text-[13px] uppercase tracking-[0.2em] font-bold border transition ${
                   selected
                     ? "bg-pink-500/90 border-pink-300/70 text-white"
                     : "bg-black/30 border-white/40 text-white/90 opacity-0 group-hover:opacity-100 focus:opacity-100"
@@ -3143,26 +3217,27 @@
           {orderedItems.length === 0 ? (
             <div className="text-sm text-white/40">No entries found.</div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {orderedItems.map(renderCard)}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              {orderedItems.map((item, idx) => renderCard(item, idx))}
             </div>
           )}
 
           <div className="pt-2 flex flex-col gap-3">
             <div className="text-xs uppercase tracking-[0.3em] text-white/45">{additionalLabel}</div>
             {isRaceSelector && additionalItems.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
                 {additionalItems
                   .slice()
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map(renderCard)}
+                  .sort((a, b) => a.id.localeCompare(b.id))
+                  .map((item, idx) => renderCard(item, orderedItems.length + idx))}
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {additionalPlaceholders.map((box) => (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                {additionalPlaceholders.map((box, idx) => (
                   <div
                     key={box.id}
-                    className="relative aspect-[3/4] rounded-2xl border border-dashed border-white/20 bg-white/[0.02]"
+                    className="relative aspect-[3/4] rounded-2xl border border-dashed border-white/20 bg-white/[0.02] animate-fade-in-up"
+                    style={{ animationDelay: `${Math.min(orderedItems.length + idx, 24) * 35}ms` }}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
                       <span className="text-[10px] uppercase tracking-[0.25em] text-white/30">Empty</span>
@@ -3176,7 +3251,7 @@
       );
     };
 
-    const CharacterItemModal = ({ item, kindLabel, selected, onClose, onToggle, originRect }) => {
+    const CharacterItemModal = ({ item, kind, kindLabel, selected, onClose, onToggle, originRect }) => {
       const [entered, setEntered] = useState(false);
       const panelRef = useRef(null);
       const { ageInfo, remaining: dataChips } = useMemo(
@@ -3256,15 +3331,20 @@
         <div
           ref={panelRef}
           style={panelStyle}
-          className="w-full max-w-4xl bg-[#13131a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+          className="w-full max-w-[560px] aspect-[3/4] max-h-[86vh] bg-[#13131a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
         >
-          <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.2fr]">
-            <div className="relative bg-black/50">
-              <div className="aspect-[3/4] md:h-full">
-                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-              </div>
+          <div className="relative w-full h-full">
+            <div className="absolute inset-0 pointer-events-none">
+              <CharacterItemImage
+                item={item}
+                kind={kind}
+                alt={item.name}
+                className="w-full h-full object-cover scale-105 contrast-[0.85]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95"></div>
             </div>
-            <div className="p-6 flex flex-col gap-4">
+
+            <div className="relative z-10 h-full overflow-y-auto custom-scrollbar p-6 flex flex-col gap-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">{kindLabel}</div>
@@ -3275,33 +3355,45 @@
                 </button>
               </div>
               <p className="text-sm leading-relaxed text-white/70">{item.description}</p>
-              {item.bonuses?.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Bonuses</div>
-                  <BonusChips bonuses={item.bonuses} />
-                </div>
-              )}
-              {item.traits?.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Racial Abilities</div>
-                  <TraitChips traits={item.traits} />
-                </div>
-              )}
-              {ageInfo.length > 0 && (
-                <div className="flex flex-col gap-2">
+              <div className="mt-auto flex flex-col gap-3">
+                {item.bonuses?.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Bonuses</div>
+                    <BonusChips bonuses={item.bonuses} />
+                  </div>
+                )}
+                {item.traits?.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {item.traits.map((trait) => (
+                      <span
+                        key={trait}
+                        className="px-4 py-2.5 rounded-2xl border border-white/25 bg-white/14 backdrop-blur-md text-[13px] font-semibold tracking-[0.04em] text-white shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                      >
+                        {trait}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {ageInfo.length > 0 && (
                   <div className="text-sm text-white/75 leading-relaxed">{ageInfo.join(" ")}</div>
-                </div>
-              )}
-              {dataChips.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <div className="text-[10px] uppercase tracking-[0.24em] text-white/45">Class Data</div>
-                  <TraitChips traits={dataChips} />
-                </div>
-              )}
+                )}
+                {dataChips.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {dataChips.map((chip) => (
+                      <span
+                        key={chip}
+                        className="px-3 py-2 rounded-2xl border border-cyan-200/35 bg-cyan-300/15 text-[12px] font-semibold tracking-[0.04em] text-cyan-50 shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                      >
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={onToggle}
-                className={`mt-auto px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] font-semibold transition ${
+                className={`px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] font-semibold transition ${
                   selected
                     ? "border-pink-400 bg-pink-500/20 text-pink-100"
                     : "border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:bg-white/10"
@@ -3316,7 +3408,7 @@
     );
     };
 
-    const VerticalCompareSpinner = ({ title, items, onActiveChange }) => {
+    const VerticalCompareSpinner = ({ title, items, onActiveChange, kind }) => {
       const containerRef = useRef(null);
       const [activeIndex, setActiveIndex] = useState(0);
 
@@ -3380,7 +3472,13 @@
                   >
                     <div className="grid grid-cols-[76px_1fr] items-center gap-3 p-2 bg-white/[0.03]">
                       <div className="aspect-[3/4] rounded-lg overflow-hidden border border-white/10">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+                        <CharacterItemImage
+                          item={item}
+                          kind={kind}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
                       </div>
                       <div className="text-sm font-semibold text-white/90 leading-tight">{item.name}</div>
                     </div>
@@ -3411,27 +3509,35 @@
       const [activeClass, setActiveClass] = useState(null);
       const dataFileInputRef = useRef(null);
 
+      const applyCharacterData = (data) => {
+        if (!data || !Array.isArray(data.races) || !Array.isArray(data.classes)) {
+          throw new Error("Invalid character JSON: expected { races: [], classes: [] }.");
+        }
+        setRaces(validateCharacterItems(data.races, "races"));
+        setClasses(validateCharacterItems(data.classes, "classes"));
+      };
+
       const loadData = async () => {
         setIsLoading(true);
         setLoadError("");
-        if (isFileProtocol) {
-          setIsLoading(false);
-          setLoadError("Local file mode blocks fetch. Import the combined character JSON below or run a local server.");
-          return;
-        }
         try {
+          const bundledData = window[CHARACTER_FORGE_DATA_GLOBAL_KEY];
+          if (bundledData) {
+            applyCharacterData(bundledData);
+            return;
+          }
+
+          if (isFileProtocol) {
+            throw new Error("Could not load character data script. Ensure data/wow-character-options.js exists and is linked in index.html.");
+          }
+
           const response = await fetch(CHARACTER_FORGE_DATA_FILE);
           if (!response.ok) {
             throw new Error("Could not load character data JSON.");
           }
 
           const data = await response.json();
-          if (!data || !Array.isArray(data.races) || !Array.isArray(data.classes)) {
-            throw new Error("Invalid character JSON: expected { races: [], classes: [] }.");
-          }
-
-          setRaces(validateCharacterItems(data.races, "races"));
-          setClasses(validateCharacterItems(data.classes, "classes"));
+          applyCharacterData(data);
         } catch (err) {
           setLoadError(err.message || "Failed to load character data.");
         } finally {
@@ -3447,11 +3553,7 @@
           try {
             const text = typeof reader.result === "string" ? reader.result : "";
             const parsed = JSON.parse(text);
-            if (!parsed || !Array.isArray(parsed.races) || !Array.isArray(parsed.classes)) {
-              throw new Error("Invalid character JSON: expected { races: [], classes: [] }.");
-            }
-            setRaces(validateCharacterItems(parsed.races, "races"));
-            setClasses(validateCharacterItems(parsed.classes, "classes"));
+            applyCharacterData(parsed);
             if (dataFileInputRef.current) dataFileInputRef.current.value = "";
             setLoadError("");
           } catch (err) {
@@ -3514,7 +3616,7 @@
       };
 
       const renderLoadingSkeleton = () => (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
           {Array.from({ length: 10 }).map((_, idx) => (
             <div key={`skeleton-${idx}`} className="aspect-[3/4] rounded-2xl border border-white/10 bg-white/5 animate-pulse"></div>
           ))}
@@ -3568,8 +3670,8 @@
         return (
           <div className="flex flex-col gap-5">
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              <VerticalCompareSpinner title="Races" items={selectedRaces} onActiveChange={setActiveRace} />
-              <VerticalCompareSpinner title="Classes" items={selectedClasses} onActiveChange={setActiveClass} />
+              <VerticalCompareSpinner title="Races" items={selectedRaces} onActiveChange={setActiveRace} kind="race" />
+              <VerticalCompareSpinner title="Classes" items={selectedClasses} onActiveChange={setActiveClass} kind="class" />
             </div>
             <div className="px-1 flex flex-col gap-3">
               <div className="text-lg md:text-xl font-semibold text-white/95">{comboName}</div>
@@ -3598,23 +3700,31 @@
         );
       };
 
+      const canOpenCompare = selectedRaceIds.length > 0 && selectedClassIds.length > 0;
+
       return (
         <div className="flex flex-col gap-6">
-          <div className="flex flex-wrap items-center justify-center gap-5">
-            {CHARACTER_FORGE_STEPS.map((step) => (
-              <button
-                key={step.id}
-                type="button"
-                onClick={() => setActiveStep(step.id)}
-                className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border transition-all ${
-                  activeStep === step.id
-                    ? "bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-105"
-                    : "bg-white/5 text-white/40 border-transparent hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {step.label}
-              </button>
-            ))}
+          <div className="sticky top-0 z-20 -mx-2 px-2 py-3 mb-1 flex flex-wrap items-center justify-center gap-5">
+            {CHARACTER_FORGE_STEPS.map((step) => {
+              const isCompareDisabled = step.id === "compare" && !canOpenCompare;
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  disabled={isCompareDisabled}
+                  onClick={() => setActiveStep(step.id)}
+                  className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border backdrop-blur-xl transition-all ${
+                    isCompareDisabled
+                      ? "bg-black/20 text-white/20 border-transparent cursor-not-allowed"
+                      : activeStep === step.id
+                        ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)] scale-105"
+                        : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
+                  }`}
+                >
+                  {step.label}
+                </button>
+              );
+            })}
           </div>
 
           <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow">
@@ -3693,6 +3803,7 @@
           {modalState && (
             <CharacterItemModal
               item={modalState.item}
+              kind={modalState.kind}
               kindLabel={modalState.kind === "race" ? "Race" : "Class"}
               selected={
                 modalState.kind === "race"
