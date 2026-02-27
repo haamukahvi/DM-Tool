@@ -75,6 +75,17 @@
       scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
 
+    .compare-scroll-hidden {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .compare-scroll-hidden::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
     @keyframes fade-in-up {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -242,13 +253,13 @@
     );
 
     const NAV_ITEMS = [
-      { id: "ambience", label: "Ambience", icon: Music },
-      { id: "loot", label: "Loot Roller", icon: Dice },
-      { id: "surge", label: "Arcane Surge", icon: Sparkles },
-      { id: "notes", label: "Notes", icon: FileText },
-      { id: "background", label: "Background", icon: ImageIcon },
-      { id: "portrait", label: "Portrait", icon: ImageIcon },
-      { id: "character-forge", label: "Character Forge", icon: Sparkles }
+      { id: "ambience", label: "Ambience" },
+      { id: "loot", label: "Loot Roller" },
+      { id: "surge", label: "Arcane Surge" },
+      { id: "notes", label: "Notes" },
+      { id: "background", label: "Background" },
+      { id: "portrait", label: "Portrait" },
+      { id: "character-forge", label: "Character"}
     ];
 
     const AMBIENCE_TRACKS = [
@@ -540,7 +551,7 @@
           </button>
 
           {isSidebarOpen && (
-            <aside className="w-64 bg-[#0d0d14]/90 border-r border-white/5 p-6 flex flex-col gap-8">
+            <aside className="w-64 bg-[#0d0d14]/90 border-r border-white/5 px-6 pb-6 pt-20 flex flex-col gap-8">
               <nav className="flex flex-col gap-2">
                 {NAV_ITEMS.map((item) => {
                   const isActive = item.id === activeView;
@@ -585,7 +596,7 @@
                 <PortraitPanel />
               </div>
               <div className={activeView === "character-forge" ? "block" : "hidden"}>
-                <CharacterForgePanel />
+                <CharacterForgePanel isVisible={activeView === "character-forge"} />
               </div>
             </div>
           </main>
@@ -2935,6 +2946,74 @@
       );
     };
 
+    const QuickFadeCharacterImage = ({ item, kind, className = "" }) => {
+      const [currentItem, setCurrentItem] = useState(item || null);
+      const [previousItem, setPreviousItem] = useState(null);
+      const [showCurrent, setShowCurrent] = useState(true);
+      const rafRef = useRef(null);
+      const cleanupTimeoutRef = useRef(null);
+
+      useEffect(() => {
+        return () => {
+          if (rafRef.current) cancelAnimationFrame(rafRef.current);
+          if (cleanupTimeoutRef.current) clearTimeout(cleanupTimeoutRef.current);
+        };
+      }, []);
+
+      useEffect(() => {
+        const next = item || null;
+
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        if (cleanupTimeoutRef.current) clearTimeout(cleanupTimeoutRef.current);
+
+        setCurrentItem((prevCurrent) => {
+          if (!next) {
+            setPreviousItem(null);
+            setShowCurrent(true);
+            return null;
+          }
+          if (!prevCurrent) {
+            setPreviousItem(null);
+            setShowCurrent(true);
+            return next;
+          }
+          if (prevCurrent.id === next.id) return prevCurrent;
+
+          // Restart fade on every target update, including mid-transition changes.
+          setPreviousItem(prevCurrent);
+          setShowCurrent(false);
+          rafRef.current = requestAnimationFrame(() => setShowCurrent(true));
+          cleanupTimeoutRef.current = setTimeout(() => setPreviousItem(null), 260);
+          return next;
+        });
+      }, [item?.id, kind]);
+
+      return (
+        <div className={`relative w-full h-full ${className}`}>
+          {previousItem && (
+            <CharacterItemImage
+              item={previousItem}
+              kind={kind}
+              alt={previousItem.name}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${showCurrent ? "opacity-0" : "opacity-100"}`}
+              loading="lazy"
+            />
+          )}
+          {currentItem && (
+            <CharacterItemImage
+              item={currentItem}
+              kind={kind}
+              alt={currentItem.name}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
+                previousItem ? (showCurrent ? "opacity-100" : "opacity-0") : "opacity-100"
+              }`}
+              loading="lazy"
+            />
+          )}
+        </div>
+      );
+    };
+
     const getBonusPrefix = (value) => {
       if (value === 1) return "+";
       if (value === 2) return "++";
@@ -3187,7 +3266,7 @@
                   if (hasChildren) return;
                   onToggleItem(item.id);
                 }}
-                className={`absolute top-2 right-2 px-4 py-1.5 rounded-full text-[13px] uppercase tracking-[0.2em] font-bold border transition ${
+                className={`absolute top-2 right-2 px-4 py-1.5 rounded-full text-[13px] uppercase tracking-[0.2em] font-bold border backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition ${
                   selected
                     ? "bg-pink-500/90 border-pink-300/70 text-white"
                     : "bg-black/30 border-white/40 text-white/90 opacity-0 group-hover:opacity-100 focus:opacity-100"
@@ -3347,8 +3426,7 @@
             <div className="relative z-10 h-full overflow-y-auto custom-scrollbar p-6 flex flex-col gap-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">{kindLabel}</div>
-                  <h3 className="text-2xl font-semibold text-white/95 mt-1">{item.name}</h3>
+                  <h3 className="text-2xl font-semibold text-white/95">{item.name}</h3>
                 </div>
                 <button type="button" onClick={onClose} className="text-white/40 hover:text-white transition-colors">
                   <X className="w-5 h-5" />
@@ -3393,7 +3471,7 @@
               <button
                 type="button"
                 onClick={onToggle}
-                className={`px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] font-semibold transition ${
+                className={`px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] font-semibold backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition ${
                   selected
                     ? "border-pink-400 bg-pink-500/20 text-pink-100"
                     : "border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:bg-white/10"
@@ -3408,18 +3486,64 @@
     );
     };
 
-    const VerticalCompareSpinner = ({ title, items, onActiveChange, kind }) => {
+    const VerticalCompareSpinner = ({ items, onActiveChange, onPreviewIdChange }) => {
       const containerRef = useRef(null);
       const [activeIndex, setActiveIndex] = useState(0);
+      const [spacerHeight, setSpacerHeight] = useState(160);
+      const scrollEndTimeoutRef = useRef(null);
+      const programmaticScrollTimeoutRef = useRef(null);
+      const isProgrammaticScrollRef = useRef(false);
+      const wheelStepTimeoutRef = useRef(null);
+
+      const measureSpacerHeight = () => {
+        const container = containerRef.current;
+        if (!container) return;
+        const firstCard = container.querySelector("[data-spinner-item='true']");
+        if (!firstCard) return;
+        const nextSpacer = Math.max(0, (container.clientHeight - firstCard.offsetHeight) / 2);
+        setSpacerHeight(nextSpacer);
+      };
+
+      const snapToIndex = (index, behavior = "smooth") => {
+        const container = containerRef.current;
+        if (!container) return;
+        const cards = Array.from(container.querySelectorAll("[data-spinner-item='true']"));
+        const target = cards[index];
+        if (!target) return;
+        const top = target.offsetTop - (container.clientHeight - target.offsetHeight) / 2;
+        isProgrammaticScrollRef.current = true;
+        container.scrollTo({ top: Math.max(0, top), behavior });
+        if (programmaticScrollTimeoutRef.current) clearTimeout(programmaticScrollTimeoutRef.current);
+        programmaticScrollTimeoutRef.current = setTimeout(() => {
+          isProgrammaticScrollRef.current = false;
+        }, behavior === "smooth" ? 260 : 30);
+      };
+
+      useEffect(() => {
+        return () => {
+          if (scrollEndTimeoutRef.current) clearTimeout(scrollEndTimeoutRef.current);
+          if (programmaticScrollTimeoutRef.current) clearTimeout(programmaticScrollTimeoutRef.current);
+          if (wheelStepTimeoutRef.current) clearTimeout(wheelStepTimeoutRef.current);
+        };
+      }, []);
 
       useEffect(() => {
         setActiveIndex(0);
+        if (onPreviewIdChange) onPreviewIdChange(items[0]?.id || null);
         requestAnimationFrame(() => {
-          if (containerRef.current) {
-            containerRef.current.scrollTo({ top: 0, behavior: "auto" });
-          }
+          measureSpacerHeight();
+          snapToIndex(0, "auto");
         });
-      }, [items]);
+      }, [items, onPreviewIdChange]);
+
+      useEffect(() => {
+        const onResize = () => {
+          measureSpacerHeight();
+          snapToIndex(activeIndex, "auto");
+        };
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+      }, [activeIndex]);
 
       useEffect(() => {
         if (!items.length) return;
@@ -3429,6 +3553,7 @@
       const updateActiveIndex = () => {
         const container = containerRef.current;
         if (!container) return;
+        if (isProgrammaticScrollRef.current) return;
         const cards = Array.from(container.querySelectorAll("[data-spinner-item='true']"));
         if (!cards.length) return;
         const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
@@ -3443,56 +3568,81 @@
             nearestIndex = index;
           }
         });
-        setActiveIndex(nearestIndex);
+        if (onPreviewIdChange) onPreviewIdChange(items[nearestIndex]?.id || null);
+
+        if (scrollEndTimeoutRef.current) clearTimeout(scrollEndTimeoutRef.current);
+        scrollEndTimeoutRef.current = setTimeout(() => {
+          setActiveIndex(nearestIndex);
+          snapToIndex(nearestIndex, "smooth");
+        }, 90);
+      };
+
+      const handleWheel = (event) => {
+        event.preventDefault();
+        if (!items.length) return;
+        if (wheelStepTimeoutRef.current) return;
+
+        const direction = event.deltaY > 0 ? 1 : event.deltaY < 0 ? -1 : 0;
+        if (!direction) return;
+
+        const nextIndex = Math.max(0, Math.min(items.length - 1, activeIndex + direction));
+        if (nextIndex === activeIndex) return;
+        setActiveIndex(nextIndex);
+        if (onPreviewIdChange) onPreviewIdChange(items[nextIndex]?.id || null);
+        snapToIndex(nextIndex, "smooth");
+
+        wheelStepTimeoutRef.current = setTimeout(() => {
+          wheelStepTimeoutRef.current = null;
+        }, 140);
       };
 
       return (
-        <div className="bg-black/30 border border-white/10 rounded-2xl p-4">
-          <div className="text-[11px] uppercase tracking-[0.25em] text-white/50 mb-3">{title}</div>
+        <div className="relative w-full max-w-[540px] mx-auto">
           <div
             ref={containerRef}
             onScroll={updateActiveIndex}
-            className="h-[430px] overflow-y-auto custom-scrollbar scroll-smooth snap-y snap-mandatory pr-1"
+            onWheel={handleWheel}
+            className="h-[clamp(220px,34vh,430px)] overflow-y-auto compare-scroll-hidden"
           >
-            <div className="h-[160px]"></div>
-            <div className="flex flex-col gap-3">
+            <div style={{ height: `${spacerHeight}px` }}></div>
+            <div className="flex flex-col gap-2">
               {items.map((item, index) => {
                 const isActive = index === activeIndex;
+                const distance = Math.abs(index - activeIndex);
+                const fadeDistance = 3;
+                const opacity = Math.max(0, 1 - (distance / fadeDistance));
+                const scale = Math.max(0.85, 1 - (distance * 0.04));
                 return (
                   <button
                     key={item.id}
                     type="button"
+                    tabIndex={-1}
                     data-spinner-item="true"
-                    onClick={(event) => event.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })}
-                    className={`w-full text-left snap-center rounded-2xl border overflow-hidden transition-all ${
-                      isActive
-                        ? "border-pink-400/80 shadow-[0_0_30px_rgba(236,72,153,0.2)]"
-                        : "border-white/10 opacity-70 hover:opacity-100"
-                    }`}
+                    onClick={() => {
+                      setActiveIndex(index);
+                      if (onPreviewIdChange) onPreviewIdChange(item.id);
+                      snapToIndex(index, "smooth");
+                    }}
+                    className="w-full h-14 px-1 text-center text-white transition-all duration-200 inline-flex items-center justify-center"
+                    style={{ opacity, transform: `scale(${scale})` }}
                   >
-                    <div className="grid grid-cols-[76px_1fr] items-center gap-3 p-2 bg-white/[0.03]">
-                      <div className="aspect-[3/4] rounded-lg overflow-hidden border border-white/10">
-                        <CharacterItemImage
-                          item={item}
-                          kind={kind}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="text-sm font-semibold text-white/90 leading-tight">{item.name}</div>
+                    <div className="inline-flex items-center gap-3">
+                      <span className={`text-[20px] md:text-[28px] font-semibold leading-none tracking-[0.03em] transition-colors ${isActive ? "text-white" : "text-inherit"}`}>
+                        {item.name}
+                      </span>
+                      {isActive && <span className="h-1.5 w-1.5 rounded-full bg-white/85"></span>}
                     </div>
                   </button>
                 );
               })}
             </div>
-            <div className="h-[160px]"></div>
+            <div style={{ height: `${spacerHeight}px` }}></div>
           </div>
         </div>
       );
     };
 
-    const CharacterForgePanel = () => {
+    const CharacterForgePanel = ({ isVisible = false }) => {
       const isFileProtocol = window.location.protocol === "file:";
       const [activeStep, setActiveStep] = useState(() => {
         const saved = localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.activeStep) || "races";
@@ -3507,6 +3657,8 @@
       const [modalState, setModalState] = useState(null);
       const [activeRace, setActiveRace] = useState(null);
       const [activeClass, setActiveClass] = useState(null);
+      const [previewRaceId, setPreviewRaceId] = useState(null);
+      const [previewClassId, setPreviewClassId] = useState(null);
       const dataFileInputRef = useRef(null);
 
       const applyCharacterData = (data) => {
@@ -3583,6 +3735,18 @@
       }, [selectedClassIds]);
 
       useEffect(() => {
+        const mainEl = document.querySelector("main");
+        if (!mainEl) return;
+        const previousOverflow = mainEl.style.overflowY;
+        if (isVisible && activeStep === "compare") {
+          mainEl.style.overflowY = "hidden";
+        }
+        return () => {
+          mainEl.style.overflowY = previousOverflow;
+        };
+      }, [isVisible, activeStep]);
+
+      useEffect(() => {
         if (!races.length) return;
         const validIds = getSelectableCharacterIds(races);
         setSelectedRaceIds((prev) => prev.filter((id) => validIds.has(id)));
@@ -3602,6 +3766,32 @@
         const validIds = getSelectableCharacterIds(classes);
         return classes.filter((item) => validIds.has(item.id) && selectedClassIds.includes(item.id));
       }, [classes, selectedClassIds]);
+
+      const compareRace = activeRace || selectedRaces[0] || null;
+      const compareClass = activeClass || selectedClasses[0] || null;
+      const previewRace = selectedRaces.find((item) => item.id === previewRaceId) || null;
+      const previewClass = selectedClasses.find((item) => item.id === previewClassId) || null;
+      const backgroundRace = previewRace || compareRace;
+      const backgroundClass = previewClass || compareClass;
+
+      useEffect(() => {
+        if (previewRaceId && !selectedRaces.some((item) => item.id === previewRaceId)) {
+          setPreviewRaceId(null);
+        }
+      }, [selectedRaces, previewRaceId]);
+
+      useEffect(() => {
+        if (previewClassId && !selectedClasses.some((item) => item.id === previewClassId)) {
+          setPreviewClassId(null);
+        }
+      }, [selectedClasses, previewClassId]);
+
+      useEffect(() => {
+        if (activeStep !== "compare") {
+          setPreviewRaceId(null);
+          setPreviewClassId(null);
+        }
+      }, [activeStep]);
 
       const toggleSelection = (kind, itemId) => {
         const sourceItems = kind === "race" ? races : classes;
@@ -3650,60 +3840,112 @@
           );
         }
 
-        const currentRace = activeRace || selectedRaces[0] || null;
-        const currentClass = activeClass || selectedClasses[0] || null;
-        const comboName = [currentRace?.name, currentClass?.name].filter(Boolean).join(" ");
+        const comboName = [compareRace?.name, compareClass?.name].filter(Boolean).join(" ");
         const comboBonuses = mergeBonuses([
-          currentRace?.bonuses || [],
-          currentClass?.bonuses || []
+          compareRace?.bonuses || [],
+          compareClass?.bonuses || []
         ]);
         const comboTraits = mergeTraits([
-          currentRace?.traits || [],
-          currentClass?.traits || []
+          compareRace?.traits || [],
+          compareClass?.traits || []
         ]);
         const comboDataChips = mergeDataChips([
-          currentRace?.dataChips || [],
-          currentClass?.dataChips || []
+          compareRace?.dataChips || [],
+          compareClass?.dataChips || []
         ]);
         const { ageInfo: comboAgeInfo, remaining: comboChips } = extractAgeInfoFromChips(comboDataChips);
 
         return (
-          <div className="flex flex-col gap-5">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              <VerticalCompareSpinner title="Races" items={selectedRaces} onActiveChange={setActiveRace} kind="race" />
-              <VerticalCompareSpinner title="Classes" items={selectedClasses} onActiveChange={setActiveClass} kind="class" />
-            </div>
-            <div className="px-1 flex flex-col gap-3">
-              <div className="text-lg md:text-xl font-semibold text-white/95">{comboName}</div>
-              {comboBonuses.length > 0 ? (
-                <BonusChips bonuses={comboBonuses} />
-              ) : (
-                <div className="text-sm text-white/45">No bonuses defined for this combination yet.</div>
-              )}
-              {comboTraits.length > 0 && (
-                <div className="pt-1">
-                  <TraitChips traits={comboTraits} />
+          <div className="relative h-[calc(100vh-220px)] min-h-[560px] max-h-[840px]">
+            <div className="relative z-10 h-full p-4 md:p-8 flex flex-col gap-4 md:gap-6">
+              <div className="flex-1 min-h-0 grid place-items-start">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-10 items-start max-w-7xl mx-auto w-full">
+                  <VerticalCompareSpinner
+                    items={selectedRaces}
+                    onActiveChange={setActiveRace}
+                    onPreviewIdChange={setPreviewRaceId}
+                  />
+                  <VerticalCompareSpinner
+                    items={selectedClasses}
+                    onActiveChange={setActiveClass}
+                    onPreviewIdChange={setPreviewClassId}
+                  />
                 </div>
-              )}
-              {comboAgeInfo.length > 0 && (
-                <div className="pt-1 text-sm text-white/75 leading-relaxed">
-                  {comboAgeInfo.join(" ")}
+              </div>
+
+              <div className="mt-auto w-full max-w-7xl mx-auto px-3 md:px-10 pb-2 md:pb-4">
+                <div className="rounded-2xl bg-black/35 backdrop-blur-md p-4 md:p-6 flex flex-col gap-3">
+                  <div className="text-lg md:text-2xl font-semibold text-white/95">{comboName}</div>
+                  {comboBonuses.length > 0 ? (
+                    <BonusChips bonuses={comboBonuses} />
+                  ) : (
+                    <div className="text-sm text-white/50">No bonuses defined for this combination yet.</div>
+                  )}
+                  {comboTraits.length > 0 && (
+                    <div className="pt-1">
+                      <TraitChips traits={comboTraits} />
+                    </div>
+                  )}
+                  {comboAgeInfo.length > 0 && (
+                    <div className="pt-1 text-sm text-white/75 leading-relaxed">
+                      {comboAgeInfo.join(" ")}
+                    </div>
+                  )}
+                  {comboChips.length > 0 && (
+                    <div className="pt-1">
+                      <TraitChips traits={comboChips} />
+                    </div>
+                  )}
                 </div>
-              )}
-              {comboChips.length > 0 && (
-                <div className="pt-1">
-                  <TraitChips traits={comboChips} />
-                </div>
-              )}
+              </div>
             </div>
           </div>
         );
       };
 
       const canOpenCompare = selectedRaceIds.length > 0 && selectedClassIds.length > 0;
+      const isCompareActiveView = !isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "compare";
 
       return (
-        <div className="flex flex-col gap-6">
+        <div className="relative flex flex-col gap-6">
+          {isCompareActiveView && (
+            <div className="absolute -inset-x-6 -inset-y-6 lg:-inset-x-10 lg:-inset-y-10 z-0 pointer-events-none">
+              <div className="absolute inset-0">
+                <div
+                  className="absolute inset-y-0 left-0 w-[56%]"
+                  style={{
+                    WebkitMaskImage: "linear-gradient(to right, black 74%, transparent 100%)",
+                    maskImage: "linear-gradient(to right, black 74%, transparent 100%)"
+                  }}
+                >
+                  {backgroundRace && (
+                    <QuickFadeCharacterImage
+                      item={backgroundRace}
+                      kind="race"
+                      className="absolute inset-0 w-full h-full object-left contrast-[0.8] brightness-[0.72] saturate-[0.9]"
+                    />
+                  )}
+                </div>
+                <div
+                  className="absolute inset-y-0 right-0 w-[56%]"
+                  style={{
+                    WebkitMaskImage: "linear-gradient(to left, black 74%, transparent 100%)",
+                    maskImage: "linear-gradient(to left, black 74%, transparent 100%)"
+                  }}
+                >
+                  {backgroundClass && (
+                    <QuickFadeCharacterImage
+                      item={backgroundClass}
+                      kind="class"
+                      className="absolute inset-0 w-full h-full object-right contrast-[0.8] brightness-[0.72] saturate-[0.9]"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="absolute inset-0 bg-black/35"></div>
+            </div>
+          )}
+
           <div className="sticky top-0 z-20 -mx-2 px-2 py-3 mb-1 flex flex-wrap items-center justify-center gap-5">
             {CHARACTER_FORGE_STEPS.map((step) => {
               const isCompareDisabled = step.id === "compare" && !canOpenCompare;
@@ -3727,7 +3969,7 @@
             })}
           </div>
 
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow">
+          <div className={isCompareActiveView ? "" : "bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow"}>
             <input
               ref={dataFileInputRef}
               type="file"
