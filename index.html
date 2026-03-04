@@ -86,6 +86,17 @@
       height: 0;
     }
 
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
     @keyframes fade-in-up {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -527,12 +538,15 @@
       selectedRaceIds: "character_forge_selected_race_ids",
       selectedClassIds: "character_forge_selected_class_ids",
       selectedBackgroundId: "character_forge_selected_background_id",
+      selectedWeaponId: "character_forge_selected_weapon_id",
       activeStep: "character_forge_active_step"
     };
     const CHARACTER_FORGE_STEPS = [
       { id: "races", label: "Races" },
       { id: "classes", label: "Classes" },
-      { id: "compare", label: "Compare" }
+      { id: "background", label: "Background" },
+      { id: "weapon", label: "Weapon" },
+      { id: "compare", label: "Finalize" }
     ];
     const CHARACTER_FORGE_DATA_FILE = "data/wow-character-options.json";
     const CHARACTER_FORGE_DATA_GLOBAL_KEY = "WOW_CHARACTER_OPTIONS";
@@ -541,7 +555,7 @@
       const [activeView, setActiveView] = useState(() => localStorage.getItem("dm_dashboard_view") || "ambience");
       const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
         const saved = localStorage.getItem("dm_sidebar_open");
-        return saved === null ? true : saved === "true";
+        return saved === null ? false : saved === "true";
       });
 
       useEffect(() => {
@@ -553,26 +567,36 @@
       }, [isSidebarOpen]);
 
       return (
-        <div className="min-h-screen flex ambient-bg">
+        <div className="min-h-screen ambient-bg">
           <button
             type="button"
             onClick={() => setIsSidebarOpen((prev) => !prev)}
-            className="fixed top-4 left-4 z-40 h-10 w-10 rounded-xl border border-white/15 bg-[#0d0d14]/90 hover:bg-[#171723] text-white/80 hover:text-white transition inline-flex items-center justify-center"
+            className="fixed top-4 left-4 z-50 h-10 w-10 rounded-xl border border-white/15 bg-[#0d0d14]/90 hover:bg-[#171723] text-white/80 hover:text-white transition inline-flex items-center justify-center"
             aria-label={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
             title={isSidebarOpen ? "Hide sidebar" : "Show sidebar"}
           >
             <ChevronDown className={`w-4 h-4 transition-transform ${isSidebarOpen ? "rotate-90" : "-rotate-90"}`} />
           </button>
 
-          {isSidebarOpen && (
-            <aside className="w-64 bg-[#0d0d14]/90 border-r border-white/5 px-6 pb-6 pt-20 flex flex-col gap-8">
+          <div
+            className={`fixed inset-0 z-30 bg-black/55 backdrop-blur-sm transition-opacity duration-200 ${isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+            onClick={() => setIsSidebarOpen(false)}
+            aria-hidden={!isSidebarOpen}
+          />
+
+          <aside
+            className={`fixed inset-y-0 left-0 z-40 w-[min(18rem,84vw)] bg-[#0d0d14]/95 border-r border-white/10 px-6 pb-6 pt-20 flex flex-col gap-8 overflow-y-auto transition-transform duration-250 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
               <nav className="flex flex-col gap-2">
                 {NAV_ITEMS.map((item) => {
                   const isActive = item.id === activeView;
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setActiveView(item.id)}
+                      onClick={() => {
+                        setActiveView(item.id);
+                        setIsSidebarOpen(false);
+                      }}
                       className={`w-full text-left px-4 py-3 rounded-xl border transition-all text-sm ${
                         isActive
                           ? "bg-white text-black border-white shadow-lg shadow-white/10"
@@ -586,10 +610,9 @@
               </nav>
 
               <HpTracker />
-            </aside>
-          )}
+          </aside>
 
-          <main className="flex-1 h-screen overflow-y-auto">
+          <main className="h-screen overflow-y-auto">
             <div className="p-6 lg:p-10">
               <div className={activeView === "ambience" ? "block" : "hidden"}>
                 <AmbiencePanel />
@@ -609,7 +632,7 @@
               <div className={activeView === "portrait" ? "block" : "hidden"}>
                 <PortraitPanel />
               </div>
-              <div className={activeView === "character-forge" ? "block" : "hidden"}>
+              <div className={activeView === "character-forge" ? "block -mx-6 lg:mx-0" : "hidden"}>
                 <CharacterForgePanel isVisible={activeView === "character-forge"} />
               </div>
             </div>
@@ -3021,6 +3044,15 @@
               .filter(Boolean)
           : [];
         const startingMoney = typeof raw?.startingMoney === "string" ? raw.startingMoney.trim() : "";
+        const isAdditional = raw?.isAdditional === true;
+        const linkChipRaw = raw?.linkChip;
+        const linkChip =
+          linkChipRaw && typeof linkChipRaw === "object" && !Array.isArray(linkChipRaw)
+            ? {
+                label: typeof linkChipRaw.label === "string" ? linkChipRaw.label.trim() : "",
+                url: typeof linkChipRaw.url === "string" ? linkChipRaw.url.trim() : "",
+              }
+            : null;
 
         if (!id || !name || !description) {
           throw new Error("Invalid background item: required fields are id, name, description.");
@@ -3037,12 +3069,68 @@
           proficiencies: { skills, tools },
           languages,
           equipment,
-          startingMoney
+          startingMoney,
+          isAdditional,
+          linkChip: linkChip?.url ? linkChip : null,
         };
       });
     };
 
-    const CHARACTER_LOCAL_IMAGE_EXTENSIONS = ["webp", "png", "jpg", "jpeg"];
+    const validateWeaponItems = (rawItems) => {
+      if (rawItems === undefined) return [];
+      if (!Array.isArray(rawItems)) {
+        throw new Error("Invalid weapons JSON: expected an array.");
+      }
+
+      const normalizeWeaponTags = (rawTags) => {
+        const cleaned = rawTags
+          .map((entry) => (typeof entry === "string" ? entry.trim() : ""))
+          .filter(Boolean);
+        const versatileRegex = /^versatile\s*\(([^)]+)\)$/i;
+        const baseDamageRegex = /^\d+d\d+$/i;
+        const loadingRegex = /^loading$/i;
+
+        let versatileDamage = null;
+        const withoutVersatile = cleaned.filter((tag) => {
+          if (loadingRegex.test(tag)) return false;
+          const match = tag.match(versatileRegex);
+          if (!match) return true;
+          if (!versatileDamage) versatileDamage = match[1].trim();
+          return false;
+        });
+
+        if (!versatileDamage) return withoutVersatile;
+
+        const damageIndex = withoutVersatile.findIndex((tag) => baseDamageRegex.test(tag));
+        if (damageIndex >= 0) {
+          withoutVersatile[damageIndex] = `${withoutVersatile[damageIndex]} / ${versatileDamage}`;
+        } else {
+          withoutVersatile.unshift(versatileDamage);
+        }
+
+        return withoutVersatile;
+      };
+
+      const idSet = new Set();
+      return rawItems.map((raw) => {
+        const id = typeof raw?.id === "string" ? raw.id.trim() : "";
+        const name = typeof raw?.name === "string" ? raw.name.trim() : "";
+        const image = typeof raw?.image === "string" ? raw.image.trim() : "";
+        const tags = Array.isArray(raw?.tags) ? normalizeWeaponTags(raw.tags) : [];
+
+        if (!id || !name || !image) {
+          throw new Error("Invalid weapon item: required fields are id, name, image.");
+        }
+        if (idSet.has(id)) {
+          throw new Error(`Duplicate weapon id "${id}" in dataset.`);
+        }
+        idSet.add(id);
+
+        return { id, name, image, tags };
+      });
+    };
+
+    const CHARACTER_LOCAL_IMAGE_EXTENSIONS = ["png"];
 
     const getCharacterImageCandidates = (item, kind) => {
       const fallback = typeof item?.image === "string" ? item.image.trim() : "";
@@ -3463,7 +3551,7 @@
       );
     };
 
-    const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem }) => {
+    const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem, onDeselectItems }) => {
       const [expandedParentIds, setExpandedParentIds] = useState(() => new Set());
       const isRaceSelector = title.toLowerCase().includes("race");
       const useParentGrouping = !isRaceSelector;
@@ -3557,6 +3645,12 @@
       const renderCard = (item, index = 0) => {
         const selected = selectedIds.includes(item.id);
         const hasChildren = useParentGrouping && !item.parentId && (childrenByParent.get(item.id)?.length || 0) > 0;
+        const childVariants = hasChildren ? (childrenByParent.get(item.id) || []) : [];
+        const selectedChildIds = hasChildren
+          ? childVariants.filter((child) => selectedIds.includes(child.id)).map((child) => child.id)
+          : [];
+        const selectedChildCount = selectedChildIds.length;
+        const hasSelectedChildren = selectedChildCount > 0;
         const isExpanded = hasChildren && expandedParentIds.has(item.id);
         const staggerDelayMs = Math.min(index, 24) * 35;
 
@@ -3586,7 +3680,7 @@
             role="button"
             tabIndex={0}
             className={`group text-left rounded-2xl border overflow-hidden transition-all animate-fade-in-up ${
-              selected
+              selected || hasSelectedChildren
                 ? "border-pink-400/80 shadow-[0_0_25px_rgba(236,72,153,0.25)]"
                 : "border-white/10 hover:border-white/30"
             }`}
@@ -3600,7 +3694,7 @@
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
+              <div className="absolute inset-x-0 bottom-0 h-[34%] bg-gradient-to-t from-black/50 via-black/12 to-transparent"></div>
               <button
                 type="button"
                 onClick={(event) => {
@@ -3608,7 +3702,7 @@
                   if (hasChildren) return;
                   onToggleItem(item.id);
                 }}
-                className={`absolute top-2 right-2 px-4 py-1.5 rounded-full text-[13px] uppercase tracking-[0.2em] font-bold border backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition ${
+                className={`absolute top-1.5 right-1.5 md:top-2 md:right-2 px-2.5 md:px-4 py-1 md:py-1.5 rounded-full text-[9px] md:text-[13px] uppercase tracking-[0.12em] md:tracking-[0.2em] font-bold border backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition ${
                   selected
                     ? "bg-pink-500/90 border-pink-300/70 text-white"
                     : "bg-black/30 border-white/40 text-white/90 opacity-0 group-hover:opacity-100 focus:opacity-100"
@@ -3616,13 +3710,30 @@
               >
                 {selected ? "Selected" : "Select"}
               </button>
+              {hasSelectedChildren && (
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onDeselectItems?.(selectedChildIds);
+                  }}
+                  className="absolute top-1.5 right-1.5 md:top-2 md:right-2 px-2.5 md:px-4 py-1 md:py-1.5 rounded-full text-[9px] md:text-[13px] uppercase tracking-[0.12em] md:tracking-[0.2em] font-bold border backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition bg-pink-500/90 border-pink-300/70 text-white hover:bg-pink-400"
+                >
+                  {selectedChildCount} Selected
+                </button>
+              )}
               {hasChildren && (
-                <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white/90 border border-white/80 shadow-[0_8px_24px_rgba(255,255,255,0.18)] inline-flex items-center justify-center">
-                  <ChevronDown className={`w-4 h-4 text-black transition-transform ${isExpanded ? "rotate-90" : "-rotate-90"}`} />
+                <div className="absolute bottom-1.5 right-1.5 md:bottom-2 md:right-2 w-[10px] h-[10px] md:w-8 md:h-8 rounded-full bg-white/90 border border-white/80 shadow-[0_8px_24px_rgba(255,255,255,0.18)] inline-flex items-center justify-center">
+                  <ChevronDown className={`w-1.5 h-1.5 md:w-4 md:h-4 text-black transition-transform ${isExpanded ? "rotate-90" : "-rotate-90"}`} />
                 </div>
               )}
               <div className="absolute inset-x-0 bottom-0 p-3">
-                <div className="text-sm font-semibold text-white">{item.name}</div>
+                <div className="text-[12px] sm:text-base md:text-xl font-semibold leading-tight text-white">{item.name}</div>
+                {hasSelectedChildren && (
+                  <div className="mt-1 text-[10px] md:text-[13px] font-semibold uppercase tracking-[0.12em] md:tracking-[0.16em] text-pink-200/90">
+                    {selectedChildCount} selected
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -3630,7 +3741,7 @@
       };
 
       return (
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 px-4 sm:px-0">
           <div className="text-xs uppercase tracking-[0.3em] text-white/50">
             {title}
           </div>
@@ -3638,7 +3749,7 @@
           {orderedItems.length === 0 ? (
             <div className="text-sm text-white/40">No entries found.</div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-3">
               {orderedItems.map((item, idx) => renderCard(item, idx))}
             </div>
           )}
@@ -3646,11 +3757,11 @@
           <div className="pt-2 flex flex-col gap-3">
             <div className="text-xs uppercase tracking-[0.3em] text-white/45">{additionalLabel}</div>
             {additionalItems.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-3">
                 {orderedAdditionalItems.map((item, idx) => renderCard(item, orderedItems.length + idx))}
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-3">
                 {additionalPlaceholders.map((box, idx) => (
                   <div
                     key={box.id}
@@ -3742,7 +3853,7 @@
 
       return (
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-200 ${entered ? "bg-black/80 opacity-100" : "bg-black/0 opacity-0"}`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm transition-opacity duration-200 ${entered ? "bg-black/80 opacity-100" : "bg-black/0 opacity-0"}`}
         onMouseDown={(event) => {
           if (event.target === event.currentTarget) onClose();
         }}
@@ -3750,7 +3861,7 @@
         <div
           ref={panelRef}
           style={panelStyle}
-          className="w-full max-w-[560px] aspect-[3/4] max-h-[86vh] bg-[#13131a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+          className="w-full max-w-[560px] h-[88vh] sm:h-auto sm:aspect-[3/4] sm:max-h-[86vh] bg-[#13131a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
         >
           <div className="relative w-full h-full">
             <div className="absolute inset-0 pointer-events-none">
@@ -3763,7 +3874,7 @@
               <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/95"></div>
             </div>
 
-            <div className="relative z-10 h-full overflow-y-auto custom-scrollbar p-6 flex flex-col gap-4">
+            <div className="relative z-10 h-full overflow-hidden p-4 sm:p-6 flex flex-col gap-3 sm:gap-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                   <h3 className="text-2xl font-semibold text-white/95">{item.name}</h3>
@@ -4036,7 +4147,7 @@
       };
 
       return (
-        <div className="relative w-full max-w-[540px] mx-auto">
+        <div className="relative w-full max-w-none mx-auto">
           <div
             ref={containerRef}
             onScroll={updateActiveIndex}
@@ -4058,7 +4169,7 @@
                     className="w-full h-14 px-1"
                     style={{ opacity, transform: `scale(${scale})` }}
                   >
-                    <div className="group/compare-row relative w-full max-w-[420px] h-full mx-auto">
+                    <div className="group/compare-row relative w-full max-w-none h-full mx-auto">
                       <button
                         type="button"
                         tabIndex={-1}
@@ -4070,7 +4181,7 @@
                         className="w-full h-full text-center text-white transition-all duration-200 inline-flex items-center justify-center"
                       >
                         <div className="flex items-center justify-center gap-3">
-                          <span className={`text-[20px] md:text-[28px] font-semibold leading-none tracking-[0.03em] transition-colors ${isActive ? "text-white" : "text-inherit"}`}>
+                          <span className={`text-[14px] md:text-[28px] font-semibold leading-none tracking-[0.03em] transition-colors ${isActive ? "text-white" : "text-inherit"}`}>
                             {item.name}
                           </span>
                           {isActive && onRequestRemove ? (
@@ -4106,6 +4217,8 @@
 
     const BackgroundSelectModal = ({ backgrounds, selectedBackgroundId, onSelect, onClose }) => {
       const [tooltipState, setTooltipState] = useState(null);
+      const mainBackgrounds = useMemo(() => backgrounds.filter((item) => !item.isAdditional), [backgrounds]);
+      const additionalBackgrounds = useMemo(() => backgrounds.filter((item) => item.isAdditional), [backgrounds]);
       const getChipTone = (index) => {
         const maxIndex = Math.max(1, backgrounds.length - 1);
         const ratio = index / maxIndex;
@@ -4183,44 +4296,93 @@
             </div>
 
             <div className="mt-5 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1">
-              <div className="flex flex-wrap gap-3 px-1 py-1">
-                {backgrounds.map((background, index) => {
-                  const selected = background.id === selectedBackgroundId;
-                  const tone = getChipTone(index);
-                  return (
-                    <div key={background.id} className="relative">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onSelect(background.id);
-                          onClose();
-                        }}
-                        onMouseEnter={(event) => showTooltip(event, background)}
-                        onMouseLeave={hideTooltip}
-                        onFocus={(event) => showTooltip(event, background)}
-                        onBlur={hideTooltip}
-                        className="px-4 py-2.5 rounded-full border text-sm font-semibold transition"
-                        style={{
-                          borderColor: selected ? tone.selectedBorder : tone.border,
-                          backgroundColor: selected ? tone.selectedBackground : tone.background,
-                          color: tone.text,
-                          boxShadow: selected ? tone.shadow : "none"
-                        }}
-                        onMouseMove={(event) => {
-                          event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.hoverBorder;
-                          event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.hoverBackground;
-                        }}
-                        onMouseOut={(event) => {
-                          event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.border;
-                          event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.background;
-                        }}
-                      >
-                        {background.name}
-                      </button>
-                    </div>
-                  );
-                })}
+              <div className="px-1 py-1">
+                <div className="text-xs uppercase tracking-[0.3em] text-white/45 mb-2">Backgrounds</div>
+                <div className="flex flex-wrap gap-3">
+                  {mainBackgrounds.map((background, index) => {
+                    const selected = background.id === selectedBackgroundId;
+                    const tone = getChipTone(index);
+                    return (
+                      <div key={background.id} className="relative">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onSelect(background.id);
+                            onClose();
+                          }}
+                          onMouseEnter={(event) => showTooltip(event, background)}
+                          onMouseLeave={hideTooltip}
+                          onFocus={(event) => showTooltip(event, background)}
+                          onBlur={hideTooltip}
+                          className="px-4 py-2.5 rounded-full border text-sm font-semibold transition"
+                          style={{
+                            borderColor: selected ? tone.selectedBorder : tone.border,
+                            backgroundColor: selected ? tone.selectedBackground : tone.background,
+                            color: tone.text,
+                            boxShadow: selected ? tone.shadow : "none"
+                          }}
+                          onMouseMove={(event) => {
+                            event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.hoverBorder;
+                            event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.hoverBackground;
+                          }}
+                          onMouseOut={(event) => {
+                            event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.border;
+                            event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.background;
+                          }}
+                        >
+                          {background.name}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
+              {additionalBackgrounds.length > 0 && (
+                <div className="px-1 py-1 mt-5">
+                  <div className="text-xs uppercase tracking-[0.3em] text-white/45 mb-2">Additional Backgrounds</div>
+                  <div className="flex flex-wrap gap-3">
+                    {additionalBackgrounds.map((background, index) => {
+                      const selected = background.id === selectedBackgroundId;
+                      const tone = getChipTone(mainBackgrounds.length + index);
+                      return (
+                        <div key={background.id} className="relative">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onSelect(background.id);
+                              onClose();
+                            }}
+                            onMouseEnter={(event) => showTooltip(event, background)}
+                            onMouseLeave={hideTooltip}
+                            onFocus={(event) => showTooltip(event, background)}
+                            onBlur={hideTooltip}
+                            className="px-4 py-2.5 rounded-full border text-sm font-semibold transition"
+                            style={{
+                              borderColor: selected ? tone.selectedBorder : tone.border,
+                              backgroundColor: selected ? tone.selectedBackground : tone.background,
+                              color: tone.text,
+                              boxShadow: selected ? tone.shadow : "none"
+                            }}
+                            onMouseMove={(event) => {
+                              event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.hoverBorder;
+                              event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.hoverBackground;
+                            }}
+                            onMouseOut={(event) => {
+                              event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.border;
+                              event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.background;
+                            }}
+                          >
+                            {background.name}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {backgrounds.length === 0 && (
+                <div className="text-sm text-white/45 px-1 py-2">No backgrounds available.</div>
+              )}
             </div>
           </div>
           {tooltipState && ReactDOM.createPortal(
@@ -4239,6 +4401,123 @@
       );
     };
 
+    const BackgroundSelectionSection = ({ backgrounds, selectedBackgroundId, onSelect }) => {
+      const mainBackgrounds = useMemo(() => backgrounds.filter((item) => !item.isAdditional), [backgrounds]);
+      const additionalBackgrounds = useMemo(() => backgrounds.filter((item) => item.isAdditional), [backgrounds]);
+
+      const renderBackgroundCard = (background) => {
+        const selected = background.id === selectedBackgroundId;
+        return (
+          <button
+            key={background.id}
+            type="button"
+            onClick={() => onSelect(background.id)}
+            className={`rounded-2xl md:rounded-3xl border p-3 md:p-5 text-left transition ${
+              selected
+                ? "border-pink-400/80 bg-pink-500/12 shadow-[0_0_25px_rgba(236,72,153,0.25)]"
+                : "border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]"
+            }`}
+          >
+            <div className="text-lg md:text-3xl font-semibold leading-tight text-white/95">{background.name}</div>
+            <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-white/65">{background.description}</p>
+            <div className="mt-2.5 md:mt-4 flex flex-wrap gap-1.5 md:gap-2">
+              <DetailChips
+                items={[...background.proficiencies.skills, ...background.proficiencies.tools]}
+                chipClassName="border-cyan-200/30 bg-cyan-300/10 text-cyan-50"
+              />
+              <DetailChips
+                items={background.languages > 0 ? [`+${background.languages} Languages`] : []}
+                chipClassName="border-emerald-200/30 bg-emerald-300/10 text-emerald-50"
+              />
+            </div>
+            <DetailChips
+              items={background.equipment}
+              className="mt-2 md:mt-3"
+              chipClassName="border-white/15 bg-white/[0.05] text-white/75"
+            />
+          </button>
+        );
+      };
+
+      return (
+        <div className="flex flex-col gap-5 px-4 sm:px-0">
+          <div className="flex flex-col gap-2">
+            <div className="text-xs uppercase tracking-[0.3em] text-white/50">Origin Story</div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {mainBackgrounds.map(renderBackgroundCard)}
+          </div>
+          {additionalBackgrounds.length > 0 && (
+            <>
+              <div className="text-xs uppercase tracking-[0.3em] text-white/45">Additional Backgrounds</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {additionalBackgrounds.map(renderBackgroundCard)}
+              </div>
+            </>
+          )}
+        </div>
+      );
+    };
+
+    const WeaponPickerSection = ({ weapons, selectedWeaponId, onSelect }) => (
+      <div className="flex flex-col gap-5 px-4 sm:px-0">
+        <div className="flex flex-col gap-2">
+          <div className="text-xs uppercase tracking-[0.3em] text-white/50">Signature Weapon</div>
+        </div>
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-3">
+          {weapons.map((weapon) => {
+            const selected = weapon.id === selectedWeaponId;
+            return (
+              <button
+                key={weapon.id}
+                type="button"
+                onClick={() => onSelect(weapon.id)}
+                className={`group overflow-hidden rounded-2xl border text-left transition ${
+                  selected
+                    ? "border-pink-400/80 shadow-[0_0_25px_rgba(236,72,153,0.25)]"
+                    : "border-white/10 hover:border-white/30"
+                }`}
+              >
+                <div className="relative aspect-[3/4] bg-black/40">
+                  <img src={weapon.image} alt={weapon.name} className="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy" />
+                  <div className="absolute inset-x-0 bottom-0 h-[34%] bg-gradient-to-t from-black/50 via-black/12 to-transparent"></div>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onSelect(weapon.id);
+                    }}
+                    className={`absolute top-1.5 right-1.5 md:top-2 md:right-2 px-2.5 md:px-4 py-1 md:py-1.5 rounded-full text-[9px] md:text-[13px] uppercase tracking-[0.12em] md:tracking-[0.2em] font-bold border backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition ${
+                      selected
+                        ? "bg-pink-500/90 border-pink-300/70 text-white"
+                        : "bg-black/30 border-white/40 text-white/90 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    }`}
+                  >
+                    {selected ? "Selected" : "Select"}
+                  </button>
+                  <div className="absolute inset-x-0 bottom-0 p-3">
+                    <div className="text-[12px] sm:text-base md:text-xl font-semibold leading-tight text-white">{weapon.name}</div>
+                    {weapon.tags?.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-0.5 md:gap-1.5">
+                        {weapon.tags.map((tag) => (
+                          <span
+                            key={`${weapon.id}-${tag}`}
+                            className="px-1.5 md:px-2 py-[1px] md:py-0.5 rounded-full border border-white/20 bg-black/35 text-[9px] md:text-[10px] font-semibold tracking-[0.03em] md:tracking-[0.04em] text-white/80 backdrop-blur-sm"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+
     const CharacterForgePanel = ({ isVisible = false }) => {
       const isFileProtocol = window.location.protocol === "file:";
       const [activeStep, setActiveStep] = useState(() => {
@@ -4248,13 +4527,14 @@
       const [selectedRaceIds, setSelectedRaceIds] = useState(() => parseStoredIdList(CHARACTER_FORGE_STORAGE_KEYS.selectedRaceIds));
       const [selectedClassIds, setSelectedClassIds] = useState(() => parseStoredIdList(CHARACTER_FORGE_STORAGE_KEYS.selectedClassIds));
       const [selectedBackgroundId, setSelectedBackgroundId] = useState(() => localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.selectedBackgroundId) || "");
+      const [selectedWeaponId, setSelectedWeaponId] = useState(() => localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId) || "");
       const [races, setRaces] = useState([]);
       const [classes, setClasses] = useState([]);
       const [backgrounds, setBackgrounds] = useState([]);
+      const [weapons, setWeapons] = useState([]);
       const [isLoading, setIsLoading] = useState(true);
       const [loadError, setLoadError] = useState("");
       const [modalState, setModalState] = useState(null);
-      const [isBackgroundModalOpen, setIsBackgroundModalOpen] = useState(false);
       const [removeConfirmState, setRemoveConfirmState] = useState(null);
       const [activeRace, setActiveRace] = useState(null);
       const [activeClass, setActiveClass] = useState(null);
@@ -4269,6 +4549,7 @@
         setRaces(validateCharacterItems(data.races, "races"));
         setClasses(validateCharacterItems(data.classes, "classes"));
         setBackgrounds(validateBackgroundItems(data.backgrounds));
+        setWeapons(validateWeaponItems(data.weapons));
       };
 
       const loadData = async () => {
@@ -4341,6 +4622,10 @@
       }, [selectedBackgroundId]);
 
       useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId, selectedWeaponId);
+      }, [selectedWeaponId]);
+
+      useEffect(() => {
         const mainEl = document.querySelector("main");
         if (!mainEl) return;
         const previousOverflow = mainEl.style.overflowY;
@@ -4374,6 +4659,16 @@
         }
       }, [backgrounds, selectedBackgroundId]);
 
+      useEffect(() => {
+        if (!weapons.length) {
+          setSelectedWeaponId("");
+          return;
+        }
+        if (selectedWeaponId && !weapons.some((item) => item.id === selectedWeaponId)) {
+          setSelectedWeaponId("");
+        }
+      }, [weapons, selectedWeaponId]);
+
       const selectedRaces = useMemo(() => {
         const validIds = getSelectableCharacterIds(races);
         return races.filter((item) => validIds.has(item.id) && selectedRaceIds.includes(item.id));
@@ -4382,6 +4677,7 @@
         const validIds = getSelectableCharacterIds(classes);
         return classes.filter((item) => validIds.has(item.id) && selectedClassIds.includes(item.id));
       }, [classes, selectedClassIds]);
+      const canOpenFinalize = selectedRaceIds.length > 0 && selectedClassIds.length > 0;
 
       const compareRace = activeRace || selectedRaces[0] || null;
       const compareClass = activeClass || selectedClasses[0] || null;
@@ -4390,6 +4686,7 @@
       const backgroundRace = previewRace || compareRace;
       const backgroundClass = previewClass || compareClass;
       const selectedBackground = backgrounds.find((item) => item.id === selectedBackgroundId) || null;
+      const selectedWeapon = weapons.find((item) => item.id === selectedWeaponId) || null;
 
       useEffect(() => {
         if (previewRaceId && !selectedRaces.some((item) => item.id === previewRaceId)) {
@@ -4422,6 +4719,12 @@
         }
       }, [activeStep]);
 
+      useEffect(() => {
+        if (activeStep === "compare" && !canOpenFinalize) {
+          setActiveStep("races");
+        }
+      }, [activeStep, canOpenFinalize]);
+
       const toggleSelection = (kind, itemId) => {
         const sourceItems = kind === "race" ? races : classes;
         const validIds = getSelectableCharacterIds(sourceItems);
@@ -4430,12 +4733,19 @@
         setter((prev) => (prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]));
       };
 
+      const deselectSelections = (kind, itemIds) => {
+        if (!Array.isArray(itemIds) || itemIds.length === 0) return;
+        const idsToRemove = new Set(itemIds);
+        const setter = kind === "race" ? setSelectedRaceIds : setSelectedClassIds;
+        setter((prev) => prev.filter((id) => !idsToRemove.has(id)));
+      };
+
       const openItemModal = (kind, item, rect = null) => {
         setModalState({ kind, item, rect });
       };
 
       const renderLoadingSkeleton = () => (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 md:gap-3">
           {Array.from({ length: 10 }).map((_, idx) => (
             <div key={`skeleton-${idx}`} className="aspect-[3/4] rounded-2xl border border-white/10 bg-white/5 animate-pulse"></div>
           ))}
@@ -4500,10 +4810,10 @@
           : [];
 
         return (
-          <div className="relative h-[calc(100vh-220px)] min-h-[560px] max-h-[840px]">
-            <div className="relative z-10 h-full p-4 md:p-8 flex flex-col gap-4 md:gap-6">
+          <div className="relative h-[calc(100vh-170px)] md:h-[calc(100vh-220px)] min-h-0 md:min-h-[560px] max-h-none md:max-h-[840px]">
+            <div className="relative z-10 h-full px-0 pt-3 pb-0 md:px-8 md:pt-8 md:pb-0 flex flex-col gap-3 md:gap-6">
               <div className="flex-1 min-h-0 grid place-items-start">
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-10 items-start max-w-7xl mx-auto w-full">
+                <div className="grid grid-cols-2 gap-2 md:gap-10 items-start max-w-7xl mx-auto w-full">
                   <VerticalCompareSpinner
                     items={selectedRaces}
                     onActiveChange={setActiveRace}
@@ -4521,8 +4831,8 @@
                 </div>
               </div>
 
-              <div className="mt-auto w-full max-w-7xl mx-auto px-3 md:px-10 pb-2 md:pb-4">
-                <div className="rounded-2xl bg-black/35 backdrop-blur-md p-4 md:p-6 flex flex-col gap-3">
+              <div className="mt-auto w-full max-w-7xl mx-auto px-0 md:px-6 -mb-2 md:-mb-3">
+                <div className="rounded-2xl bg-black/35 backdrop-blur-xl p-3 md:p-4 flex flex-col gap-2.5">
                   <div className="text-lg md:text-2xl font-semibold text-white/95">{comboName}</div>
                   <div className="flex flex-wrap items-center gap-2">
                     <HpDisplay baseHp={comboBaseHp} conBonus={comboConBonus} />
@@ -4547,22 +4857,23 @@
                       <TraitChips traits={comboChips} />
                     </div>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setIsBackgroundModalOpen(true)}
-                    className="mt-2 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.07] transition"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="mt-1 text-sm font-semibold text-cyan-100/90">
-                        {selectedBackground ? selectedBackground.name : "Select background"}
-                      </div>
-                      {selectedBackground && (
-                        <div className="flex items-center gap-2 shrink-0">
+                  <div className="mt-2 grid gap-3 md:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep("background")}
+                      className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.07] transition"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="mt-1 text-sm font-semibold text-white/95">
+                          {selectedBackground ? selectedBackground.name : "Select background"}
+                        </div>
+                        {selectedBackground && (
+                          <div className="flex items-center gap-2 shrink-0">
                           <HoverInfoChip
                             label="Skills"
-                            className="border-cyan-200/30 bg-cyan-300/12 text-cyan-50"
+                            className="border-slate-200/25 bg-slate-200/10 text-slate-100"
                             tooltipContent={
-                              <div className="flex flex-col gap-2">
+                              <div className="flex flex-wrap gap-2">
                                 <DetailChips
                                   items={backgroundSkillChips}
                                   chipClassName="border-cyan-200/35 bg-cyan-300/15 text-cyan-50"
@@ -4574,37 +4885,56 @@
                               </div>
                             }
                           />
-                          <HoverInfoChip
-                            label="Gear"
-                            className="border-slate-200/25 bg-slate-200/10 text-slate-100"
-                            tooltipContent={
-                              <div className="flex flex-col gap-2">
-                                <DetailChips
-                                  items={backgroundFundsChips}
-                                  chipClassName="border-amber-200/35 bg-amber-300/15 text-amber-50"
-                                />
-                                <DetailChips
-                                  items={backgroundGearChips}
-                                  chipClassName="border-slate-200/30 bg-slate-200/10 text-slate-100"
-                                />
-                              </div>
-                            }
-                          />
-                        </div>
-                      )}
-                    </div>
-                    {selectedBackground ? (
-                      <>
+                            <HoverInfoChip
+                              label="Gear"
+                              className="border-slate-200/25 bg-slate-200/10 text-slate-100"
+                              tooltipContent={
+                                <div className="flex flex-col gap-2">
+                                  <DetailChips
+                                    items={backgroundFundsChips}
+                                    chipClassName="border-amber-200/35 bg-amber-300/15 text-amber-50"
+                                  />
+                                  <DetailChips
+                                    items={backgroundGearChips}
+                                    chipClassName="border-slate-200/30 bg-slate-200/10 text-slate-100"
+                                  />
+                                </div>
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                      {selectedBackground ? (
                         <div className="mt-2 text-sm text-white/70 leading-relaxed">
                           {selectedBackground.description}
                         </div>
-                      </>
-                    ) : (
-                      <div className="mt-2 text-sm text-white/45 leading-relaxed">
-                        This will provide proficiencies, languages, equipment, and starting funds.
+                      ) : (
+                        <div className="mt-2 text-sm text-white/45 leading-relaxed">
+                          This will provide proficiencies, languages, equipment, and starting funds.
+                        </div>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStep("weapon")}
+                      className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.07] transition"
+                    >
+                      <div className="text-sm font-semibold text-white/95">
+                        {selectedWeapon ? selectedWeapon.name : "Select signature weapon"}
                       </div>
-                    )}
-                  </button>
+                      {selectedWeapon?.tags?.length > 0 ? (
+                        <DetailChips
+                          items={selectedWeapon.tags}
+                          className="mt-2"
+                          chipClassName="border-amber-200/30 bg-amber-300/10 text-amber-50"
+                        />
+                      ) : (
+                        <div className="mt-2 text-sm text-white/45 leading-relaxed">
+                          Pick the iconic weapon that completes the character fantasy.
+                        </div>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4612,13 +4942,12 @@
         );
       };
 
-      const canOpenCompare = selectedRaceIds.length > 0 && selectedClassIds.length > 0;
       const isCompareActiveView = !isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "compare";
 
       return (
         <div className="relative flex flex-col gap-6">
           {isCompareActiveView && (
-            <div className="absolute -inset-x-6 -inset-y-6 lg:-inset-x-10 lg:-inset-y-10 z-0 pointer-events-none">
+            <div className="absolute inset-x-0 inset-y-0 lg:-inset-x-10 lg:-inset-y-10 z-0 pointer-events-none overflow-hidden">
               <div className="absolute inset-0">
                 <div
                   className="absolute inset-y-0 left-0 w-[56%]"
@@ -4655,30 +4984,62 @@
             </div>
           )}
 
-          <div className="sticky top-0 z-20 -mx-2 px-2 py-3 mb-1 flex flex-wrap items-center justify-center gap-5">
-            {CHARACTER_FORGE_STEPS.map((step) => {
-              const isCompareDisabled = step.id === "compare" && !canOpenCompare;
-              return (
-                <button
-                  key={step.id}
-                  type="button"
-                  disabled={isCompareDisabled}
-                  onClick={() => setActiveStep(step.id)}
-                  className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border backdrop-blur-xl transition-all ${
-                    isCompareDisabled
-                      ? "bg-black/20 text-white/20 border-transparent cursor-not-allowed"
-                      : activeStep === step.id
-                        ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)] scale-105"
-                        : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
-                  }`}
-                >
-                  {step.label}
-                </button>
-              );
-            })}
+          <div className="sticky top-0 z-20 py-2 mb-1">
+            <div className="md:hidden overflow-x-auto overflow-y-visible no-scrollbar pl-4 pr-4 py-5 -my-5">
+              <div className="flex min-w-max items-center gap-2">
+                {CHARACTER_FORGE_STEPS.map((step) => {
+                  const isFinalizeDisabled = step.id === "compare" && !canOpenFinalize;
+                  return (
+                    <button
+                      key={`mobile-${step.id}`}
+                      type="button"
+                      disabled={isFinalizeDisabled}
+                      onClick={() => {
+                        if (isFinalizeDisabled) return;
+                        setActiveStep(step.id);
+                      }}
+                      className={`shrink-0 whitespace-nowrap px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.14em] border backdrop-blur-xl transition-all ${
+                        isFinalizeDisabled
+                          ? "bg-black/20 text-white/20 border-transparent cursor-not-allowed"
+                          : activeStep === step.id
+                            ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)]"
+                            : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
+                      }`}
+                    >
+                      {step.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="hidden md:flex -mx-2 px-2 py-1 flex-wrap items-center justify-center gap-5">
+              {CHARACTER_FORGE_STEPS.map((step) => {
+                const isFinalizeDisabled = step.id === "compare" && !canOpenFinalize;
+                return (
+                  <button
+                    key={`desktop-${step.id}`}
+                    type="button"
+                    disabled={isFinalizeDisabled}
+                    onClick={() => {
+                      if (isFinalizeDisabled) return;
+                      setActiveStep(step.id);
+                    }}
+                    className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border backdrop-blur-xl transition-all ${
+                      isFinalizeDisabled
+                        ? "bg-black/20 text-white/20 border-transparent cursor-not-allowed"
+                        : activeStep === step.id
+                          ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)] scale-105"
+                          : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
+                    }`}
+                  >
+                    {step.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className={isCompareActiveView ? "" : "bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow"}>
+          <div className={isCompareActiveView ? "" : "bg-[#13131a]/90 border border-white/5 rounded-3xl px-0 py-4 sm:p-6 panel-glow"}>
             <input
               ref={dataFileInputRef}
               type="file"
@@ -4730,25 +5091,43 @@
 
             {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "races" && (
               <CharacterPickerSection
-                title="Choose Races"
+                title="Choose Race"
                 items={races}
                 selectedIds={selectedRaceIds}
                 onOpenItem={(item, rect) => openItemModal("race", item, rect)}
                 onToggleItem={(itemId) => toggleSelection("race", itemId)}
+                onDeselectItems={(itemIds) => deselectSelections("race", itemIds)}
               />
             )}
 
             {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "classes" && (
               <CharacterPickerSection
-                title="Choose Classes"
+                title="Choose Class"
                 items={classes}
                 selectedIds={selectedClassIds}
                 onOpenItem={(item, rect) => openItemModal("class", item, rect)}
                 onToggleItem={(itemId) => toggleSelection("class", itemId)}
+                onDeselectItems={(itemIds) => deselectSelections("class", itemIds)}
               />
             )}
 
             {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "compare" && renderCompare()}
+
+            {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "background" && (
+              <BackgroundSelectionSection
+                backgrounds={backgrounds}
+                selectedBackgroundId={selectedBackgroundId}
+                onSelect={setSelectedBackgroundId}
+              />
+            )}
+
+            {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "weapon" && (
+              <WeaponPickerSection
+                weapons={weapons}
+                selectedWeaponId={selectedWeaponId}
+                onSelect={setSelectedWeaponId}
+              />
+            )}
           </div>
 
           {modalState && (
@@ -4780,14 +5159,6 @@
             />
           )}
 
-          {isBackgroundModalOpen && (
-            <BackgroundSelectModal
-              backgrounds={backgrounds}
-              selectedBackgroundId={selectedBackgroundId}
-              onSelect={setSelectedBackgroundId}
-              onClose={() => setIsBackgroundModalOpen(false)}
-            />
-          )}
         </div>
       );
     };

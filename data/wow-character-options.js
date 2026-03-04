@@ -2249,7 +2249,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "bonuses": [
         {
-          "stat": "CON",
+          "stat": "STR",
           "value": 2
         },
         {
@@ -2258,9 +2258,9 @@ window.WOW_CHARACTER_OPTIONS = {
         }
       ],
       "traits": [
-        "Thick Hide",
-        "Totem Heritage",
-        "Wild Communion"
+        "Powerful Build",
+        "Nature's Kin",
+        "Tribal Legacy"
       ],
       "names": {
         "male": [
@@ -2277,7 +2277,7 @@ window.WOW_CHARACTER_OPTIONS = {
         ]
       },
       "dataChips": [
-        "Lifespan: around 120 years"
+        "Lifespan: around 300 years"
       ],
       "isAdditional": true,
       "faction": "Neutral"
@@ -2431,14 +2431,14 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 2
         },
         {
-          "stat": "DEX",
+          "stat": "ANY",
           "value": 1
         }
       ],
       "traits": [
         "Dual Heritage",
-        "Social Adaptability",
-        "Keen Insight"
+        "Resilient Will",
+        "Ancestral Blood"
       ],
       "names": {
         "male": [
@@ -2532,8 +2532,8 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "traits": [
         "Powerful Build",
-        "Runic Legacy",
-        "Sea Raider"
+        "Runic Might",
+        "Titan Legacy"
       ],
       "names": {
         "male": [
@@ -4386,7 +4386,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Sneak Attack"
+        "Cheap Shot"
       ],
       "bonuses": []
     },
@@ -4398,7 +4398,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": "rogue",
       "dataChips": [
         "HP: 8",
-        "Sneak Attack",
+        "Cheap Shot",
         "Master Poisoner",
         "Seal Fate"
       ],
@@ -4423,7 +4423,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": "rogue",
       "dataChips": [
         "HP: 8",
-        "Sneak Attack",
+        "Cheap Shot",
         "Riposte",
         "Adrenaline Rush"
       ],
@@ -4448,7 +4448,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": "rogue",
       "dataChips": [
         "HP: 8",
-        "Sneak Attack",
+        "Cheap Shot",
         "Shadowstep",
         "Subtle Magic"
       ],
@@ -5051,8 +5051,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Inspiration",
-        "Performance"
+        "Bardic Inspiration",
+        "Countercharm"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5126,8 +5126,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Spirit Rites",
-        "Totemic Rituals"
+        "Juju and Mojo",
+        "Spirit Communion"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5151,8 +5151,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Field Medicine",
-        "Combat Concoctions"
+        "Overdose",
+        "Experimental Formulas"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5202,7 +5202,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
-        "Nightmare Bloom"
+        "Child of Nightmare",
+        "Warp Flesh"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5227,7 +5228,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
-        "Wildfire"
+        "Wildfire",
+        "Aspect of Ragnaros"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5251,7 +5253,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Primal Forms",
+        "Shapeshifting",
+        "Primal Fury",
         "Saurian Call"
       ],
       "bonuses": [],
@@ -5301,8 +5304,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 10",
-        "Animal Companion",
-        "Hex Shots"
+        "Spirit of the Loa",
+        "Hexed Shot",
+        "Shadowstep"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5326,7 +5330,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 10",
-        "Ballistics",
+        "Focus Mastery",
+        "Animal Companion",
+        "Run and Gun",
         "Suppressive Fire"
       ],
       "bonuses": [],
@@ -5352,7 +5358,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
-        "Rage Frenzy"
+        "Berserker's Grip",
+        "Undying Rage"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5377,7 +5384,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
-        "Arena Stance"
+        "Blademaster",
+        "Fight to the Death"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5402,7 +5410,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
-        "Close-Quarters"
+        "Dirty Fighting",
+        "Danger Sense"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5425,9 +5434,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Fusing arcane spellcraft and steel, they weave melee pressure with instant magical burst windows.",
       "parentId": null,
       "dataChips": [
-        "HP: 6",
-        "Arcane Edge",
-        "Spellcasting Focus"
+        "HP: 8",
+        "Cast and Slash",
+        "Arcane Edge"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5451,8 +5460,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 6",
-        "Spellcasting Focus",
-        "Temporal Shift"
+        "Metamagic",
+        "Temporal Shift",
+        "Nozdormu's Gift"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5476,8 +5486,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 6",
-        "Spellcasting Focus",
-        "Stellar Conduit"
+        "Metamagic",
+        "Stellar Conduit",
+        "Aspect of Cosmos"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5501,8 +5512,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 6",
-        "Spellcasting Focus",
-        "Mirrorcraft"
+        "Metamagic",
+        "Master of Illusions",
+        "Reality Bend"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5526,8 +5538,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Totemic Bond",
-        "Ancestral Guidance"
+        "Totemist",
+        "Spirit Form",
+        "Avatar of the Ancients"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5547,12 +5560,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "id": "shaman-summoner",
       "name": "Summoner",
       "image": "https://placehold.co/600x800/2f3940/e8ecff?text=Summoner",
-      "description": "Shamans who call elemental allies and spiritual constructs to pressure, screen, and overwhelm enemies.",
+      "description": "Shamans who call elementals to aid them in battle, providing support, damage, and utility.",
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Totemic Bond",
-        "Elemental Host"
+        "Totemist",
+        "Elemental Summons",
+        "Ascendancy"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5576,8 +5590,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Totemic Bond",
-        "Stone Ward"
+        "Totemist",
+        "Geomancy",
+        "Monolithic Form"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5601,8 +5616,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Chi",
-        "Runic Seals"
+        "Chi Mastery",
+        "Enruned Fists",
+        "Runic Arts"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5626,8 +5642,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Sneak Attack",
-        "Sentinel Arsenal"
+        "Cheap Shot",
+        "Blink",
+        "Avatar of Vengeance"
       ],
       "bonuses": [],
       "isAdditional": true,
@@ -5655,7 +5672,7 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "HP: 8",
-        "Sneak Attack",
+        "Cheap Shot",
         "Elegant Maneuver",
         "Master Duelist"
       ],
@@ -5699,31 +5716,6 @@ window.WOW_CHARACTER_OPTIONS = {
       ]
     },
     {
-      "id": "paladin-voidwarden",
-      "name": "Voidwarden",
-      "image": "https://placehold.co/600x800/2a2e44/e8ecff?text=Voidwarden",
-      "description": "Zealous protectors who harness disciplined void techniques to shield allies and punish overreach.",
-      "parentId": null,
-      "dataChips": [
-        "HP: 10",
-        "Divine Aura",
-        "Void Aegis"
-      ],
-      "bonuses": [],
-      "isAdditional": true,
-      "profile": {
-        "damage": 3,
-        "survivability": 5,
-        "support": 3,
-        "control": 4,
-        "utility": 2
-      },
-      "tags": [
-        "Frontline",
-        "Debuffer"
-      ]
-    },
-    {
       "id": "warlock-soulreaver",
       "name": "Soulreaver",
       "image": "https://placehold.co/600x800/2f2538/e8ecff?text=Soulreaver",
@@ -5731,7 +5723,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "parentId": null,
       "dataChips": [
         "HP: 8",
-        "Fel Hexblade",
+        "Fel-infused Strikes",
         "Soul Leech"
       ],
       "bonuses": [],
@@ -5747,6 +5739,254 @@ window.WOW_CHARACTER_OPTIONS = {
         "Skirmisher",
         "Debuffer"
       ]
+    }
+  ],
+  "weapons": [
+    {
+      "id": "club",
+      "name": "Club",
+      "image": "https://placehold.co/800x600/4a3529/f2e8da?text=Club",
+      "tags": ["1d4", "Light"]
+    },
+    {
+      "id": "dagger",
+      "name": "Dagger",
+      "image": "https://placehold.co/800x600/3a3a40/f1f3f8?text=Dagger",
+      "tags": ["1d4", "Finesse", "Light", "Thrown"]
+    },
+    {
+      "id": "greatclub",
+      "name": "Greatclub",
+      "image": "https://placehold.co/800x600/4d392d/f1e7d8?text=Greatclub",
+      "tags": ["1d8", "2H"]
+    },
+    {
+      "id": "handaxe",
+      "name": "Handaxe",
+      "image": "https://placehold.co/800x600/47352f/f2e7df?text=Handaxe",
+      "tags": ["1d6", "Light", "Thrown"]
+    },
+    {
+      "id": "javelin",
+      "name": "Javelin",
+      "image": "https://placehold.co/800x600/4e4031/f3ebdf?text=Javelin",
+      "tags": ["1d6", "Thrown"]
+    },
+    {
+      "id": "light-hammer",
+      "name": "Light Hammer",
+      "image": "https://placehold.co/800x600/45424a/f2f0f6?text=Light+Hammer",
+      "tags": ["1d4", "Light", "Thrown"]
+    },
+    {
+      "id": "mace",
+      "name": "Mace",
+      "image": "https://placehold.co/800x600/40444a/edf1f7?text=Mace",
+      "tags": ["1d6"]
+    },
+    {
+      "id": "quarterstaff",
+      "name": "Quarterstaff",
+      "image": "https://placehold.co/800x600/4a3a2d/f2eadf?text=Quarterstaff",
+      "tags": ["1d6", "Versatile (1d8)"]
+    },
+    {
+      "id": "sickle",
+      "name": "Sickle",
+      "image": "https://placehold.co/800x600/37433a/e9f3ea?text=Sickle",
+      "tags": ["1d4", "Light"]
+    },
+    {
+      "id": "spear",
+      "name": "Spear",
+      "image": "https://placehold.co/800x600/4f4334/f3ecdf?text=Spear",
+      "tags": ["1d6", "Thrown", "Versatile (1d8)"]
+    },
+    {
+      "id": "dart",
+      "name": "Dart",
+      "image": "https://placehold.co/800x600/3c4048/f0f3f8?text=Dart",
+      "tags": ["1d4", "Finesse", "Thrown"]
+    },
+    {
+      "id": "light-crossbow",
+      "name": "Light Crossbow",
+      "image": "https://placehold.co/800x600/473c34/f3e9dd?text=Light+Crossbow",
+      "tags": ["1d8",  "Loading", "2H"]
+    },
+    {
+      "id": "shortbow",
+      "name": "Shortbow",
+      "image": "https://placehold.co/800x600/584733/f4ebdd?text=Shortbow",
+      "tags": ["1d6",  "2H"]
+    },
+    {
+      "id": "sling",
+      "name": "Sling",
+      "image": "https://placehold.co/800x600/4b4039/f1ebe4?text=Sling",
+      "tags": ["1d4"]
+    },
+    {
+      "id": "battleaxe",
+      "name": "Battleaxe",
+      "image": "https://placehold.co/800x600/4c3a34/f3e7de?text=Battleaxe",
+      "tags": ["1d8", "Versatile (1d10)"]
+    },
+    {
+      "id": "flail",
+      "name": "Flail",
+      "image": "https://placehold.co/800x600/3d3530/f1e8df?text=Flail",
+      "tags": ["1d8"]
+    },
+    {
+      "id": "glaive",
+      "name": "Glaive",
+      "image": "https://placehold.co/800x600/454139/f2ece3?text=Glaive",
+      "tags": ["1d10", "Heavy", "Reach", "2H"]
+    },
+    {
+      "id": "greataxe",
+      "name": "Greataxe",
+      "image": "https://placehold.co/800x600/43322d/f3e6de?text=Greataxe",
+      "tags": ["1d12", "Heavy", "2H"]
+    },
+    {
+      "id": "greatsword",
+      "name": "Greatsword",
+      "image": "https://placehold.co/800x600/39404a/f0f4f8?text=Greatsword",
+      "tags": ["2d6", "Heavy", "2H"]
+    },
+    {
+      "id": "halberd",
+      "name": "Halberd",
+      "image": "https://placehold.co/800x600/484039/f2ebe2?text=Halberd",
+      "tags": ["1d10", "Heavy", "Reach", "2H"]
+    },
+    {
+      "id": "lance",
+      "name": "Lance",
+      "image": "https://placehold.co/800x600/514435/f4ecde?text=Lance",
+      "tags": ["1d10", "Heavy", "Reach", "2H"]
+    },
+    {
+      "id": "longsword",
+      "name": "Longsword",
+      "image": "https://placehold.co/800x600/3a434d/f0f4f8?text=Longsword",
+      "tags": ["1d8", "Versatile (1d10)"]
+    },
+    {
+      "id": "maul",
+      "name": "Maul",
+      "image": "https://placehold.co/800x600/433b35/f0e8e0?text=Maul",
+      "tags": ["2d6", "Heavy", "2H"]
+    },
+    {
+      "id": "morningstar",
+      "name": "Morningstar",
+      "image": "https://placehold.co/800x600/423940/f1edf4?text=Morningstar",
+      "tags": ["1d8"]
+    },
+    {
+      "id": "pike",
+      "name": "Pike",
+      "image": "https://placehold.co/800x600/4b4339/f3ede2?text=Pike",
+      "tags": ["1d10", "Heavy", "Reach", "2H"]
+    },
+    {
+      "id": "rapier",
+      "name": "Rapier",
+      "image": "https://placehold.co/800x600/353943/f3f5fa?text=Rapier",
+      "tags": ["1d8", "Finesse"]
+    },
+    {
+      "id": "scimitar",
+      "name": "Scimitar",
+      "image": "https://placehold.co/800x600/40453d/f0f5ee?text=Scimitar",
+      "tags": ["1d6", "Finesse", "Light"]
+    },
+    {
+      "id": "shortsword",
+      "name": "Shortsword",
+      "image": "https://placehold.co/800x600/39414a/f0f4f8?text=Shortsword",
+      "tags": ["1d6", "Finesse", "Light"]
+    },
+    {
+      "id": "trident",
+      "name": "Trident",
+      "image": "https://placehold.co/800x600/35505a/e8f7fb?text=Trident",
+      "tags": ["1d8", "Thrown", "Versatile (1d10)"]
+    },
+    {
+      "id": "warhammer",
+      "name": "Warhammer",
+      "image": "https://placehold.co/800x600/41454c/f0f3f8?text=Warhammer",
+      "tags": ["1d8", "Versatile (1d10)"]
+    },
+    {
+      "id": "war-pick",
+      "name": "War Pick",
+      "image": "https://placehold.co/800x600/434040/f2eeec?text=War+Pick",
+      "tags": ["1d8", "Versatile (1d10)"]
+    },
+    {
+      "id": "whip",
+      "name": "Whip",
+      "image": "https://placehold.co/800x600/4a362f/f4e7de?text=Whip",
+      "tags": ["1d4", "Finesse", "Reach"]
+    },
+    {
+      "id": "blowgun",
+      "name": "Blowgun",
+      "image": "https://placehold.co/800x600/4c4337/f2ebe1?text=Blowgun",
+      "tags": ["1", "Loading"]
+    },
+    {
+      "id": "hand-crossbow",
+      "name": "Hand Crossbow",
+      "image": "https://placehold.co/800x600/423731/f3e7df?text=Hand+Crossbow",
+      "tags": ["1d6", "Light", "Loading"]
+    },
+    {
+      "id": "heavy-crossbow",
+      "name": "Heavy Crossbow",
+      "image": "https://placehold.co/800x600/403833/f2e8de?text=Heavy+Crossbow",
+      "tags": ["1d10", "Heavy", "Loading", "2H"]
+    },
+    {
+      "id": "longbow",
+      "name": "Longbow",
+      "image": "https://placehold.co/800x600/584631/f4ebdd?text=Longbow",
+      "tags": ["1d8", "Heavy", "2H"]
+    },
+    {
+      "id": "musket",
+      "name": "Musket",
+      "image": "https://placehold.co/800x600/3d342e/f2e8df?text=Musket",
+      "tags": ["1d12", "Loading", "2H"]
+    },
+    {
+      "id": "pistol",
+      "name": "Pistol",
+      "image": "https://placehold.co/800x600/403531/f3e9e1?text=Pistol",
+      "tags": ["1d10", "Loading"]
+    },
+    {
+      "id": "totem",
+      "name": "Totem",
+      "image": "https://placehold.co/800x600/4b3f33/f3ece1?text=Totem",
+      "tags": ["2d8", "Heavy", "2H"]
+    },
+    {
+      "id": "warclaw",
+      "name": "Warclaw",
+      "image": "https://placehold.co/800x600/3d3841/f0eef6?text=Warclaw",
+      "tags": ["1d6", "Light", "Bound"]
+    },
+    {
+      "id": "warglaive",
+      "name": "Warglaive",
+      "image": "https://placehold.co/800x600/394149/edf3f8?text=Warglaive",
+      "tags": ["1d8", "Light", "Thrown", "Returning"]
     }
   ],
   "backgrounds": [
@@ -5989,6 +6229,577 @@ window.WOW_CHARACTER_OPTIONS = {
       "languages": 0,
       "equipment": ["Small knife", "map of city", "pet mouse", "token of parents", "common clothes"],
       "startingMoney": "10 gp"
+    },
+    {
+      "id": "adventurer",
+      "name": "Adventurer",
+      "description": "A seasoned traveler who survives by sharp instincts, field skill, and hard-earned grit.",
+      "proficiencies": {
+        "skills": ["Athletics", "Perception"],
+        "tools": ["Thieves' Tools"]
+      },
+      "languages": 1,
+      "equipment": ["Wooden training sword", "traveler's clothes", "cloak", "shovel", "crowbar", "trophy from your first adventure"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Adventurer_(5e_Background)"
+      }
+    },
+    {
+      "id": "archivist",
+      "name": "Archivist",
+      "description": "You preserve stories, records, and hidden truths, turning knowledge into leverage.",
+      "proficiencies": {
+        "skills": ["History", "Performance"],
+        "tools": ["One musical instrument"]
+      },
+      "languages": 1,
+      "equipment": ["Musical instrument", "traveler's clothes", "leather-bound journal", "inkwell", "pen"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Archivist_(5e_Background)"
+      }
+    },
+    {
+      "id": "cook",
+      "name": "Cook",
+      "description": "Your meals uplift allies and open doors, backed by practical kitchen mastery.",
+      "proficiencies": {
+        "skills": ["Insight", "Performance"],
+        "tools": ["Cook's Utensils"]
+      },
+      "languages": 2,
+      "equipment": ["Mess kit", "cook's utensils", "bottle of cooking oil", "spice kit", "recipe book", "iron pot"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Cook_(5e_Background)"
+      }
+    },
+    {
+      "id": "doctor",
+      "name": "Doctor",
+      "description": "You studied anatomy and treatment in depth, serving as a learned battlefield healer.",
+      "proficiencies": {
+        "skills": ["Investigation", "Medicine"],
+        "tools": ["Herbalism kit"]
+      },
+      "languages": 1,
+      "equipment": ["Doctoral notes", "doctor's certification", "common clothes", "bedroll", "blanket", "2-person tent"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Doctor_(5e_Background)"
+      }
+    },
+    {
+      "id": "envoy",
+      "name": "Envoy",
+      "description": "A trained representative skilled in diplomacy, negotiation, and courtly maneuvering.",
+      "proficiencies": {
+        "skills": ["Persuasion", "History"],
+        "tools": []
+      },
+      "languages": 2,
+      "equipment": ["Journal of meetings and contacts", "letter of introduction", "bottle of black ink", "quill", "common clothes", "traveler's clothes"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Envoy_(5e_Background)"
+      }
+    },
+    {
+      "id": "executioner",
+      "name": "Executioner",
+      "description": "You carry a grim professional reputation built on intimidation and brutal certainty.",
+      "proficiencies": {
+        "skills": ["Intimidation", "Investigation"],
+        "tools": ["Poisoner's Kit"]
+      },
+      "languages": 1,
+      "equipment": ["50 feet of hempen rope with noose", "black hood", "butcher's frock", "knife", "farewell letter from a condemned criminal"],
+      "startingMoney": "8 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Executioner_(5e_Background)"
+      }
+    },
+    {
+      "id": "farmer",
+      "name": "Farmer",
+      "description": "Life of labor and seasons taught you patience, resilience, and practical know-how.",
+      "proficiencies": {
+        "skills": ["Animal Handling", "Nature"],
+        "tools": ["Farm Implements", "Vehicles (land)"]
+      },
+      "languages": 0,
+      "equipment": ["Farm tool", "set of work clothes", "wide-brimmed hat", "trade goods"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Farmer_(5e_Background)"
+      }
+    },
+    {
+      "id": "janitor",
+      "name": "Janitor",
+      "description": "You know every hallway and hidden corner, with a talent for spotting what others miss.",
+      "proficiencies": {
+        "skills": ["Persuasion", "Investigation"],
+        "tools": ["One gaming set", "One artisan's tool"]
+      },
+      "languages": 0,
+      "equipment": ["Sponge", "mop", "cleaning fluid", "site sketch", "common clothes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Janitor_(5e_Background)"
+      }
+    },
+    {
+      "id": "lone-survivor",
+      "name": "Lone Survivor",
+      "description": "You endured catastrophe alone and learned to trust instinct over comfort.",
+      "proficiencies": {
+        "skills": ["Survival", "Perception"],
+        "tools": ["One artisan's tool", "Vehicles (water)"]
+      },
+      "languages": 0,
+      "equipment": ["Personal trinket from your past", "worn travel clothes", "backpack", "life journal"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Lone_Survivor_(5e_Background)"
+      }
+    },
+    {
+      "id": "metal-worker",
+      "name": "Metal Worker",
+      "description": "You shaped steel for coin and pride, mastering forge-work through discipline.",
+      "proficiencies": {
+        "skills": ["Athletics", "Insight"],
+        "tools": ["Smith's tools"]
+      },
+      "languages": 1,
+      "equipment": ["Set of smith's tools", "sledge hammer", "merchant's scale", "work apron", "leather gloves", "common clothes"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Metal_Worker_(5e_Background)"
+      }
+    },
+    {
+      "id": "monster-hunter",
+      "name": "Monster Hunter",
+      "description": "You track, study, and kill unnatural threats with prepared methods and trophies to prove it.",
+      "proficiencies": {
+        "skills": ["Survival", "Nature"],
+        "tools": ["Poisoner's Kit", "Herbalism Kit"]
+      },
+      "languages": 1,
+      "equipment": ["Traveler's clothes", "herbalism kit", "monster trophy", "5 days of rations"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Monster_Hunter_(5e_Background)"
+      }
+    },
+    {
+      "id": "slave",
+      "name": "Slave",
+      "description": "You survived oppression through obedience, endurance, and the will to outlast your chains.",
+      "proficiencies": {
+        "skills": ["Performance", "Survival"],
+        "tools": ["One tool worth 15 gp or less"]
+      },
+      "languages": 0,
+      "equipment": ["One tool you are proficient with", "one simple melee weapon", "clothes fit for your assigned role"],
+      "startingMoney": "1 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Slave_(5e_Background)"
+      }
+    },
+    {
+      "id": "wronged-hero",
+      "name": "Wronged Hero",
+      "description": "Once celebrated, you now live in exile, carrying equal parts resolve and resentment.",
+      "proficiencies": {
+        "skills": ["Intimidation", "Insight"],
+        "tools": ["Disguise Kit", "Forgery Kit"]
+      },
+      "languages": 1,
+      "equipment": ["Journal from your days of glory", "common clothes"],
+      "startingMoney": "20 gp",
+      "isAdditional": true,
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Wronged_Hero_(5e_Background)"
+      }
+    },
+    {
+      "id": "apothecary",
+      "name": "Apothecary",
+      "description": "You are one of the few healers who studies disease, cures, and alchemical remedies for common folk.",
+      "proficiencies": {
+        "skills": ["Medicine", "Nature"],
+        "tools": ["Herbalism Kit"]
+      },
+      "languages": 1,
+      "equipment": ["Herbalism kit", "merchant's scale", "set of common clothes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Apothecary_(5e_Background)" }
+    },
+    {
+      "id": "arcane-thief",
+      "name": "Arcane Thief",
+      "description": "You steal and copy spells from wizards, then sell arcane secrets to buyers who can pay.",
+      "proficiencies": {
+        "skills": ["Choose two from Arcana, History, Sleight of Hand, or Stealth"],
+        "tools": ["Choose one from Disguise Kit, Forgery Kit, or Thieves' Tools"]
+      },
+      "languages": 1,
+      "equipment": ["Chosen tool kit", "scholar's pack", "silken rope (50 ft) with grappling hook", "spellbook", "fine clothes with hooded cloak"],
+      "startingMoney": "30 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Arcane_Thief_(5e_Background)" }
+    },
+    {
+      "id": "bodyguard",
+      "name": "Bodyguard",
+      "description": "You devoted your life to protecting others, whether from the shadows or by standing as their shield.",
+      "proficiencies": {
+        "skills": ["Choose two between Perception, Intimidation, Investigation, and Survival"],
+        "tools": []
+      },
+      "languages": 1,
+      "equipment": ["healing potion", "shield", "hooded cloak", "set of common clothes"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Bodyguard_(5e_Background)" }
+    },
+    {
+      "id": "bounty-hunter",
+      "name": "Bounty Hunter",
+      "description": "You tracked marks for coin, hunting fugitives across civilized lands for paying clients.",
+      "proficiencies": {
+        "skills": ["Pick two from Perception, Insight, Survival, Investigation, Stealth, History"],
+        "tools": ["Thieves' Tools"]
+      },
+      "languages": 1,
+      "equipment": ["ink bottle", "ink pen", "5 pages of parchment", "2 hunting traps", "set of traveler's clothes", "3 bounty trinkets", "Thieves' Tools"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Bounty_Hunter_(5e_Background)" }
+    },
+    {
+      "id": "city-guard",
+      "name": "City Guard",
+      "description": "You served as part of a city watch, enforcing order and standing ready during raids or sieges.",
+      "proficiencies": {
+        "skills": ["Athletics or Acrobatics", "Insight or Investigation"],
+        "tools": ["Musical Instrument - Horn"]
+      },
+      "languages": 1,
+      "equipment": ["horn", "set of common clothes", "city insignia necklace", "pair of shackles", "2 keys", "guard's cloak"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/City_Guard_(5e_Background)" }
+    },
+    {
+      "id": "demonologist",
+      "name": "Demonologist",
+      "description": "You dedicated your life to studying fiends, their origins, and the rites used against or with them.",
+      "proficiencies": {
+        "skills": ["Choose two: Arcana, History, or Religion"],
+        "tools": []
+      },
+      "languages": 0,
+      "equipment": ["backpack", "set of common clothes", "hooded cloak", "silvered or cold-iron weapon", "bedroll", "tattered scrolls", "fiend lore books"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Demonologist_(5e_Background)" }
+    },
+    {
+      "id": "exiled-knight",
+      "name": "Exiled Knight",
+      "description": "You are a disgraced knight cast out from your order, carrying rank, shame, and hard-earned discipline.",
+      "proficiencies": {
+        "skills": ["History", "Persuasion or Intuition"],
+        "tools": ["One type of gaming set", "smith's tools"]
+      },
+      "languages": 1,
+      "equipment": ["set of traveler's clothes", "battered insignia of your former order", "broken blade or damaged weapon"],
+      "startingMoney": "1 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Exiled_Knight_(5e_Background)" }
+    },
+    {
+      "id": "explorer",
+      "name": "Explorer",
+      "description": "You ventured into dangerous unknown lands, seeking mystery, treasure, and forgotten places.",
+      "proficiencies": {
+        "skills": ["Acrobatics", "Animal Handling"],
+        "tools": ["Herbalism Kit", "Vehicles (land) or Vehicles (water)"]
+      },
+      "languages": 0,
+      "equipment": ["climber's kit", "Herbalism Kit", "set of traveler's clothes", "small telescope"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Explorer_(5e_Background)" }
+    },
+    {
+      "id": "fallen-hero",
+      "name": "Fallen Hero",
+      "description": "Once admired, you now walk with a tragic past and a reputation stained by failure or betrayal.",
+      "proficiencies": {
+        "skills": ["Intimidation", "Survival"],
+        "tools": ["Disguise Kit"]
+      },
+      "languages": 1,
+      "equipment": ["set of traveler's clothes with hood", "trinket from your tragic fate"],
+      "startingMoney": "25 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Fallen_Hero_(5e_Background)" }
+    },
+    {
+      "id": "gravetender",
+      "name": "Gravetender",
+      "description": "You worked among graves and funerary duties, learning secrets buried with the dead.",
+      "proficiencies": {
+        "skills": ["Choose two from Sleight of Hand, Stealth, History, Religion, or Investigation"],
+        "tools": ["Mason's Tools", "Carpenter's Tools"]
+      },
+      "languages": 0,
+      "equipment": ["trusty shovel", "ruined trinket from an old acquaintance", "set of common clothes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Gravetender_(5e_Background)" }
+    },
+    {
+      "id": "outlandborn",
+      "name": "Outlandborn",
+      "description": "You are bound by a dark pact and hardened by fel-scarred Outland influences rather than infernal courts.",
+      "proficiencies": {
+        "skills": ["Religion", "Persuasion"],
+        "tools": ["One type of gaming set"]
+      },
+      "languages": 0,
+      "equipment": ["contract describing your duties and punishments", "set of common clothes", "bone dice or playing cards"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Hellborn_(5e_Background)" }
+    },
+    {
+      "id": "mercenary",
+      "name": "Mercenary",
+      "description": "You sold your martial skill to employers for coin, surviving campaigns as a soldier of fortune.",
+      "proficiencies": {
+        "skills": ["Intimidation", "Perception"],
+        "tools": ["One type of gaming set", "Vehicles (land)"]
+      },
+      "languages": 0,
+      "equipment": ["proof of your first completed contract", "set of common clothes", "one gaming set"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Mercenary_(5e_Background)" }
+    },
+    {
+      "id": "occultist",
+      "name": "Occultist",
+      "description": "You delved into forbidden esoteric rites and hidden lore others fear to read.",
+      "proficiencies": {
+        "skills": ["Choose two of Deception, Investigation, Religion"],
+        "tools": ["Alchemist's supplies"]
+      },
+      "languages": 0,
+      "equipment": ["censer", "occult focus", "Alchemist's supplies", "set of common clothes", "forbidden lore tomes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Occultist_(5e_Background)" }
+    },
+    {
+      "id": "cultist",
+      "name": "Cultist",
+      "description": "You served an ancient cult devoted to a dreadful power and now walk beyond that circle.",
+      "proficiencies": {
+        "skills": ["Arcana", "Religion"],
+        "tools": ["Poisoner's Kit"]
+      },
+      "languages": 1,
+      "equipment": ["set of traveler's clothes", "holy symbol", "marked dagger"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Ancient_Cultist_(5e_Background)" }
+    },
+    {
+      "id": "scavenger",
+      "name": "Scavenger",
+      "description": "You lived by salvaging scraps and valuables from ruins and refuse others ignore.",
+      "proficiencies": {
+        "skills": ["Investigation", "Perception"],
+        "tools": ["One type of artisan's tools"]
+      },
+      "languages": 0,
+      "equipment": ["scavenged trinket", "set of common clothes", "warm blanket", "leather sack"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Scavenger_(5e_Background)" }
+    },
+    {
+      "id": "city-worker",
+      "name": "City Worker",
+      "description": "You handled the thankless labor that keeps a city running despite poor pay and little respect.",
+      "proficiencies": {
+        "skills": ["Perception", "Athletics"],
+        "tools": ["One gaming set"]
+      },
+      "languages": 0,
+      "equipment": ["broom", "shovel", "hooded lantern", "common clothes"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/City_Worker_(5e_Background)" }
+    },
+    {
+      "id": "debt-collector",
+      "name": "Debt Collector",
+      "description": "You enforced payments and extracted debts through intimidation, insight, and underworld pressure.",
+      "proficiencies": {
+        "skills": ["Insight", "Intimidation"],
+        "tools": ["Thieves' tools or Forgery kit"]
+      },
+      "languages": 1,
+      "equipment": ["short club", "signet ring", "stack of IOUs", "set of traveler's clothes"],
+      "startingMoney": "20 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Debt_Collector_(5e_Background)" }
+    },
+    {
+      "id": "drunken-bum",
+      "name": "Drunken Bum",
+      "description": "You survived on streets and taverns with a hustler's hands and a performer's distractions.",
+      "proficiencies": {
+        "skills": ["Performance", "Sleight of Hand"],
+        "tools": ["One type of gaming set"]
+      },
+      "languages": 1,
+      "equipment": ["flask", "set of dice or deck of cards", "well-worn common clothes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Drunken_Bum_(5e_Background)" }
+    },
+    {
+      "id": "inventor",
+      "name": "Inventor",
+      "description": "You turn unusual ideas into practical designs using craft, theory, and magical experimentation.",
+      "proficiencies": {
+        "skills": ["Arcana", "Investigation"],
+        "tools": ["Tinker's Tools"]
+      },
+      "languages": 0,
+      "equipment": ["set of common clothes", "Tinker's Tools", "hammer", "hourglass", "magnifying glass"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Inventor_(5e_Background)" }
+    },
+    {
+      "id": "feral-child",
+      "name": "Feral Child",
+      "description": "Lost young in the wild, you learned survival and animal instincts before living among civilization.",
+      "proficiencies": {
+        "skills": ["Survival", "Animal Handling"],
+        "tools": ["Herbalism kit", "Poisoner's kit"]
+      },
+      "languages": 0,
+      "equipment": ["herbalism kit", "wild-collected trinket", "set of traveler's clothes", "animal fur patch", "large waterskin"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Feral_Child_(5e_Background)" }
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "description": "You lived as a wanderer between settlements, carrying stories, songs, and road wisdom.",
+      "proficiencies": {
+        "skills": ["Performance", "Survival"],
+        "tools": ["A musical instrument of your choice"]
+      },
+      "languages": 1,
+      "equipment": ["bedroll", "set of traveler's clothes", "blanket", "ink pen", "vial of ink", "journal of previous travels", "trinket from your travels"],
+      "startingMoney": "5 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Nomad_(5e_Background)" }
+    },
+    {
+      "id": "oracle",
+      "name": "Oracle",
+      "description": "You interpret omens and divine insight, serving as a spiritual guide through signs and prophecy.",
+      "proficiencies": {
+        "skills": ["Insight", "Religion"],
+        "tools": []
+      },
+      "languages": 2,
+      "equipment": ["set of common clothes", "set of divination tools"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Oracle_(5e_Background)" }
+    },
+    {
+      "id": "outcast",
+      "name": "Outcast",
+      "description": "Once part of a clan or community, you were exiled and now survive at the edge of every society.",
+      "proficiencies": {
+        "skills": ["Choose two from Sleight of Hand, Stealth, Perception, and Survival"],
+        "tools": ["One type of gaming set of your choice"]
+      },
+      "languages": 1,
+      "equipment": ["outcast's pack", "childhood trinket", "one gaming set", "set of common clothes"],
+      "startingMoney": "10 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Outcast_(5e_Background)" }
+    },
+    {
+      "id": "researcher",
+      "name": "Researcher",
+      "description": "You pursued mysteries through disciplined study, collecting data and tools instead of glory.",
+      "proficiencies": {
+        "skills": ["Choose two from History, Athletics, Arcana, Investigation, Perception, Religion, Medicine, or Insight"],
+        "tools": ["Choose one tool set related to your area of study"]
+      },
+      "languages": 1,
+      "equipment": ["set of fine clothes", "chosen tool set", "research notebook", "study trinket"],
+      "startingMoney": "15 gp",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Researcher_(5e_Background)" }
+    },
+    {
+      "id": "smuggler",
+      "name": "Smuggler",
+      "description": "The smuggler is listed on D&D Wiki as a background from Ghosts of Saltmarsh.",
+      "proficiencies": {
+        "skills": [],
+        "tools": []
+      },
+      "languages": 0,
+      "equipment": [],
+      "startingMoney": "",
+      "isAdditional": true,
+      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Smuggler_(5e_Background)" }
     }
   ]
 };
