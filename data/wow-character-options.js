@@ -2215,7 +2215,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "id": "troll-sand",
       "name": "Sand Troll",
       "image": "https://placehold.co/600x800/3e3328/e8ecff?text=Sand%20Troll",
-      "description": "Desert-hardened Farraki descendants of Tanaris, known for ruthless survival, sand-craft ambushes, and dark blood-voodoo rites.",
+      "description": "Desert-hardened Farraki descendants of Tanaris, known for ruthless survival, sand-craft ambushes, and dark voodoo rites.",
       "parentId": null,
       "faction": "Neutral",
       "difficulty": 2,
