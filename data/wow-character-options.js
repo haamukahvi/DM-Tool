@@ -64,6 +64,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: 350-500 years"
       ],
+      "languages": "Gnomish",
       "storyQuestion": "What personal trait makes you stand out among clever, driven gnomes?"
     },
     {
@@ -130,6 +131,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: 350-500 years"
       ],
+      "languages": "Gnomish",
       "storyQuestion": "How has becoming part-machine changed who you are as a person?"
     },
     {
@@ -184,6 +186,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
+      "languages": "Creator's language",
       "storyQuestion": "What choice makes you feel more than just a construct built to serve?"
     },
     {
@@ -238,6 +241,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
+      "languages": "Creator's language",
       "storyQuestion": "What inner value guides you beyond the purpose you were made for?"
     },
     {
@@ -312,6 +316,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: human-like aging, long active years"
       ],
+      "languages": "Common human, One extra",
       "storyQuestion": "How do you stay true to yourself while living with the beast inside you?"
     },
     {
@@ -382,6 +387,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: many hundreds of years"
       ],
+      "languages": "Thalassian",
       "storyQuestion": "What keeps you grounded while carrying powers others fear?"
     },
     {
@@ -448,6 +454,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 80-100 years"
       ],
+      "languages": "Pandaren",
       "storyQuestion": "What personal principle do you refuse to compromise, even under pressure?"
     },
     {
@@ -512,6 +519,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: several thousand years"
       ],
+      "languages": "Darnassian",
       "storyQuestion": "What personal belief or trait makes you stand out among other night elves?"
     },
     {
@@ -578,6 +586,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 320 years"
       ],
+      "languages": "Dwarven",
       "storyQuestion": "What part of your character was forged hardest by your people's values?"
     },
     {
@@ -644,6 +653,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 320 years"
       ],
+      "languages": "Dwarven",
       "storyQuestion": "What makes your spirit different from other freedom-loving Wildhammers?"
     },
     {
@@ -711,6 +721,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 320 years"
       ],
+      "languages": "Dwarven",
       "storyQuestion": "What part of your past did you reject to become who you are now?"
     },
     {
@@ -769,6 +780,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: thousands of years"
       ],
+      "languages": "Draenei",
       "storyQuestion": "What gives you strength after losing so much of your old life?"
     },
     {
@@ -827,6 +839,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: thousands of years"
       ],
+      "languages": "Draenei",
       "storyQuestion": "What hope keeps you moving after generations of exile?"
     },
     {
@@ -885,6 +898,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: thousands of years"
       ],
+      "languages": "Draenei",
       "storyQuestion": "What personal conviction defines you beyond duty and zeal?"
     },
     {
@@ -1021,6 +1035,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: under 100 years"
       ],
+      "languages": "Common human, One extra",
       "storyQuestion": "What hard lesson shaped you early, and what keeps you pushing forward?"
     },
     {
@@ -1088,6 +1103,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 80-100 years"
       ],
+      "languages": "Taur-ahe",
       "storyQuestion": "What tradition do you carry proudly, and what part did you choose to change?"
     },
     {
@@ -1155,6 +1171,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 80-100 years"
       ],
+      "languages": "Taur-ahe",
       "storyQuestion": "What tradition of your people shaped you most, and what called you beyond your homeland?"
     },
     {
@@ -1222,6 +1239,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 80-100 years"
       ],
+      "languages": "Taur-ahe",
       "storyQuestion": "How did hardship shape your personality in ways others notice immediately?"
     },
     {
@@ -1292,6 +1310,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: many hundreds of years"
       ],
+      "languages": "Thalassian, One extra",
       "storyQuestion": "What personal value or habit sets you apart from other blood elves?"
     },
     {
@@ -1347,6 +1366,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: ageless unless destroyed"
       ],
+      "languages": "Gutterspeak",
       "storyQuestion": "What part of your old self still survives in who you are now?"
     },
     {
@@ -1461,6 +1481,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: ageless unless destroyed"
       ],
+      "languages": "Gutterspeak",
       "storyQuestion": "If undeath was your second beginning, what did you become this time by choice, not by fate?"
     },
     {
@@ -1525,6 +1546,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: many hundreds to over a thousand years"
       ],
+      "languages": "Shalassian",
       "storyQuestion": "What part of your identity matters most now that isolation is over?"
     },
     {
@@ -1592,6 +1614,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 70-90 years"
       ],
+      "languages": "Goblin, One extra",
       "storyQuestion": "What did survival and dealmaking teach you, and what's the one thing you won't sell?"
     },
     {
@@ -1664,6 +1687,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 75 years"
       ],
+      "languages": "Orcish",
       "storyQuestion": "What clan lesson still shapes your decisions when no one is watching?"
     },
     {
@@ -1736,6 +1760,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 75 years"
       ],
+      "languages": "Orcish",
       "storyQuestion": "What belief guides you personally, even when other orcs disagree?"
     },
     {
@@ -1804,6 +1829,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 75 years"
       ],
+      "languages": "Orcish",
       "storyQuestion": "When clan identity defines so much, what makes your way of honor, war, or leadership different from other orcs?"
     },
     {
@@ -1859,6 +1885,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 70-90 years"
       ],
       "isAdditional": false,
+      "languages": "Vulpera",
       "storyQuestion": "What part of your story made you more than just a survivor of the road?"
     },
     {
@@ -1922,6 +1949,7 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 1
         }
       ],
+      "languages": "Zandali",
       "storyQuestion": "What personal code sets you apart from other forest trolls?"
     },
     {
@@ -1985,6 +2013,7 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 1
         }
       ],
+      "languages": "Zandali",
       "storyQuestion": "What does strength mean to you beyond simply enduring hard times?"
     },
     {
@@ -2052,6 +2081,7 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 1
         }
       ],
+      "languages": "Zandali",
       "storyQuestion": "What part of your spirit makes you different from others in your tribe?"
     },
     {
@@ -2119,7 +2149,72 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 1
         }
       ],
+      "languages": "Zandali",
       "storyQuestion": "What makes you stand out in a people defined by legacy and status?"
+    },
+    {
+      "id": "troll-sand",
+      "name": "Sand Troll",
+      "image": "https://placehold.co/600x800/3e3328/e8ecff?text=Sand%20Troll",
+      "description": "Desert-hardened Farraki descendants of Tanaris, known for ruthless survival, sand-craft ambushes, and dark blood-voodoo rites.",
+      "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 2,
+      "traits": [
+        "Regeneration",
+        "Desert Adaptation",
+        "Sandfury Voodoo"
+      ],
+      "names": {
+        "male": [
+          "Vol",
+          "Ros",
+          "Mig",
+          "Gal",
+          "Traxe",
+          "Maaho",
+          "Tuben",
+          "Ju",
+          "Goz",
+          "Akash",
+          "Vithek",
+          "Tian",
+          "Vazkono",
+          "Rhas",
+          "Vog"
+        ],
+        "female": [
+          "Shi",
+          "Mith",
+          "Hai",
+          "So",
+          "Ozdun",
+          "Imo",
+          "Aju",
+          "Zhokre",
+          "Xullah",
+          "Joz",
+          "Fahze",
+          "Zil",
+          "Ruso",
+          "Mooh"
+        ]
+      },
+      "dataChips": [
+        "Lifespan: around 80-120 years"
+      ],
+      "bonuses": [
+        {
+          "stat": "DEX",
+          "value": 2
+        },
+        {
+          "stat": "WIS",
+          "value": 1
+        }
+      ],
+      "languages": "Zandali",
+      "storyQuestion": "What survival lesson from the burning sands still defines your choices today?"
     },
     {
       "id": "arakkoa-high",
@@ -2162,6 +2257,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 150 years"
       ],
       "isAdditional": true,
+      "languages": "Ravenspeech",
       "storyQuestion": "What personal truth did you keep when your culture expected something else?"
     },
     {
@@ -2205,6 +2301,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 150 years"
       ],
       "isAdditional": true,
+      "languages": "Ravenspeech",
       "storyQuestion": "How did being cast down change the person you chose to become?"
     },
     {
@@ -2248,6 +2345,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 70 years"
       ],
       "isAdditional": true,
+      "languages": "Orcish",
       "storyQuestion": "What personal drive pushes you beyond the life your people expected?"
     },
     {
@@ -2295,6 +2393,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
+      "languages": "Common, One extra",
       "storyQuestion": "How did living in a world not built for your kind change how you adapt and survive?"
     },
     {
@@ -2338,6 +2437,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 300 years"
       ],
       "isAdditional": true,
+      "languages": "Furbolg, Taur-ahe or Darnassian",
       "storyQuestion": "What gentle or fierce part of you surprises people most?"
     },
     {
@@ -2381,6 +2481,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 50 years"
       ],
       "isAdditional": true,
+      "languages": "Common",
       "storyQuestion": "What choice proves you're more than the worst expectations others have of gnolls?"
     },
     {
@@ -2431,6 +2532,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 250 years"
       ],
       "isAdditional": true,
+      "languages": "Gnomish",
       "storyQuestion": "What keeps your identity strong despite stigma and hardship?"
     },
     {
@@ -2481,6 +2583,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 90 years"
       ],
       "isAdditional": true,
+      "languages": "Goblin",
       "storyQuestion": "When plans fail and titles mean nothing, what do you trust most?"
     },
     {
@@ -2524,6 +2627,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 180 years"
       ],
       "isAdditional": true,
+      "languages": "Thalassian, Human",
       "storyQuestion": "How did you turn living between worlds into a personal strength?"
     },
     {
@@ -2580,6 +2684,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 20 years"
       ],
       "isAdditional": true,
+      "languages": "Hozen, Orcish, Mogu",
       "storyQuestion": "What deeper value do you hold that people don't expect from you?"
     },
     {
@@ -2623,6 +2728,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Vrykul",
       "storyQuestion": "What part of your heart stands out in a culture that prizes might?"
     },
     {
@@ -2668,6 +2774,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Alliance-leaning",
+      "languages": "Jinyu, Mogu",
       "storyQuestion": "What personal calling matters most to you beyond tradition and prophecy?"
     },
     {
@@ -2711,6 +2818,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Alliance-leaning",
+      "languages": "Jinyu, Mogu",
       "storyQuestion": "How did war and loss change what kind of person you are now?"
     },
     {
@@ -2754,6 +2862,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Low Common, One Extra",
       "storyQuestion": "What makes you stand out from other kobolds who survive by fear and numbers?"
     },
     {
@@ -2812,6 +2921,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Mogu",
       "storyQuestion": "What personal change proves you are not trapped by old tyranny?"
     },
     {
@@ -2861,6 +2971,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Mantid",
       "storyQuestion": "What individual purpose drives you beyond the swarm's old cycles?"
     },
     {
@@ -2911,6 +3022,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Nerglish, Low Common",
       "storyQuestion": "What personal trait helps others see you as more than a stereotype?"
     },
     {
@@ -2962,6 +3074,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Nazja",
       "storyQuestion": "What part of your identity did you keep despite everything your people became?"
     },
     {
@@ -3005,6 +3118,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Ogre, Orcish",
       "storyQuestion": "What quality do you have that people never expect from an ogre?"
     },
     {
@@ -3082,6 +3196,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Quilboar",
       "storyQuestion": "What personal value shaped you beyond clan rivalry and brutality?"
     },
     {
@@ -3126,6 +3241,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Saberon",
       "storyQuestion": "What makes your instincts serve your choices, not control them?"
     },
     {
@@ -3191,6 +3307,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Saurok",
       "storyQuestion": "What decision made you more than the role violence gave you?"
     },
     {
@@ -3230,10 +3347,11 @@ window.WOW_CHARACTER_OPTIONS = {
         ]
       },
       "dataChips": [
-        "Lifespan: around 90 years"
+        "Lifespan: thousands of years"
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Sethrak",
       "storyQuestion": "What value keeps you steady when your people are divided by different loyalties and futures?"
     },
     {
@@ -3284,6 +3402,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Taur-ahe",
       "storyQuestion": "What did a harsh life teach you that became your greatest strength?"
     },
     {
@@ -3327,6 +3446,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Tortollan",
       "storyQuestion": "What personal mission matters more to you than trade, travel, or stories?"
     },
     {
@@ -3370,6 +3490,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Tol'vir",
       "storyQuestion": "What part of your will shaped you beyond ancient duty?"
     },
     {
@@ -3413,6 +3534,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Zandali",
       "storyQuestion": "What choice made you different from the violence your people are known for?"
     },
     {
@@ -3474,6 +3596,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Tuskarr",
       "storyQuestion": "What personal value anchors you when life gets hard?"
     },
     {
@@ -3517,6 +3640,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Nerubian",
       "storyQuestion": "In a people known for intellect and ancient craft, what idea or pursuit sets your mind apart?"
     },
     {
@@ -3560,6 +3684,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Darnassian",
       "storyQuestion": "What part of yourself are you trying to reclaim or protect?"
     },
     {
@@ -3610,6 +3735,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Thalassian, Eredun",
       "storyQuestion": "What keeps you from becoming only the power you wield?"
     },
     {
@@ -3660,6 +3786,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Shalassian",
       "storyQuestion": "What did surviving dependence and decline teach you about who you are?"
     },
     {
@@ -3710,6 +3837,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Thalassian",
       "storyQuestion": "What personal resolve helped you hold onto yourself through desperation?"
     },
     {
@@ -3753,6 +3881,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Thalassian",
       "storyQuestion": "What part of your humanity or honor have you chosen not to lose?"
     },
     {
@@ -3803,6 +3932,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Alliance-leaning",
+      "languages": "Thalassian",
       "storyQuestion": "What makes your path distinct from the long legacy your people carry?"
     },
     {
@@ -3846,6 +3976,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Neutral",
+      "languages": "Darnassian",
       "storyQuestion": "What personal calling guides you beyond simply guarding nature?"
     },
     {
@@ -3897,6 +4028,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "isAdditional": true,
       "faction": "Horde-leaning",
+      "languages": "Darnassian",
       "storyQuestion": "What makes you different from the life and reputation your kind are known for?"
     },
     {
@@ -3944,9 +4076,9 @@ window.WOW_CHARACTER_OPTIONS = {
         ]
       },
       "dataChips": [
-        "Lifespan: many hundreds of years",
-        "Languages: Draconic, Common, Orcish"
+        "Lifespan: many hundreds of years"
       ],
+      "languages": "Draconic",
       "isAdditional": true,
       "faction": "Neutral",
       "storyQuestion": "What choice proves you are more than just a servant of dragonflight duty?"
@@ -3983,7 +4115,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 5,
         "utility": 3
@@ -4010,7 +4142,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 2,
         "utility": 3
@@ -4037,7 +4169,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 2,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -4064,7 +4196,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 1,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -4106,7 +4238,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 3,
         "utility": 3
@@ -4127,14 +4259,14 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
-        "Animal Companion",
         "Aspect of the Eagle",
+        "Lone Wolf",
         "Multiattack"
       ],
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 2,
         "utility": 2
@@ -4155,14 +4287,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
-        "Animal Companion",
         "Trapper",
         "Lone Wolf"
       ],
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 4,
         "utility": 3
@@ -4203,7 +4334,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 3,
         "utility": 3
@@ -4230,7 +4361,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 5,
         "utility": 3
@@ -4257,7 +4388,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 2,
         "utility": 2
@@ -4298,7 +4429,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -4325,7 +4456,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 2,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -4352,7 +4483,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 2,
         "utility": 3
@@ -4393,7 +4524,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 2,
-        "survivability": 4,
+        "survival": 4,
         "support": 5,
         "control": 2,
         "utility": 3
@@ -4420,7 +4551,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 2,
-        "survivability": 5,
+        "survival": 5,
         "support": 3,
         "control": 3,
         "utility": 2
@@ -4447,7 +4578,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 4,
+        "survival": 4,
         "support": 2,
         "control": 2,
         "utility": 2
@@ -4488,7 +4619,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 2,
+        "survival": 2,
         "support": 5,
         "control": 3,
         "utility": 3
@@ -4515,7 +4646,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 1,
-        "survivability": 2,
+        "survival": 2,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -4542,7 +4673,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 3
@@ -4583,7 +4714,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 2,
         "utility": 3
@@ -4610,7 +4741,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 3,
         "utility": 4
@@ -4637,7 +4768,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 4,
         "utility": 4
@@ -4678,7 +4809,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 3
@@ -4705,7 +4836,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 2,
         "utility": 3
@@ -4732,7 +4863,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 1,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -4773,7 +4904,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 3
@@ -4800,7 +4931,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 3,
         "utility": 3
@@ -4827,7 +4958,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 2,
         "utility": 2
@@ -4868,7 +4999,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 3,
         "utility": 2
@@ -4895,7 +5026,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 1,
         "utility": 1
@@ -4922,7 +5053,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 2,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 4,
         "utility": 2
@@ -4963,7 +5094,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 3,
         "utility": 2
@@ -4990,7 +5121,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -5017,7 +5148,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 3,
         "utility": 3
@@ -5058,7 +5189,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 2,
         "utility": 3
@@ -5085,7 +5216,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 3,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -5112,7 +5243,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "bonuses": [],
       "profile": {
         "damage": 5,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 2,
         "utility": 2
@@ -5138,7 +5269,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 3,
+        "survival": 3,
         "support": 4,
         "control": 3,
         "utility": 5
@@ -5170,7 +5301,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 2,
+        "survival": 2,
         "support": 4,
         "control": 5,
         "utility": 5
@@ -5202,7 +5333,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 3
@@ -5233,7 +5364,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 5,
+        "survival": 5,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -5265,7 +5396,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 4,
         "utility": 4
@@ -5292,7 +5423,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 2,
-        "survivability": 2,
+        "survival": 2,
         "support": 5,
         "control": 4,
         "utility": 5
@@ -5319,7 +5450,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 4,
         "utility": 2
@@ -5346,7 +5477,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 5,
         "utility": 4
@@ -5375,7 +5506,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 3,
+        "survival": 3,
         "support": 4,
         "control": 4,
         "utility": 3
@@ -5402,7 +5533,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 2,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 4,
         "utility": 4
@@ -5429,7 +5560,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -5457,7 +5588,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 5,
         "utility": 3
@@ -5485,7 +5616,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 5,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -5513,7 +5644,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 4,
+        "survival": 4,
         "support": 2,
         "control": 3,
         "utility": 2
@@ -5541,7 +5672,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 2,
-        "survivability": 3,
+        "survival": 3,
         "support": 4,
         "control": 5,
         "utility": 4
@@ -5569,7 +5700,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 4,
         "utility": 4
@@ -5590,7 +5721,6 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
-        "Animal Companion",
         "Run and Gun",
         "Suppressive Fire"
       ],
@@ -5598,7 +5728,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 5,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 3,
         "utility": 2
@@ -5626,7 +5756,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 5,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 2,
         "utility": 1
@@ -5655,7 +5785,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 3,
         "utility": 2
@@ -5683,7 +5813,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 4,
+        "survival": 4,
         "support": 1,
         "control": 4,
         "utility": 2
@@ -5710,7 +5840,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 1,
         "control": 3,
         "utility": 3
@@ -5738,7 +5868,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 2,
+        "survival": 2,
         "support": 4,
         "control": 5,
         "utility": 4
@@ -5766,7 +5896,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 4,
         "utility": 4
@@ -5794,7 +5924,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 2,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 5,
         "utility": 5
@@ -5822,7 +5952,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 4
@@ -5850,7 +5980,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 2,
-        "survivability": 3,
+        "survival": 3,
         "support": 5,
         "control": 3,
         "utility": 4
@@ -5878,7 +6008,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 3,
         "control": 4,
         "utility": 3
@@ -5906,7 +6036,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 5,
+        "survival": 5,
         "support": 3,
         "control": 3,
         "utility": 2
@@ -5934,7 +6064,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 3,
-        "survivability": 3,
+        "survival": 3,
         "support": 4,
         "control": 4,
         "utility": 3
@@ -5962,7 +6092,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 5,
         "utility": 3
@@ -5994,7 +6124,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 1,
         "control": 3,
         "utility": 5
@@ -6022,7 +6152,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 2,
+        "survival": 2,
         "support": 2,
         "control": 4,
         "utility": 3
@@ -6049,7 +6179,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "isAdditional": true,
       "profile": {
         "damage": 4,
-        "survivability": 3,
+        "survival": 3,
         "support": 2,
         "control": 4,
         "utility": 2
@@ -7643,23 +7773,24 @@ window.WOW_CHARACTER_OPTIONS = {
       "storyQuestion": "How did your Gravetender past shape who you are, and what made you leave that life for adventure?"
     },
     {
-      "id": "outlandborn",
-      "name": "Outlandborn",
-      "description": "You are bound by a dark pact and hardened by fel-scarred Outland influences rather than infernal courts.",
+      "id": "outland-survivor",
+      "name": "Outland Survivor",
+      "description": "You endured the shattered wastes of Outland, where fel storms, broken lands, and marauding warbands forced you to survive through scavenging, caution, and ruthless resolve.",
       "proficiencies": {
         "skills": [
-          "Religion",
-          "Persuasion"
+          "Survival",
+          "Intimidation"
         ],
         "tools": [
-          "One type of gaming set"
+          "Herbalism Kit"
         ]
       },
       "languages": 0,
       "equipment": [
-        "contract describing your duties and punishments",
+        "scavenged traveler’s gear",
+        "trophy from a fallen foe",
         "set of common clothes",
-        "bone dice or playing cards"
+        "waterskin"
       ],
       "startingMoney": "5 gp",
       "isAdditional": true,
@@ -7667,7 +7798,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Hellborn_(5e_Background)"
       },
-      "storyQuestion": "How did your Outlandborn past shape who you are, and what made you leave that life for adventure?"
+      "storyQuestion": "How did your past shape who you are, and how did you make it out alive?"
     },
     {
       "id": "mercenary",

@@ -147,6 +147,25 @@
     .animate-breathe {
       animation: breathe-opacity 4s ease-in-out infinite;
     }
+
+    @keyframes pink-soft-glow {
+      0%, 100% {
+        color: rgba(244, 114, 182, 0.78);
+        text-shadow: 0 0 6px rgba(236, 72, 153, 0.38);
+        border-color: rgba(236, 72, 153, 0.22);
+        box-shadow: 0 0 8px rgba(236, 72, 153, 0.16);
+      }
+      50% {
+        color: rgba(251, 207, 232, 0.95);
+        text-shadow: 0 0 14px rgba(236, 72, 153, 0.72);
+        border-color: rgba(236, 72, 153, 0.5);
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.34);
+      }
+    }
+
+    .expand-glow {
+      animation: pink-soft-glow 3.4s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
@@ -292,10 +311,10 @@
       storyAnswersById: "character_forge_story_answers_by_id"
     };
     const CHARACTER_FORGE_STEPS = [
-      { id: "races", label: "Races" },
-      { id: "classes", label: "Classes" },
+      { id: "races", label: "Race" },
+      { id: "classes", label: "Class" },
       { id: "background", label: "Background" },
-      { id: "weapon", label: "Weapons" },
+      { id: "weapon", label: "Weapon" },
       { id: "compare", label: "Finalize" }
     ];
     const CHARACTER_FORGE_DATA_FILE = "data/wow-character-options.json";
@@ -303,7 +322,7 @@
     const App = () => {
       return (
         <div className="min-h-screen ambient-bg">
-          <main className="h-screen overflow-y-auto no-scrollbar">
+          <main className="h-screen overflow-y-auto overflow-x-hidden no-scrollbar">
             <div className="p-2 sm:p-4">
               <CharacterForgePanel isVisible={true} />
             </div>
@@ -490,6 +509,11 @@
               .map((chip) => (typeof chip === "string" ? chip.trim() : ""))
               .filter((chip) => chip.length > 0)
           : [];
+        const explicitLanguages = typeof raw?.languages === "string" ? raw.languages.trim() : "";
+        const extractedLanguagesChip = dataChips.find((chip) => /^Languages:\s*/i.test(chip)) || "";
+        const languages = explicitLanguages
+          || (extractedLanguagesChip ? extractedLanguagesChip.replace(/^Languages:\s*/i, "").trim() : "");
+        const normalizedDataChips = dataChips.filter((chip) => !/^Languages:\s*/i.test(chip));
         const linkChipRaw = raw?.linkChip;
         const linkChip =
           linkChipRaw && typeof linkChipRaw === "object" && !Array.isArray(linkChipRaw)
@@ -545,7 +569,8 @@
           parentId,
           bonuses,
           traits,
-          dataChips,
+          dataChips: normalizedDataChips,
+          languages,
           linkChip: linkChip?.url ? linkChip : null,
           names,
           isAdditional,
@@ -973,6 +998,16 @@
         setTooltipState(null);
       };
 
+      const handleChipTap = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (tooltipState) {
+          hideTooltip();
+          return;
+        }
+        showTooltip(event);
+      };
+
       useEffect(() => {
         const clearTooltip = () => hideTooltip();
         window.addEventListener("scroll", clearTooltip, true);
@@ -991,6 +1026,9 @@
             onMouseLeave={hideTooltip}
             onFocus={showTooltip}
             onBlur={hideTooltip}
+            onMouseDown={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onClick={handleChipTap}
             tabIndex={0}
           >
             {label}
@@ -1732,10 +1770,10 @@
             type="button"
             disabled={isRandomLocked}
             onClick={handleRandomizePick}
-            className={`fixed left-4 bottom-4 z-40 px-8 py-5 rounded-full border border-white/65 bg-[#A99EB0]/20 text-[16px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-md transition ${
+            className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
               isRandomLocked
                 ? "cursor-not-allowed opacity-75"
-                : "hover:bg-[#A99EB0]/40"
+                : "hover:bg-black/50"
             }`}
           >
             Random
@@ -1890,8 +1928,8 @@
                     {[
                       { key: "male", label: "Male", names: item.names.male || [] },
                       { key: "female", label: "Female", names: item.names.female || [] },
-                      { key: "family", label: "Family", names: item.names.groupNames || item.names.any || [] }
-                    ].map((entry, rowIndex) => (
+                      { key: "family", label: "Family", names: item.names.groupNames || [] }
+                    ].filter((entry) => Array.isArray(entry.names) && entry.names.length > 0).map((entry, rowIndex) => (
                       <div key={entry.key} className="min-w-0 truncate">
                         <span className="font-semibold text-white/95">{entry.label}:</span>{" "}
                         <RotatingInlineNameValue names={entry.names} delayMs={rowIndex * 100} intervalMs={3000} />
@@ -1903,6 +1941,11 @@
               {kind === "race" && ageInfo.length > 0 && (
                 <div className="text-[11px] text-white/70 leading-relaxed">
                   {ageInfo.join("  â€¢  ")}
+                </div>
+              )}
+              {kind === "race" && item.languages && (
+                <div className="text-[11px] text-white/70 leading-relaxed">
+                  Languages: {item.languages}
                 </div>
               )}
               <div className="mt-auto flex flex-col gap-3">
@@ -2059,7 +2102,7 @@
         return () => window.removeEventListener("keydown", onKeyDown);
       }, [onClose]);
 
-      const sectionBaseClass = "rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-col gap-3";
+      const sectionBaseClass = "flex flex-col gap-3";
       const textareaBaseClass = "w-full min-h-[96px] rounded-xl border border-white/15 bg-black/35 px-3 py-2.5 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80";
 
       return (
@@ -2070,17 +2113,10 @@
           }}
         >
           <div className="w-full max-w-3xl max-h-[88vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#13131a]/95 p-5 md:p-6 shadow-2xl flex flex-col gap-4">
-            <div className="flex items-start justify-between gap-4">
-              <button type="button" onClick={onClose} className="text-white/40 hover:text-white transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
             <section className={sectionBaseClass}>
               <div className="flex items-center justify-between gap-3">
                 <div className="text-sm text-white/70 text-cyan-200/80">{raceItem ? raceItem.name : "No race selected"}</div>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed">{racePrompt.statement}</p>
               <div className="text-sm text-white/90 leading-relaxed">{racePrompt.question}</div>
               <textarea
                 value={raceAnswer}
@@ -2089,12 +2125,12 @@
                 className={textareaBaseClass}
               />
             </section>
+            <div className="h-px bg-white/10"></div>
 
             <section className={sectionBaseClass}>
               <div className="flex items-center justify-between gap-3">
                 <div className="text-sm text-white/70 text-emerald-200/80">{classItem ? classItem.name : "No class selected"}</div>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed">{classPrompt.statement}</p>
               <div className="text-sm text-white/90 leading-relaxed">{classPrompt.question}</div>
               <textarea
                 value={classAnswer}
@@ -2103,12 +2139,12 @@
                 className={textareaBaseClass}
               />
             </section>
+            <div className="h-px bg-white/10"></div>
 
             <section className={sectionBaseClass}>
               <div className="flex items-center justify-between gap-3">
                 <div className="text-sm text-white/70 text-amber-200/80">{backgroundItem ? backgroundItem.name : "No background selected"}</div>
               </div>
-              <p className="text-sm text-white/50 leading-relaxed">{backgroundPrompt.statement}</p>
               <div className="text-sm text-white/90 leading-relaxed">{backgroundPrompt.question}</div>
               <textarea
                 value={backgroundAnswer}
@@ -2243,12 +2279,19 @@
         }, 140);
       };
 
+      useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const onWheel = (event) => handleWheel(event);
+        container.addEventListener("wheel", onWheel, { passive: false });
+        return () => container.removeEventListener("wheel", onWheel);
+      }, [handleWheel]);
+
       return (
         <div className="relative w-full max-w-none mx-auto">
           <div
             ref={containerRef}
             onScroll={updateActiveIndex}
-            onWheel={handleWheel}
             className="h-[clamp(220px,34vh,430px)] overflow-y-auto compare-scroll-hidden"
           >
             <div style={{ height: `${spacerHeight}px` }}></div>
@@ -2492,10 +2535,10 @@
             type="button"
             disabled={isRandomLocked}
             onClick={handleRandomizeBackground}
-            className={`fixed left-4 bottom-4 z-40 px-8 py-5 rounded-full border border-white/65 bg-[#f5f3ec]/60 text-[22px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-md transition ${
+            className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
               isRandomLocked
                 ? "cursor-not-allowed opacity-75"
-                : "hover:bg-[#f5f3ec]/80"
+                : "hover:bg-black/50"
             }`}
           >
             Random
@@ -2517,6 +2560,11 @@
     };
 
     const WeaponPickerSection = ({ weapons, selectedWeaponIds, onToggleWeapon }) => {
+      const [randomHighlightId, setRandomHighlightId] = useState(null);
+      const [isRandomLocked, setIsRandomLocked] = useState(false);
+      const randomHighlightStartTimeoutRef = useRef(null);
+      const randomHighlightTimeoutRef = useRef(null);
+      const sectionRef = useRef(null);
       const rangedWeaponIds = new Set([
         "dart",
         "light-crossbow",
@@ -2565,16 +2613,21 @@
       const renderWeaponCard = (weapon, colorIndex, animationIndex) => {
         const selectedIndex = selectedWeaponIds.indexOf(weapon.id);
         const selected = selectedIndex !== -1;
+        const hasRandomHighlight = randomHighlightId === weapon.id;
         const tone = getWeaponTone(colorIndex);
         const staggerDelayMs = Math.min(animationIndex, 24) * 35;
         return (
           <button
             key={weapon.id}
+            data-weapon-card-id={weapon.id}
             type="button"
             onClick={() => onToggleWeapon(weapon.id)}
-            className="group overflow-hidden rounded-2xl border text-left transition animate-fade-in-up"
+            className={`group overflow-hidden rounded-2xl border text-left transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] animate-fade-in-up ${
+              hasRandomHighlight ? "relative z-20 ring-4 ring-white/90 shadow-[0_0_72px_rgba(255,255,255,0.85)]" : ""
+            } ${randomHighlightId && !hasRandomHighlight ? "blur-[20px]" : ""}`}
             style={{
               animationDelay: `${staggerDelayMs}ms`,
+              scale: hasRandomHighlight ? "1.08" : "1",
               borderColor: selected ? tone.selectedBorder : tone.border,
               backgroundColor: selected ? tone.selectedBackground : tone.background,
               boxShadow: selected ? tone.shadow : "none"
@@ -2650,11 +2703,78 @@
         </div>
       );
 
+      useEffect(() => {
+        return () => {
+          if (randomHighlightStartTimeoutRef.current) {
+            window.clearTimeout(randomHighlightStartTimeoutRef.current);
+            randomHighlightStartTimeoutRef.current = null;
+          }
+          if (randomHighlightTimeoutRef.current) {
+            window.clearTimeout(randomHighlightTimeoutRef.current);
+            randomHighlightTimeoutRef.current = null;
+          }
+        };
+      }, []);
+
+      const scrollToWeaponCard = (itemId) => {
+        window.setTimeout(() => {
+          const container = sectionRef.current;
+          if (!container) return;
+          const cardElements = container.querySelectorAll("[data-weapon-card-id]");
+          const target = Array.from(cardElements).find((el) => el.getAttribute("data-weapon-card-id") === itemId);
+          if (target && typeof target.scrollIntoView === "function") {
+            target.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 90);
+      };
+
+      const highlightWeaponCard = (itemId) => {
+        setIsRandomLocked(true);
+        if (randomHighlightStartTimeoutRef.current) {
+          window.clearTimeout(randomHighlightStartTimeoutRef.current);
+          randomHighlightStartTimeoutRef.current = null;
+        }
+        if (randomHighlightTimeoutRef.current) {
+          window.clearTimeout(randomHighlightTimeoutRef.current);
+          randomHighlightTimeoutRef.current = null;
+        }
+        setRandomHighlightId(null);
+        randomHighlightStartTimeoutRef.current = window.setTimeout(() => {
+          setRandomHighlightId(itemId);
+          randomHighlightStartTimeoutRef.current = null;
+          randomHighlightTimeoutRef.current = window.setTimeout(() => {
+            setRandomHighlightId(null);
+            setIsRandomLocked(false);
+            randomHighlightTimeoutRef.current = null;
+          }, 1950);
+        }, 750);
+      };
+
+      const handleRandomizeWeapon = () => {
+        if (isRandomLocked) return;
+        if (!sortedWeapons.length) return;
+        const randomItem = sortedWeapons[Math.floor(Math.random() * sortedWeapons.length)];
+        highlightWeaponCard(randomItem.id);
+        scrollToWeaponCard(randomItem.id);
+      };
+
       return (
-        <div className="flex flex-col gap-5 px-4 sm:px-0">
+        <div ref={sectionRef} className="flex flex-col gap-5 px-4 sm:px-0">
           {renderWeaponSection("Melee Weapons", meleeWeapons, 0)}
           {renderWeaponSection("Ranged Weapons", rangedWeapons, meleeWeapons.length)}
           {renderWeaponSection("Shields", shieldWeapons, meleeWeapons.length + rangedWeapons.length)}
+          <button
+            type="button"
+            disabled={isRandomLocked}
+            onClick={handleRandomizeWeapon}
+            className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
+              isRandomLocked
+                ? "cursor-not-allowed opacity-75"
+                : "hover:bg-black/50"
+            }`}
+          >
+            Random
+          </button>
         </div>
       );
     };
@@ -2688,7 +2808,10 @@
       const [activeClass, setActiveClass] = useState(null);
       const [previewRaceId, setPreviewRaceId] = useState(null);
       const [previewClassId, setPreviewClassId] = useState(null);
-      const [mainScrollTop, setMainScrollTop] = useState(0);
+      const [isFinalizeExpanded, setIsFinalizeExpanded] = useState(false);
+      const [isPersonaInlineOpen, setIsPersonaInlineOpen] = useState(false);
+      const [isFinalizeStatsVisible, setIsFinalizeStatsVisible] = useState(false);
+      const previousStepRef = useRef(activeStep);
       const dataFileInputRef = useRef(null);
       const visibleRaces = useMemo(() => races.filter((item) => item.hidden !== true), [races]);
       const visibleClasses = useMemo(() => classes.filter((item) => item.hidden !== true), [classes]);
@@ -2794,17 +2917,6 @@
       }, [isVisible, activeStep]);
 
       useEffect(() => {
-        const mainEl = document.querySelector("main");
-        if (!mainEl) return;
-        const syncScrollTop = () => setMainScrollTop(mainEl.scrollTop || 0);
-        syncScrollTop();
-        mainEl.addEventListener("scroll", syncScrollTop, { passive: true });
-        return () => {
-          mainEl.removeEventListener("scroll", syncScrollTop);
-        };
-      }, []);
-
-      useEffect(() => {
         if (isLoading || loadError) return;
         if (!visibleRaces.length) {
           setSelectedRaceIds([]);
@@ -2902,6 +3014,9 @@
         setPreviewClassId(null);
         setModalState(null);
         setRemoveConfirmState(null);
+        setIsFinalizeExpanded(false);
+        setIsPersonaInlineOpen(false);
+        setIsFinalizeStatsVisible(false);
         setActiveStep("races");
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId);
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.storyAnswersById);
@@ -2943,6 +3058,19 @@
           setActiveStep("races");
         }
       }, [activeStep, canOpenFinalize]);
+
+      useEffect(() => {
+        const enteredCompare = previousStepRef.current !== "compare" && activeStep === "compare";
+        if (enteredCompare && selectedRaces.length === 1 && selectedClasses.length === 1) {
+          setIsFinalizeExpanded(true);
+        }
+        if (activeStep !== "compare") {
+          setIsFinalizeExpanded(false);
+          setIsPersonaInlineOpen(false);
+          setIsFinalizeStatsVisible(false);
+        }
+        previousStepRef.current = activeStep;
+      }, [activeStep, selectedRaces.length, selectedClasses.length]);
 
       const toggleSelection = (kind, itemId) => {
         const sourceItems = kind === "race" ? visibleRaces : visibleClasses;
@@ -3022,9 +3150,28 @@
           compareRace?.dataChips || [],
           compareClass?.dataChips || []
         ]);
-        const { ageInfo: comboAgeInfo, remaining: comboAgeResolvedChips } = extractAgeInfoFromChips(comboDataChips);
+        const { remaining: comboAgeResolvedChips } = extractAgeInfoFromChips(comboDataChips);
         const { hp: comboBaseHp, remaining: comboChips } = extractHpInfoFromChips(comboAgeResolvedChips);
         const comboConBonus = comboBonuses.find((bonus) => bonus.stat === "CON")?.value || 0;
+        const getNameRows = (item) => {
+          if (!item?.names) return [];
+          return [
+            { key: "male", label: "Male", names: item.names.male || [] },
+            { key: "female", label: "Female", names: item.names.female || [] },
+            { key: "family", label: "Family", names: item.names.groupNames || item.names.any || [] }
+          ].filter((entry) => Array.isArray(entry.names) && entry.names.length > 0);
+        };
+        const getDetailChips = (item) => {
+          const traitChips = Array.isArray(item?.traits) ? item.traits : [];
+          const dataChips = Array.isArray(item?.dataChips)
+            ? item.dataChips.filter((chip) => typeof chip === "string" && !/^Lifespan:/i.test(chip) && !/^HP:\s*-?\d+/i.test(chip))
+            : [];
+          return mergeDataChips([traitChips, dataChips]);
+        };
+        const raceNameRows = getNameRows(compareRace);
+        const classNameRows = getNameRows(compareClass);
+        const raceDetailChips = getDetailChips(compareRace);
+        const classDetailChips = getDetailChips(compareClass);
         const backgroundSkillChips = selectedBackground
           ? [
               ...selectedBackground.proficiencies.skills,
@@ -3040,40 +3187,78 @@
         const backgroundFundsChips = selectedBackground && selectedBackground.startingMoney
           ? [selectedBackground.startingMoney]
           : [];
+        const compareProfile = compareClass?.profile || {};
+        const compareDifficultyValues = [Number(compareClass?.difficulty), Number(compareRace?.difficulty)]
+          .filter((value) => Number.isFinite(value));
+        const compareDifficulty = compareDifficultyValues.length > 0
+          ? Math.round((compareDifficultyValues.reduce((sum, value) => sum + value, 0) / compareDifficultyValues.length) * 10) / 10
+          : null;
+        const hasCompareProfile = Object.keys(compareProfile || {}).length > 0 || Number.isFinite(compareDifficulty);
 
         return (
-          <div className="relative h-[calc(100vh-170px)] md:h-[calc(100vh-220px)] min-h-0 md:min-h-[560px] max-h-none md:max-h-[840px]">
-            <div className="relative z-10 h-full px-0 pt-3 pb-0 md:px-8 md:pt-8 md:pb-0 flex flex-col gap-3 md:gap-6">
-              <div className="flex-1 min-h-0 grid place-items-start">
-                <div className="grid grid-cols-2 gap-2 md:gap-10 items-start max-w-7xl mx-auto w-full">
-                  <VerticalCompareSpinner
-                    items={selectedRaces}
-                    onActiveChange={setActiveRace}
-                    onPreviewIdChange={setPreviewRaceId}
-                    onRequestRemove={(item) => setRemoveConfirmState({ kind: "race", item })}
-                    removeLabel="race"
-                  />
-                  <VerticalCompareSpinner
-                    items={selectedClasses}
-                    onActiveChange={setActiveClass}
-                    onPreviewIdChange={setPreviewClassId}
-                    onRequestRemove={(item) => setRemoveConfirmState({ kind: "class", item })}
-                    removeLabel="class"
-                  />
+          <div className={`relative ${isFinalizeExpanded ? "fixed inset-0 z-[55] h-screen bg-black/78 backdrop-blur-md" : "h-full min-h-0 md:min-h-[560px] max-h-none md:max-h-[840px]"}`}>
+            <div className={`relative z-10 h-full ${isFinalizeExpanded ? "px-0 pt-0 pb-0 md:px-0 md:pt-0 md:pb-0" : "px-0 pt-3 pb-0 md:px-8 md:pt-8 md:pb-0"} flex flex-col gap-3 md:gap-6`}>
+              {!isFinalizeExpanded && (
+                <div className="flex-1 min-h-0 grid place-items-start pb-[240px] md:pb-[280px]">
+                  <div className="grid grid-cols-2 gap-2 md:gap-10 items-start max-w-7xl mx-auto w-full">
+                    <VerticalCompareSpinner
+                      items={selectedRaces}
+                      onActiveChange={setActiveRace}
+                      onPreviewIdChange={setPreviewRaceId}
+                      onRequestRemove={(item) => setRemoveConfirmState({ kind: "race", item })}
+                      removeLabel="race"
+                    />
+                    <VerticalCompareSpinner
+                      items={selectedClasses}
+                      onActiveChange={setActiveClass}
+                      onPreviewIdChange={setPreviewClassId}
+                      onRequestRemove={(item) => setRemoveConfirmState({ kind: "class", item })}
+                      removeLabel="class"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="mt-auto w-full max-w-7xl mx-auto px-0 md:px-6 -mb-2 md:-mb-3">
-                <div className="rounded-2xl bg-black/35 backdrop-blur-xl p-3 md:p-4 flex flex-col gap-2.5">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="text-lg md:text-2xl font-semibold text-white/95">{comboName}</div>
+              <div className={`${isFinalizeExpanded ? "w-full flex-1 min-h-0 px-2 md:px-3 pt-2 md:pt-3 pb-2 md:pb-3" : "fixed inset-x-0 bottom-0 z-20 w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-6 pb-2 md:pb-3 flex flex-col gap-2"}`}>
+                {!isFinalizeExpanded && hasCompareProfile && isFinalizeStatsVisible && (
+                  <div className="md:hidden rounded-2xl border border-white/10 bg-black/35 backdrop-blur-xl p-3">
+                    <ProfileBars profile={compareProfile} difficulty={compareDifficulty} />
+                  </div>
+                )}
+                {!isFinalizeExpanded && hasCompareProfile && isFinalizeStatsVisible && (
+                  <div className="hidden md:flex justify-end">
+                    <div className="w-[320px] rounded-2xl border border-white/10 bg-black/35 backdrop-blur-xl p-3">
+                      <ProfileBars profile={compareProfile} difficulty={compareDifficulty} />
+                    </div>
+                  </div>
+                )}
+                <div className={`rounded-2xl bg-black/35 backdrop-blur-xl p-3 md:p-4 flex flex-col gap-2.5 ${isFinalizeExpanded ? "h-full overflow-y-auto no-scrollbar" : ""}`}>
+                  <div className="flex items-center gap-3">
+                    <div className="h-px flex-1 bg-white/15"></div>
                     <button
                       type="button"
-                      onClick={() => setIsStoryModalOpen(true)}
-                      className="shrink-0 inline-flex items-center px-3 py-2 rounded-xl border border-white/15 bg-white/[0.04] text-[11px] uppercase tracking-[0.2em] text-white/85 hover:border-white/30 hover:bg-white/[0.08] transition"
+                      onClick={() => setIsFinalizeExpanded((prev) => !prev)}
+                      className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white transition"
                     >
-                      Persona
+                      {isFinalizeExpanded ? "Collapse Final Results" : "Expand Final Results"}
                     </button>
+                    <div className="h-px flex-1 bg-white/15"></div>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-lg md:text-2xl font-semibold text-white/95">{comboName}</div>
+                    {!isFinalizeExpanded && hasCompareProfile && (
+                      <button
+                        type="button"
+                        onClick={() => setIsFinalizeStatsVisible((prev) => !prev)}
+                        className={`text-[11px] uppercase tracking-[0.18em] transition ${
+                          isFinalizeStatsVisible
+                            ? "text-white/90"
+                            : "text-white/65 hover:text-white"
+                        }`}
+                      >
+                        Stats
+                      </button>
+                    )}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <HpDisplay baseHp={comboBaseHp} conBonus={comboConBonus} />
@@ -3083,49 +3268,100 @@
                       <div className="text-sm text-white/50">No bonuses defined for this combination yet.</div>
                     )}
                   </div>
-                  {comboTraits.length > 0 && (
+                  {!isFinalizeExpanded && comboTraits.length > 0 && (
                     <div className="pt-1">
                       <TraitChips traits={comboTraits} />
                     </div>
                   )}
-                  {comboAgeInfo.length > 0 && (
-                    <div className="pt-1 text-sm text-white/75 leading-relaxed">
-                      {comboAgeInfo.join(" ")}
-                    </div>
-                  )}
-                  {comboChips.length > 0 && (
+                  {!isFinalizeExpanded && comboChips.length > 0 && (
                     <div className="pt-1">
                       <TraitChips traits={comboChips} />
+                    </div>
+                  )}
+                  {isFinalizeExpanded && (
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 md:p-4 flex flex-col gap-2">
+                        <div className="text-sm font-semibold text-white/90">{compareRace?.name || "-"}</div>
+                        {compareRace?.description && (
+                          <div className="text-sm text-white/65 leading-relaxed">{compareRace.description}</div>
+                        )}
+                        {raceNameRows.length > 0 && (
+                          <div className="grid grid-cols-3 gap-2 text-[11px] text-white/80">
+                            {raceNameRows.map((entry, rowIndex) => (
+                              <div key={`expanded-race-${entry.key}`} className="min-w-0 truncate">
+                                <span className="font-semibold text-white/95">{entry.label}:</span>{" "}
+                                <RotatingInlineNameValue names={entry.names} delayMs={rowIndex * 100} intervalMs={3000} />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {compareRace?.languages && (
+                          <div className="text-sm text-white/65 leading-relaxed">
+                            Languages: {compareRace.languages}
+                          </div>
+                        )}
+                        {raceDetailChips.length > 0 && (
+                          <DetailChips
+                            items={raceDetailChips}
+                            chipClassName="border-cyan-200/35 bg-cyan-300/15 text-cyan-50"
+                          />
+                        )}
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 md:p-4 flex flex-col gap-2">
+                        <div className="text-sm font-semibold text-white/90">{compareClass?.name || "-"}</div>
+                        {compareClass?.description && (
+                          <div className="text-sm text-white/65 leading-relaxed">{compareClass.description}</div>
+                        )}
+                        {classDetailChips.length > 0 && (
+                          <DetailChips
+                            items={classDetailChips}
+                            chipClassName="border-emerald-200/35 bg-emerald-300/15 text-emerald-50"
+                          />
+                        )}
+                        {classNameRows.length > 0 && (
+                          <div className="grid grid-cols-3 gap-2 text-[11px] text-white/80">
+                            {classNameRows.map((entry, rowIndex) => (
+                              <div key={`expanded-class-${entry.key}`} className="min-w-0 truncate">
+                                <span className="font-semibold text-white/95">{entry.label}:</span>{" "}
+                                <RotatingInlineNameValue names={entry.names} delayMs={rowIndex * 100} intervalMs={3000} />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {classNameRows.length === 0 && classDetailChips.length === 0 && (
+                          <div className="text-sm text-white/45">More class finalize details can be added here.</div>
+                        )}
+                      </div>
                     </div>
                   )}
                   <div className="mt-2 grid gap-3 md:grid-cols-2">
                     <button
                       type="button"
                       onClick={() => setActiveStep("background")}
-                      className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.07] transition"
+                      className={`rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.07] transition ${!isFinalizeExpanded ? "h-full flex flex-col justify-center" : ""}`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="mt-1 text-sm font-semibold text-white/95">
-                          {selectedBackground ? selectedBackground.name : "Official backgrounds"}
+                          {selectedBackground ? selectedBackground.name : "Choose background"}
                         </div>
                         {selectedBackground && (
                           <div className="flex items-center gap-2 shrink-0">
-                          <HoverInfoChip
-                            label="Skills"
-                            className="border-slate-200/25 bg-slate-200/10 text-slate-100"
-                            tooltipContent={
-                              <div className="flex flex-wrap gap-2">
-                                <DetailChips
-                                  items={backgroundSkillChips}
-                                  chipClassName="border-cyan-200/35 bg-cyan-300/15 text-cyan-50"
-                                />
-                                <DetailChips
-                                  items={backgroundLanguageChips}
-                                  chipClassName="border-emerald-200/35 bg-emerald-300/15 text-emerald-50"
-                                />
-                              </div>
-                            }
-                          />
+                            <HoverInfoChip
+                              label="Skills"
+                              className="border-slate-200/25 bg-slate-200/10 text-slate-100"
+                              tooltipContent={
+                                <div className="flex flex-wrap gap-2">
+                                  <DetailChips
+                                    items={backgroundSkillChips}
+                                    chipClassName="border-cyan-200/35 bg-cyan-300/15 text-cyan-50"
+                                  />
+                                  <DetailChips
+                                    items={backgroundLanguageChips}
+                                    chipClassName="border-emerald-200/35 bg-emerald-300/15 text-emerald-50"
+                                  />
+                                </div>
+                              }
+                            />
                             <HoverInfoChip
                               label="Gear"
                               className="border-slate-200/25 bg-slate-200/10 text-slate-100"
@@ -3146,12 +3382,16 @@
                         )}
                       </div>
                       {selectedBackground ? (
-                        <div className="mt-2 text-sm text-white/70 leading-relaxed">
-                          {selectedBackground.description}
+                        <div className={`shrink-0 ${isFinalizeExpanded ? "mt-2 flex flex-col items-start gap-2" : "mt-1 flex items-center gap-2"}`}>
+                          {isFinalizeExpanded && selectedBackground.description && (
+                            <div className="w-full text-sm text-white/65 leading-relaxed">
+                              {selectedBackground.description}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <div className="mt-2 text-sm text-white/45 leading-relaxed">
-                          Provides some skills, equipment, and starting funds.
+                          Background grants skills, gear, and funds.
                         </div>
                       )}
                     </button>
@@ -3172,11 +3412,10 @@
                                     item={weapon}
                                     kind="weapon"
                                     alt={weapon.name}
-                                    className="absolute left-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 scale-[0.7] object-contain opacity-[0.15]"
+                                    className="absolute left-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 scale-[0.91] md:scale-[0.7] object-contain opacity-[0.15]"
                                     loading="lazy"
                                   />
                                 </div>
-                                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(160deg,rgba(6,8,16,0.66)_0%,rgba(6,8,16,0.44)_45%,rgba(6,8,16,0.66)_100%)]"></div>
                               </>
                             )}
                             <div className="relative z-10 text-sm font-semibold text-white/95">
@@ -3198,6 +3437,55 @@
                       })}
                     </div>
                   </div>
+                  {isFinalizeExpanded && (
+                    <div className="mt-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 md:p-4 flex flex-col gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setIsPersonaInlineOpen((prev) => !prev)}
+                        className="mx-auto w-fit text-[11px] uppercase tracking-[0.18em] text-white/75 hover:text-white transition"
+                      >
+                        {isPersonaInlineOpen ? "Hide Persona" : "Open Persona"}
+                      </button>
+                      {isPersonaInlineOpen && (
+                        <div className="flex flex-col gap-3">
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <section className="flex flex-col gap-3">
+                              <div className="text-sm text-cyan-200/80">{compareRace ? compareRace.name : "No race selected"}</div>
+                              <div className="text-sm text-white/90 leading-relaxed">{raceStoryPrompt.question}</div>
+                              <textarea
+                                value={raceStoryAnswer}
+                                onChange={(event) => updateStoryAnswer("race", compareRace?.id, event.target.value)}
+                                placeholder="Write a short answer..."
+                                className="w-full min-h-[96px] rounded-xl border border-white/15 bg-black/35 px-3 py-2.5 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80"
+                              />
+                            </section>
+                            <section className="flex flex-col gap-3">
+                              <div className="text-sm text-emerald-200/80">{compareClass ? compareClass.name : "No class selected"}</div>
+                              <div className="text-sm text-white/90 leading-relaxed">{classStoryPrompt.question}</div>
+                              <textarea
+                                value={classStoryAnswer}
+                                onChange={(event) => updateStoryAnswer("class", compareClass?.id, event.target.value)}
+                                placeholder="Write a short answer..."
+                                className="w-full min-h-[96px] rounded-xl border border-white/15 bg-black/35 px-3 py-2.5 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80"
+                              />
+                            </section>
+                          </div>
+                          {/* <div className="h-px bg-white/10"></div>
+                          <section className="flex flex-col gap-3">
+                            <div className="text-sm text-amber-200/80">{selectedBackground ? selectedBackground.name : "No background selected"}</div>
+                            <div className="text-sm text-white/90 leading-relaxed">{backgroundStoryPrompt.question}</div>
+                            <textarea
+                              value={backgroundStoryAnswer}
+                              onChange={(event) => updateStoryAnswer("background", selectedBackground?.id, event.target.value)}
+                              placeholder={selectedBackground ? "Write a short answer..." : "Pick a background first, then answer here."}
+                              className="w-full min-h-[96px] rounded-xl border border-white/15 bg-black/35 px-3 py-2.5 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80"
+                              disabled={!selectedBackground}
+                            />
+                          </section> */}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -3206,14 +3494,15 @@
       };
 
       const isCompareActiveView = !isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "compare";
+      const isCompareExpandedView = isCompareActiveView && isFinalizeExpanded;
 
       return (
-        <div className="relative flex flex-col gap-3 md:gap-6">
+        <div className="relative flex flex-col gap-3 md:gap-6 min-h-[100svh] -mx-2 sm:-mx-4 -my-2 sm:-my-4">
           {isCompareActiveView && (
             <div className="absolute inset-x-0 inset-y-0 lg:-inset-x-10 lg:-inset-y-10 z-0 pointer-events-none overflow-hidden">
               <div className="absolute inset-0">
                 <div
-                  className="absolute inset-y-0 left-0 w-[56%]"
+                  className="absolute inset-y-0 left-0 w-[68%] md:w-[56%]"
                   style={{
                     WebkitMaskImage: "linear-gradient(to right, black 74%, transparent 100%)",
                     maskImage: "linear-gradient(to right, black 74%, transparent 100%)"
@@ -3228,7 +3517,7 @@
                   )}
                 </div>
                 <div
-                  className="absolute inset-y-0 right-0 w-[56%]"
+                  className="absolute inset-y-0 right-0 w-[68%] md:w-[56%]"
                   style={{
                     WebkitMaskImage: "linear-gradient(to left, black 74%, transparent 100%)",
                     maskImage: "linear-gradient(to left, black 74%, transparent 100%)"
@@ -3247,50 +3536,39 @@
             </div>
           )}
 
-          <div className="hidden md:grid sticky top-0 z-40 grid-cols-3 items-center px-4 sm:px-0 py-1">
-            <div />
-            <div className="flex justify-center">
-              {canOpenFinalize && (
-                <button
-                  type="button"
-                  onClick={() => setActiveStep("compare")}
-                  className="text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white transition"
-                >
-                  Finalize
-                </button>
-              )}
+          {!isCompareExpandedView && (
+            <div className="hidden md:block fixed top-5 left-5 z-50">
+              <button
+                type="button"
+                onClick={clearAllSelections}
+                className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
+              >
+                Clear options
+              </button>
             </div>
-            <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={clearAllSelections}
-              className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
-            >
-              Clear options
-            </button>
+          )}
+          {!isCompareExpandedView && canOpenFinalize && (
+            <div className="hidden md:block fixed top-5 right-5 z-50">
+              <button
+                type="button"
+                disabled={activeStep === "compare"}
+                onClick={() => {
+                  if (activeStep === "compare") return;
+                  setActiveStep("compare");
+                }}
+                className={`px-6 py-3 rounded-xl bg-pink-500/90 text-white text-[11px] font-semibold uppercase tracking-[0.18em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
+                  activeStep === "compare" ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"
+                }`}
+              >
+                Finalize
+              </button>
             </div>
-          </div>
+          )}
 
-          <div className="sticky -top-2 z-30 mt-1 md:mt-0 py-0 md:py-2 mb-0">
-            <div className="grid md:hidden grid-cols-3 items-center px-4 sm:px-0 transition-opacity duration-150"
-              style={{
-                opacity: mainScrollTop > 0 ? 0 : 1,
-                pointerEvents: mainScrollTop > 0 ? "none" : "auto"
-              }}
-            >
-              <div />
-              <div className="flex justify-center">
-                {canOpenFinalize && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveStep("compare")}
-                    className="text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white transition"
-                  >
-                    Finalize
-                  </button>
-                )}
-              </div>
-              <div className="flex justify-end">
+          {!isCompareExpandedView && (
+          <div className="sticky top-0 md:top-3 z-30 mt-1 md:mt-0 pt-1 md:pt-0 py-0 md:py-2 mb-0">
+            <div className="grid md:hidden grid-cols-3 items-center px-4 sm:px-0">
+              <div className="flex justify-start">
               <button
                 type="button"
                 onClick={clearAllSelections}
@@ -3299,8 +3577,26 @@
                 Clear options
               </button>
               </div>
+              <div />
+              <div className="flex justify-end">
+                {canOpenFinalize ? (
+                  <button
+                    type="button"
+                    disabled={activeStep === "compare"}
+                    onClick={() => {
+                      if (activeStep === "compare") return;
+                      setActiveStep("compare");
+                    }}
+                    className={`px-3 py-1.5 rounded-lg bg-pink-500/90 text-white text-[11px] font-semibold uppercase tracking-[0.18em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
+                      activeStep === "compare" ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"
+                    }`}
+                  >
+                    Finalize
+                  </button>
+                ) : null}
+              </div>
             </div>
-            <div className="md:hidden pl-4 pr-4 pt-4 pb-1 -mt-1 -mb-2">
+            <div className="md:hidden pl-4 pr-4 pt-2 pb-1 -mt-1 -mb-2">
               <div className="flex items-center justify-between gap-1">
                 {CHARACTER_FORGE_STEPS.filter((step) => step.id !== "compare").map((step) => {
                   return (
@@ -3322,7 +3618,7 @@
                 })}
               </div>
             </div>
-            <div className="hidden md:flex -mx-2 px-2 py-1 flex-wrap items-center justify-center gap-5">
+            <div className="hidden md:flex fixed top-5 left-1/2 -translate-x-1/2 z-40 -mx-2 px-2 py-1 flex-wrap items-center justify-center gap-5">
               {CHARACTER_FORGE_STEPS.filter((step) => step.id !== "compare").map((step) => {
                 return (
                   <button
@@ -3343,6 +3639,7 @@
               })}
             </div>
           </div>
+          )}
 
           <div className={isCompareActiveView ? "" : "bg-[#13131a]/90 border border-white/5 rounded-3xl px-0 py-4 sm:p-6 panel-glow"}>
             <input
