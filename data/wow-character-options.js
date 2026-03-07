@@ -5359,14 +5359,15 @@ window.WOW_CHARACTER_OPTIONS = {
       "hidden": true
     },
     {
-      "id": "witch-doctor",
+      "id": "priest-witch-doctor",
       "name": "Witch Doctor",
       "image": "https://placehold.co/600x800/2a412f/e8ecff?text=Witch%20Doctor",
       "description": "Blending voodoo, spirit rites, and primal medicine, they curse enemies and sustain their companions.",
       "parentId": null,
       "difficulty": 3,
       "dataChips": [
-        "HP: 8",
+        "HP: 6",
+        "Channel Divinity",
         "Juju and Mojo",
         "Spirit Communion"
       ],
@@ -5803,6 +5804,34 @@ window.WOW_CHARACTER_OPTIONS = {
         "Social"
       ],
       "storyQuestion": "What taught you to fight through deception, and what truth are you still hiding?"
+    },
+    {
+      "id": "mage-leybreaker",
+      "name": "Leybreaker",
+      "image": "https://placehold.co/600x800/2a2148/e8ecff?text=Leybreaker+Mage",
+      "description": "Taboo arcanists who weaponize unstable leyline surges, breaking orthodox spellwork to unleash volatile arcane effects.",
+      "parentId": null,
+      "difficulty": 5,
+      "dataChips": [
+        "HP: 6",
+        "Metamagic",
+        "Controlled Chaos",
+        "Reality Break"
+      ],
+      "bonuses": [],
+      "isAdditional": true,
+      "profile": {
+        "damage": 4,
+        "survivability": 2,
+        "support": 2,
+        "control": 4,
+        "utility": 4
+      },
+      "tags": [
+        "Burst",
+        "Crowd Control"
+      ],
+      "storyQuestion": "What drove you to forbidden arcane methods, and what price have you already paid for that power?"
     },
     {
       "id": "shaman-spiritwalker",
