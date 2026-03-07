@@ -1833,6 +1833,65 @@ window.WOW_CHARACTER_OPTIONS = {
       "storyQuestion": "When clan identity defines so much, what makes your way of honor, war, or leadership different from other orcs?"
     },
     {
+      "id": "half-orc",
+      "name": "Half-Orc",
+      "image": "https://placehold.co/600x800/24384f/e8ecff?text=Half-Orc",
+      "description": "Children of mixed heritage, half-orcs are tougher than most and often forced to define themselves between worlds that rarely make room for them. They can be offspring of ogres, draenei or humans.",
+      "parentId": null,
+      "faction": "Horde-leaning",
+      "difficulty": 2,
+      "bonuses": [
+        {
+          "value": 1,
+          "stat": "CON"
+        },
+        {
+          "value": 1,
+          "stat": "STR"
+        },
+        {
+          "value": 1,
+          "stat": "ANY"
+        }
+      ],
+      "traits": [
+        "Hardiness",
+        "Versatile Heritage",
+        "Powerful Build"
+      ],
+      "names": {
+        "male": [
+          "Grom",
+          "Karg",
+          "Drogan",
+          "Marek",
+          "Rexxar",
+          "Thog"
+        ],
+        "female": [
+          "Groma",
+          "Agra",
+          "Kara",
+          "Yrelia",
+          "Graha",
+          "Zuri"
+        ],
+        "groupLabel": "Family Names",
+        "groupNames": [
+          "Blackscar",
+          "Stonefist",
+          "Mok'nathal",
+          "Ashwarden"
+        ]
+      },
+      "dataChips": [
+        "Lifespan: around 80 years"
+      ],
+      "languages": "Orcish, One extra",
+      "isAdditional": true,
+      "storyQuestion": "How did growing between cultures shape what strength and belonging mean to you?"
+    },
+    {
       "id": "vulpera",
       "name": "Vulpera",
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Vulpera",

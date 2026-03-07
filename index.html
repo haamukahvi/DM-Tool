@@ -308,7 +308,8 @@
       selectedWeaponId: "character_forge_selected_weapon_id",
       selectedWeaponIds: "character_forge_selected_weapon_ids",
       activeStep: "character_forge_active_step",
-      storyAnswersById: "character_forge_story_answers_by_id"
+      storyAnswersById: "character_forge_story_answers_by_id",
+      characterName: "character_forge_character_name"
     };
     const CHARACTER_FORGE_STEPS = [
       { id: "races", label: "Race" },
@@ -1061,12 +1062,11 @@
 
       const showTooltip = (event) => {
         const rect = event.currentTarget.getBoundingClientRect();
-        const tooltipWidth = 220;
         const viewportPadding = 12;
-        const centeredLeft = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+        const centerX = rect.left + (rect.width / 2);
         const left = Math.max(
           viewportPadding,
-          Math.min(centeredLeft, window.innerWidth - tooltipWidth - viewportPadding)
+          Math.min(centerX, window.innerWidth - viewportPadding)
         );
 
         setTooltipState({
@@ -1118,7 +1118,7 @@
           </div>
           {tooltipState && ReactDOM.createPortal(
             <div
-              className="pointer-events-none fixed z-[60] w-[220px] -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 px-3 py-2 text-xs leading-relaxed text-white/75 shadow-2xl"
+              className="pointer-events-none fixed z-[60] w-max max-w-[calc(100vw-24px)] -translate-x-1/2 -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 px-3 py-2 text-xs leading-relaxed text-white/75 shadow-2xl"
               style={{
                 top: tooltipState.top,
                 left: tooltipState.left
@@ -1334,7 +1334,7 @@
       );
     };
 
-    const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem, onDeselectItems }) => {
+    const CharacterPickerSection = ({ title, items, selectedIds, onOpenItem, onToggleItem, onDeselectItems, randomActionKey = "" }) => {
       const [expandedParentIds, setExpandedParentIds] = useState(() => new Set());
       const [randomHighlightId, setRandomHighlightId] = useState(null);
       const [isRandomLocked, setIsRandomLocked] = useState(false);
@@ -1770,6 +1770,18 @@
             type="button"
             disabled={isRandomLocked}
             onClick={handleRandomizePick}
+            data-global-random={randomActionKey || undefined}
+            className="hidden"
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            Random
+          </button>
+          {/* <button
+            type="button"
+            disabled={isRandomLocked}
+            onClick={handleRandomizePick}
+            data-global-random={randomActionKey || undefined}
             className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
               isRandomLocked
                 ? "cursor-not-allowed opacity-75"
@@ -1777,7 +1789,7 @@
             }`}
           >
             Random
-          </button>
+          </button> */}
 
           <div className="pt-2 flex flex-col gap-3">
             <div className="text-xs uppercase tracking-[0.3em] text-white/45">{additionalLabel}</div>
@@ -2535,6 +2547,18 @@
             type="button"
             disabled={isRandomLocked}
             onClick={handleRandomizeBackground}
+            data-global-random="background"
+            className="hidden"
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            Random
+          </button>
+          {/* <button
+            type="button"
+            disabled={isRandomLocked}
+            onClick={handleRandomizeBackground}
+            data-global-random="background"
             className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
               isRandomLocked
                 ? "cursor-not-allowed opacity-75"
@@ -2542,7 +2566,7 @@
             }`}
           >
             Random
-          </button>
+          </button> */}
           {additionalBackgrounds.length > 0 && (
             <>
               <div className="text-xs uppercase tracking-[0.3em] text-white/45">Additional Backgrounds</div>
@@ -2767,6 +2791,18 @@
             type="button"
             disabled={isRandomLocked}
             onClick={handleRandomizeWeapon}
+            data-global-random="weapon"
+            className="hidden"
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            Random
+          </button>
+          {/* <button
+            type="button"
+            disabled={isRandomLocked}
+            onClick={handleRandomizeWeapon}
+            data-global-random="weapon"
             className={`fixed left-4 bottom-4 z-40 px-7 py-4 rounded-full border border-white/50 bg-black/35 text-[14px] uppercase tracking-[0.12em] font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.38)] backdrop-blur-md transition ${
               isRandomLocked
                 ? "cursor-not-allowed opacity-75"
@@ -2774,7 +2810,7 @@
             }`}
           >
             Random
-          </button>
+          </button> */}
         </div>
       );
     };
@@ -2804,6 +2840,7 @@
       const [removeConfirmState, setRemoveConfirmState] = useState(null);
       const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
       const [storyAnswersById, setStoryAnswersById] = useState(() => parseStoredStoryAnswers());
+      const [characterName, setCharacterName] = useState(() => localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.characterName) || "");
       const [activeRace, setActiveRace] = useState(null);
       const [activeClass, setActiveClass] = useState(null);
       const [previewRaceId, setPreviewRaceId] = useState(null);
@@ -2811,6 +2848,7 @@
       const [isFinalizeExpanded, setIsFinalizeExpanded] = useState(false);
       const [isPersonaInlineOpen, setIsPersonaInlineOpen] = useState(false);
       const [isFinalizeStatsVisible, setIsFinalizeStatsVisible] = useState(false);
+      const [isExportingFinalImage, setIsExportingFinalImage] = useState(false);
       const previousStepRef = useRef(activeStep);
       const dataFileInputRef = useRef(null);
       const visibleRaces = useMemo(() => races.filter((item) => item.hidden !== true), [races]);
@@ -2905,6 +2943,10 @@
       }, [storyAnswersById]);
 
       useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.characterName, characterName);
+      }, [characterName]);
+
+      useEffect(() => {
         const mainEl = document.querySelector("main");
         if (!mainEl) return;
         const previousOverflow = mainEl.style.overflowY;
@@ -2975,6 +3017,16 @@
       const racesById = useMemo(() => new Map(races.map((item) => [item.id, item])), [races]);
       const classesById = useMemo(() => new Map(classes.map((item) => [item.id, item])), [classes]);
       const canOpenFinalize = selectedRaces.length > 0 && selectedClasses.length > 0;
+      const hasSelections =
+        selectedRaceIds.length > 0 ||
+        selectedClassIds.length > 0 ||
+        Boolean(selectedBackgroundId) ||
+        selectedWeaponIds.length > 0;
+      const triggerTopRandom = () => {
+        if (activeStep === "compare") return;
+        const randomBtn = document.querySelector(`[data-global-random="${activeStep}"]`);
+        if (randomBtn && typeof randomBtn.click === "function") randomBtn.click();
+      };
 
       const compareRace = activeRace || selectedRaces[0] || null;
       const compareClass = activeClass || selectedClasses[0] || null;
@@ -3007,6 +3059,7 @@
         setSelectedBackgroundId("");
         setSelectedWeaponIds([]);
         setStoryAnswersById({});
+        setCharacterName("");
         setIsStoryModalOpen(false);
         setActiveRace(null);
         setActiveClass(null);
@@ -3020,6 +3073,7 @@
         setActiveStep("races");
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId);
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.storyAnswersById);
+        localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.characterName);
       };
 
       useEffect(() => {
@@ -3194,6 +3248,156 @@
           ? Math.round((compareDifficultyValues.reduce((sum, value) => sum + value, 0) / compareDifficultyValues.length) * 10) / 10
           : null;
         const hasCompareProfile = Object.keys(compareProfile || {}).length > 0 || Number.isFinite(compareDifficulty);
+        const exportFinalizeImage = () => {
+          if (isExportingFinalImage) return;
+          setIsExportingFinalImage(true);
+          try {
+            const canvas = document.createElement("canvas");
+            const width = 1600;
+            const height = 2200;
+            const pad = 92;
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) throw new Error("Could not initialize canvas.");
+
+            const roundedRect = (x, y, w, h, r) => {
+              const rr = Math.min(r, w / 2, h / 2);
+              ctx.beginPath();
+              ctx.moveTo(x + rr, y);
+              ctx.arcTo(x + w, y, x + w, y + h, rr);
+              ctx.arcTo(x + w, y + h, x, y + h, rr);
+              ctx.arcTo(x, y + h, x, y, rr);
+              ctx.arcTo(x, y, x + w, y, rr);
+              ctx.closePath();
+            };
+            const drawWrapped = (text, x, y, maxWidth, lineHeight, color = "rgba(255,255,255,0.9)") => {
+              if (!text) return y;
+              ctx.fillStyle = color;
+              const words = String(text).split(/\s+/).filter(Boolean);
+              let line = "";
+              for (const word of words) {
+                const test = line ? `${line} ${word}` : word;
+                if (ctx.measureText(test).width > maxWidth && line) {
+                  ctx.fillText(line, x, y);
+                  y += lineHeight;
+                  line = word;
+                } else {
+                  line = test;
+                }
+              }
+              if (line) {
+                ctx.fillText(line, x, y);
+                y += lineHeight;
+              }
+              return y;
+            };
+            const drawSection = (title, lines, y) => {
+              const sectionW = width - pad * 2;
+              const sectionH = 240;
+              ctx.fillStyle = "rgba(15,15,22,0.78)";
+              ctx.strokeStyle = "rgba(255,255,255,0.18)";
+              ctx.lineWidth = 2;
+              roundedRect(pad, y, sectionW, sectionH, 24);
+              ctx.fill();
+              ctx.stroke();
+
+              ctx.font = "700 36px 'Exo 2', sans-serif";
+              ctx.fillStyle = "rgba(255,255,255,0.96)";
+              ctx.fillText(title, pad + 32, y + 56);
+
+              ctx.font = "500 28px 'Exo 2', sans-serif";
+              let textY = y + 98;
+              for (const line of lines.filter(Boolean)) {
+                textY = drawWrapped(line, pad + 32, textY, sectionW - 64, 38, "rgba(229,231,235,0.94)");
+                if (textY > y + sectionH - 24) break;
+              }
+              return y + sectionH + 26;
+            };
+
+            const bg = ctx.createLinearGradient(0, 0, width, height);
+            bg.addColorStop(0, "#08090f");
+            bg.addColorStop(0.55, "#0e1119");
+            bg.addColorStop(1, "#111827");
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            const glowA = ctx.createRadialGradient(220, 220, 20, 220, 220, 420);
+            glowA.addColorStop(0, "rgba(236,72,153,0.26)");
+            glowA.addColorStop(1, "rgba(236,72,153,0)");
+            ctx.fillStyle = glowA;
+            ctx.fillRect(0, 0, width, height);
+
+            const glowB = ctx.createRadialGradient(width - 260, height - 320, 30, width - 260, height - 320, 520);
+            glowB.addColorStop(0, "rgba(56,189,248,0.23)");
+            glowB.addColorStop(1, "rgba(56,189,248,0)");
+            ctx.fillStyle = glowB;
+            ctx.fillRect(0, 0, width, height);
+
+            const titleName = (characterName || "").trim() || "Unnamed Character";
+            const comboTitle = comboName || "Race + Class";
+            const hpText = Number.isFinite(comboBaseHp)
+              ? `HP ${comboBaseHp + comboConBonus} (base ${comboBaseHp}${comboConBonus ? ` ${comboConBonus > 0 ? "+" : "-"} ${Math.abs(comboConBonus)} CON` : ""})`
+              : "";
+            const bonusText = comboBonuses.length
+              ? comboBonuses.map((bonus) => `${bonus.stat} ${getBonusPrefix(bonus.value)}`).join("  |  ")
+              : "";
+            const traitText = comboTraits.length ? comboTraits.join(", ") : "";
+
+            ctx.font = "700 74px 'Exo 2', sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.98)";
+            drawWrapped(titleName, pad, 140, width - pad * 2, 84, "rgba(255,255,255,0.98)");
+
+            ctx.font = "600 42px 'Exo 2', sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.9)";
+            let cursorY = drawWrapped(comboTitle, pad, 230, width - pad * 2, 54, "rgba(255,255,255,0.9)");
+
+            ctx.font = "500 30px 'Exo 2', sans-serif";
+            cursorY = drawWrapped([hpText, bonusText].filter(Boolean).join("   "), pad, cursorY + 12, width - pad * 2, 40, "rgba(217,229,240,0.95)");
+            cursorY += 20;
+
+            cursorY = drawSection(
+              "Race",
+              [
+                compareRace?.name || "-",
+                compareRace?.description || "",
+                compareRace?.languages ? `Languages: ${compareRace.languages}` : ""
+              ],
+              cursorY
+            );
+            cursorY = drawSection(
+              "Class",
+              [
+                compareClass?.name || "-",
+                compareClass?.description || "",
+                traitText ? `Traits: ${traitText}` : ""
+              ],
+              cursorY
+            );
+            cursorY = drawSection(
+              "Background & Weapons",
+              [
+                selectedBackground?.name ? `Background: ${selectedBackground.name}` : "Background: -",
+                selectedWeapons.length ? `Weapons: ${selectedWeapons.map((weapon) => weapon.name).join(", ")}` : "Weapons: -"
+              ],
+              cursorY
+            );
+
+            ctx.font = "500 24px 'Exo 2', sans-serif";
+            ctx.fillStyle = "rgba(255,255,255,0.55)";
+            ctx.fillText("Generated by Character Creator", pad, height - 48);
+
+            const slug = ((characterName || comboName || "character").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "character");
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL("image/png");
+            link.download = `${slug}-final-results.png`;
+            link.click();
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setIsExportingFinalImage(false);
+          }
+        };
 
         return (
           <div className={`relative ${isFinalizeExpanded ? "fixed inset-0 z-[55] h-screen bg-black/78 backdrop-blur-md" : "h-full min-h-0 md:min-h-[560px] max-h-none md:max-h-[840px]"}`}>
@@ -3244,8 +3448,30 @@
                     </button>
                     <div className="h-px flex-1 bg-white/15"></div>
                   </div>
+                  {isFinalizeExpanded && (
+                    <div className="md:hidden flex justify-center">
+                      <input
+                        type="text"
+                        value={characterName}
+                        onChange={(event) => setCharacterName(event.target.value)}
+                        placeholder="Name"
+                        className="w-full max-w-[360px] rounded-xl border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 placeholder:text-white/35 text-center focus:outline-none focus:border-pink-300/80"
+                      />
+                    </div>
+                  )}
                   <div className="flex items-center justify-between gap-3">
                     <div className="text-lg md:text-2xl font-semibold text-white/95">{comboName}</div>
+                    {isFinalizeExpanded && (
+                      <div className="hidden md:block w-[320px]">
+                        <input
+                          type="text"
+                          value={characterName}
+                          onChange={(event) => setCharacterName(event.target.value)}
+                          placeholder="Name"
+                          className="w-full rounded-xl border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80"
+                        />
+                      </div>
+                    )}
                     {!isFinalizeExpanded && hasCompareProfile && (
                       <button
                         type="button"
@@ -3486,6 +3712,20 @@
                       )}
                     </div>
                   )}
+                  {isFinalizeExpanded && (
+                    <div className="mt-2 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={exportFinalizeImage}
+                        disabled={isExportingFinalImage}
+                        className={`px-4 py-2 rounded-xl bg-white text-black text-[11px] font-semibold uppercase tracking-[0.18em] border border-white/80 transition ${
+                          isExportingFinalImage ? "opacity-70 cursor-wait" : "hover:bg-white/90"
+                        }`}
+                      >
+                        {isExportingFinalImage ? "Exporting..." : "Export Image"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -3537,14 +3777,25 @@
           )}
 
           {!isCompareExpandedView && (
-            <div className="hidden md:block fixed top-5 left-5 z-50">
-              <button
-                type="button"
-                onClick={clearAllSelections}
-                className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
-              >
-                Clear options
-              </button>
+            <div className="hidden md:flex fixed top-5 left-5 z-50 flex-col items-start gap-1.5">
+              {hasSelections && (
+                <button
+                  type="button"
+                  onClick={clearAllSelections}
+                  className="mt-1 text-[13px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
+                >
+                  Clear selections
+                </button>
+              )}
+              {activeStep !== "compare" && (
+                <button
+                  type="button"
+                  onClick={triggerTopRandom}
+                  className="mt-3 text-[13px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
+                >
+                  Random
+                </button>
+              )}
             </div>
           )}
           {!isCompareExpandedView && canOpenFinalize && (
@@ -3556,7 +3807,7 @@
                   if (activeStep === "compare") return;
                   setActiveStep("compare");
                 }}
-                className={`px-6 py-3 rounded-xl bg-pink-500/90 text-white text-[11px] font-semibold uppercase tracking-[0.18em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
+                className={`px-8 py-4 rounded-2xl bg-pink-500/90 text-white text-[18px] font-bold uppercase tracking-[0.2em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
                   activeStep === "compare" ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"
                 }`}
               >
@@ -3566,49 +3817,85 @@
           )}
 
           {!isCompareExpandedView && (
-          <div className="sticky top-0 md:top-3 z-30 mt-1 md:mt-0 pt-1 md:pt-0 py-0 md:py-2 mb-0">
-            <div className="grid md:hidden grid-cols-3 items-center px-4 sm:px-0">
-              <div className="flex justify-start">
-              <button
-                type="button"
-                onClick={clearAllSelections}
-                className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
-              >
-                Clear options
-              </button>
+            <>
+              <div className="md:hidden h-[92px]" aria-hidden />
+              <div className="md:hidden fixed inset-x-0 top-0 z-40 pt-2">
+                <div className="grid grid-cols-3 items-center px-4 sm:px-0">
+                  <div className="flex justify-start">
+                    {hasSelections && (
+                      <button
+                        type="button"
+                        onClick={clearAllSelections}
+                        className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
+                      >
+                        Clear selections
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex justify-center">
+                    {activeStep !== "compare" && (
+                      <button
+                        type="button"
+                        onClick={triggerTopRandom}
+                        className="text-[11px] uppercase tracking-[0.18em] text-white/65 hover:text-white transition"
+                      >
+                        Random
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex justify-end">
+                    {canOpenFinalize ? (
+                      <button
+                        type="button"
+                        disabled={activeStep === "compare"}
+                        onClick={() => {
+                          if (activeStep === "compare") return;
+                          setActiveStep("compare");
+                        }}
+                        className={`px-3 py-1.5 rounded-2xl bg-pink-500/90 text-white text-[11px] font-semibold uppercase tracking-[0.18em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
+                          activeStep === "compare" ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"
+                        }`}
+                      >
+                        Finalize
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="pl-4 pr-4 pt-2 pb-1">
+                  <div className="flex items-center justify-between gap-1">
+                    {CHARACTER_FORGE_STEPS.filter((step) => step.id !== "compare").map((step) => {
+                      return (
+                        <button
+                          key={`mobile-${step.id}`}
+                          type="button"
+                          onClick={() => {
+                            setActiveStep(step.id);
+                          }}
+                          className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.14em] border backdrop-blur-xl transition-all ${
+                            activeStep === step.id
+                              ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)]"
+                              : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
+                          }`}
+                        >
+                          {step.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-              <div />
-              <div className="flex justify-end">
-                {canOpenFinalize ? (
-                  <button
-                    type="button"
-                    disabled={activeStep === "compare"}
-                    onClick={() => {
-                      if (activeStep === "compare") return;
-                      setActiveStep("compare");
-                    }}
-                    className={`px-3 py-1.5 rounded-lg bg-pink-500/90 text-white text-[11px] font-semibold uppercase tracking-[0.18em] border border-pink-300/70 shadow-[0_8px_24px_rgba(236,72,153,0.35)] transition ${
-                      activeStep === "compare" ? "opacity-50 cursor-not-allowed" : "hover:bg-pink-400"
-                    }`}
-                  >
-                    Finalize
-                  </button>
-                ) : null}
-              </div>
-            </div>
-            <div className="md:hidden pl-4 pr-4 pt-2 pb-1 -mt-1 -mb-2">
-              <div className="flex items-center justify-between gap-1">
+              <div className="hidden md:flex fixed top-5 left-1/2 -translate-x-1/2 z-40 -mx-2 px-2 py-1 flex-nowrap items-center justify-center gap-5">
                 {CHARACTER_FORGE_STEPS.filter((step) => step.id !== "compare").map((step) => {
                   return (
                     <button
-                      key={`mobile-${step.id}`}
+                      key={`desktop-${step.id}`}
                       type="button"
                       onClick={() => {
                         setActiveStep(step.id);
                       }}
-                      className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-[0.14em] border backdrop-blur-xl transition-all ${
+                      className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border backdrop-blur-xl transition-all ${
                         activeStep === step.id
-                          ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)]"
+                          ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)] scale-105"
                           : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
                       }`}
                     >
@@ -3617,31 +3904,14 @@
                   );
                 })}
               </div>
-            </div>
-            <div className="hidden md:flex fixed top-5 left-1/2 -translate-x-1/2 z-40 -mx-2 px-2 py-1 flex-wrap items-center justify-center gap-5">
-              {CHARACTER_FORGE_STEPS.filter((step) => step.id !== "compare").map((step) => {
-                return (
-                  <button
-                    key={`desktop-${step.id}`}
-                    type="button"
-                    onClick={() => {
-                      setActiveStep(step.id);
-                    }}
-                    className={`px-8 py-4 rounded-2xl text-[18px] font-bold uppercase tracking-[0.2em] border backdrop-blur-xl transition-all ${
-                      activeStep === step.id
-                        ? "bg-white text-black border-white shadow-[0_0_22px_rgba(255,255,255,0.45)] scale-105"
-                        : "bg-black/25 text-white/55 border-white/10 hover:bg-black/35 hover:text-white"
-                    }`}
-                  >
-                    {step.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+            </>
           )}
 
-          <div className={isCompareActiveView ? "" : "bg-[#13131a]/90 border border-white/5 rounded-3xl px-0 py-4 sm:p-6 panel-glow"}>
+          {activeStep !== "compare" && (
+            <div className="pointer-events-none fixed inset-x-0 top-0 z-20 h-28 md:h-36 bg-gradient-to-b from-black/50 via-black/20 to-transparent" />
+          )}
+
+          <div className={isCompareActiveView ? (isCompareExpandedView ? "" : "md:pt-16") : "mt-0 md:mt-24 bg-[#13131a]/90 border border-white/5 rounded-3xl px-0 py-4 sm:p-6 panel-glow"}>
             <input
               ref={dataFileInputRef}
               type="file"
@@ -3699,6 +3969,7 @@
                 onOpenItem={(item, rect) => openItemModal("race", item, rect)}
                 onToggleItem={(itemId) => toggleSelection("race", itemId)}
                 onDeselectItems={(itemIds) => deselectSelections("race", itemIds)}
+                randomActionKey="races"
               />
             )}
 
@@ -3710,6 +3981,7 @@
                 onOpenItem={(item, rect) => openItemModal("class", item, rect)}
                 onToggleItem={(itemId) => toggleSelection("class", itemId)}
                 onDeselectItems={(itemIds) => deselectSelections("class", itemIds)}
+                randomActionKey="classes"
               />
             )}
 
