@@ -6,7 +6,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Gnome%20%28Gnomeregan%29",
       "description": "Preservers of the classic tinker legacy: inventive minds, technical precision, and relentless hope after catastrophe.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Very Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -14,13 +15,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "DEX"
+          "stat": "CHA"
         }
       ],
       "traits": [
         "Artificer's Lore",
         "Escape Artist",
-        "Gnomish Engineering"
+        "Gnomish Tinkering"
       ],
       "names": {
         "male": [
@@ -62,7 +63,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: 350-500 years"
-      ]
+      ],
+      "storyQuestion": "What personal trait makes you stand out among clever, driven gnomes?"
     },
     {
       "id": "gnome-mechagnome",
@@ -70,7 +72,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Gnome%20%28Mechagnome%29",
       "description": "Pursuers of augmentation and perfection, fusing flesh with engineering into hyper-efficient problem solvers.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Very Alliance",
+      "difficulty": 2,
       "bonuses": [
         {
           "value": 2,
@@ -78,17 +81,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "DEX"
-        },
-        {
-          "value": 1,
-          "stat": "INT"
+          "stat": "CON"
         }
       ],
       "traits": [
         "Augmentation",
         "Escape Artist",
-        "Gnomish Engineering"
+        "Mechanical Improvements"
       ],
       "names": {
         "male": [
@@ -130,7 +129,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: 350-500 years"
-      ]
+      ],
+      "storyQuestion": "How has becoming part-machine changed who you are as a person?"
     },
     {
       "id": "golem-arcane",
@@ -139,6 +139,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Crystalline or metal-bodied constructs animated by spell matrices and precise command runes, or awakening into true self-direction.",
       "parentId": null,
       "faction": "Neutral",
+      "difficulty": 3,
       "bonuses": [
         {
           "value": 2,
@@ -183,6 +184,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
+      "storyQuestion": "What choice makes you feel more than just a construct built to serve?"
     },
     {
       "id": "golem-stone",
@@ -191,6 +193,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Rune-bound guardians carved for war, labor, or sacred defense.",
       "parentId": null,
       "faction": "Neutral",
+      "difficulty": 3,
       "bonuses": [
         {
           "value": 2,
@@ -235,14 +238,16 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
+      "storyQuestion": "What inner value guides you beyond the purpose you were made for?"
     },
     {
       "id": "worgen",
       "name": "Worgen",
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Worgen",
-      "description": "Disciplined souls wrestling with feral instinct, channeling predatory speed and righteous fury without losing control. They can be either humans or night elves.",
+      "description": "Disciplined, cursed souls wrestling with feral instinct. They can be either humans or night elves.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Very Alliance",
+      "difficulty": 2,
       "bonuses": [
         {
           "value": 1,
@@ -258,9 +263,9 @@ window.WOW_CHARACTER_OPTIONS = {
         }
       ],
       "traits": [
-        "Quickness",
+        "Keen Senses",
         "Two Forms",
-        "Darkflight"
+        "Hunter's Lore"
       ],
       "names": {
         "male": [
@@ -306,7 +311,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: human-like aging, long active years"
-      ]
+      ],
+      "storyQuestion": "How do you stay true to yourself while living with the beast inside you?"
     },
     {
       "id": "elf-void",
@@ -314,15 +320,20 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Void%20Elf",
       "description": "Exiled scholars of forbidden power, mastering inner chaos to weaponize the Void with focus instead of madness.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Alliance-leaning",
+      "difficulty": 2,
       "bonuses": [
         {
-          "value": 2,
+          "value": 1,
+          "stat": "DEX"
+        },
+        {
+          "value": 1,
           "stat": "INT"
         },
         {
           "value": 1,
-          "stat": "WIS"
+          "stat": "CHA"
         }
       ],
       "traits": [
@@ -370,7 +381,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: many hundreds of years"
-      ]
+      ],
+      "storyQuestion": "What keeps you grounded while carrying powers others fear?"
     },
     {
       "id": "pandaren",
@@ -379,6 +391,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Blending contemplative balance with martial discipline, they carry inner harmony into the wider conflicts of Azeroth.",
       "parentId": null,
       "faction": "Neutral",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -391,7 +404,7 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "traits": [
         "Gourmand",
-        "Iron Palms",
+        "Martial Adept",
         "Inner Peace"
       ],
       "names": {
@@ -434,7 +447,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 80-100 years"
-      ]
+      ],
+      "storyQuestion": "What personal principle do you refuse to compromise, even under pressure?"
     },
     {
       "id": "elf-night",
@@ -443,6 +457,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Ancient sentinels of nature and moonlight, graceful yet imposing guardians who unite druidic reverence with martial poise.",
       "parentId": null,
       "faction": "Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -455,9 +470,9 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "traits": [
         "Keen Senses",
-        "Nature Resistance",
+        "Superior Darkvision",
         "Shadowmeld",
-        "Kaldorei Weapon Training"
+        "Mask of the Wild"
       ],
       "names": {
         "male": [
@@ -496,7 +511,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: several thousand years"
-      ]
+      ],
+      "storyQuestion": "What personal belief or trait makes you stand out among other night elves?"
     },
     {
       "id": "dwarf-ironforge",
@@ -504,7 +520,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Ironforge%20Dwarf",
       "description": "Steadfast traditionalists and master smiths, excelling through discipline, resilience, and timeless craftsmanship.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Very Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -518,7 +535,6 @@ window.WOW_CHARACTER_OPTIONS = {
       "traits": [
         "Stonecunning",
         "Dwarven Toughness",
-        "Ironforge Training",
         "Stoneform"
       ],
       "names": {
@@ -561,7 +577,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 320 years"
-      ]
+      ],
+      "storyQuestion": "What part of your character was forged hardest by your people's values?"
     },
     {
       "id": "dwarf-wildhammer",
@@ -569,7 +586,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Wildhammer%20Dwarf",
       "description": "Sky-riding highland warriors attuned to storms and gryphons, valuing freedom, courage, and primal honor.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Alliance-leaning",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -577,14 +595,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "STR"
+          "stat": "WIS"
         }
       ],
       "traits": [
         "Stonecunning",
         "Brave Beyond Reason",
-        "Gryphon Rider",
-        "Dwarven Resilience"
+        "Natural Handler"
       ],
       "names": {
         "male": [
@@ -626,7 +643,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 320 years"
-      ]
+      ],
+      "storyQuestion": "What makes your spirit different from other freedom-loving Wildhammers?"
     },
     {
       "id": "dwarf-dark-iron",
@@ -634,15 +652,12 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Dark%20Iron%20Dwarf",
       "description": "Cunning, volcanic survivors who wield shadowed sorcery and ruthless pragmatism forged in fire and conflict.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Neutral",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
           "stat": "CON"
-        },
-        {
-          "value": 1,
-          "stat": "STR"
         },
         {
           "value": 1,
@@ -653,8 +668,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Stonecunning",
         "Fireblood",
         "Forged in Flames",
-        "Superior Darkvision",
-        "Sunlight Sensitivity"
+        "Superior Darkvision"
       ],
       "names": {
         "male": [
@@ -696,7 +710,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 320 years"
-      ]
+      ],
+      "storyQuestion": "What part of your past did you reject to become who you are now?"
     },
     {
       "id": "draenei-broken",
@@ -704,21 +719,22 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Broken%20Draenei",
       "description": "Scarred survivors severed from former grace, enduring through elemental grit, stubborn will, and hard-earned wisdom.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Neutral",
+      "difficulty": 2,
       "bonuses": [
         {
           "value": 2,
-          "stat": "WIS"
+          "stat": "CHA"
         },
         {
           "value": 1,
-          "stat": "CHA"
+          "stat": "WIS"
         }
       ],
       "traits": [
         "Shadow Resistance",
         "Elemental Bond",
-        "Gemcutting"
+        "Outcast"
       ],
       "names": {
         "male": [
@@ -752,7 +768,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: thousands of years"
-      ]
+      ],
+      "storyQuestion": "What gives you strength after losing so much of your old life?"
     },
     {
       "id": "draenei-exodar",
@@ -761,14 +778,15 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Followers of the sacred path of the Light, balancing compassion and conviction with calm heroic leadership.",
       "parentId": null,
       "faction": "Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
-          "stat": "WIS"
+          "stat": "CHA"
         },
         {
           "value": 1,
-          "stat": "CHA"
+          "stat": "STR"
         }
       ],
       "traits": [
@@ -808,7 +826,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: thousands of years"
-      ]
+      ],
+      "storyQuestion": "What hope keeps you moving after generations of exile?"
     },
     {
       "id": "draenei-lightforged",
@@ -817,23 +836,21 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Zeal-tempered holy crusaders, forged into living weapons against darkness through absolute devotion.",
       "parentId": null,
       "faction": "Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
-          "stat": "WIS"
-        },
-        {
-          "value": 1,
           "stat": "CHA"
         },
         {
           "value": 1,
-          "stat": "STR"
+          "stat": "CON"
         }
       ],
       "traits": [
         "Shadow Resistance",
-        "Forged of Light"
+        "Forged of Light",
+        "Light's Judgement"
       ],
       "names": {
         "male": [
@@ -867,7 +884,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: thousands of years"
-      ]
+      ],
+      "storyQuestion": "What personal conviction defines you beyond duty and zeal?"
     },
     {
       "id": "human",
@@ -875,7 +893,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Human",
       "description": "Adaptable and ambitious builders of kingdoms, defined by resolve, versatility, and the drive to leave a legacy within a short lifetime.",
       "parentId": null,
-      "faction": "Alliance",
+      "faction": "Very Alliance",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 3,
@@ -883,8 +902,8 @@ window.WOW_CHARACTER_OPTIONS = {
         }
       ],
       "traits": [
-        "Versatility",
-        "Human Resolve"
+        "Determination",
+        "Human Spirit"
       ],
       "names": {
         "male": [
@@ -1001,7 +1020,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: under 100 years"
-      ]
+      ],
+      "storyQuestion": "What hard lesson shaped you early, and what keeps you pushing forward?"
     },
     {
       "id": "tauren-highmountain",
@@ -1010,6 +1030,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Rugged peak-born wardens, shaped by harsh terrain, endurance culture, and ancestral mountain traditions.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -1018,16 +1039,12 @@ window.WOW_CHARACTER_OPTIONS = {
         {
           "value": 1,
           "stat": "WIS"
-        },
-        {
-          "value": 1,
-          "stat": "CON"
         }
       ],
       "traits": [
         "Powerful Build",
         "Mountaineer",
-        "Ancestral Rites"
+        "Rugged Tenacity"
       ],
       "names": {
         "male": [
@@ -1070,7 +1087,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 80-100 years"
-      ]
+      ],
+      "storyQuestion": "What tradition do you carry proudly, and what part did you choose to change?"
     },
     {
       "id": "tauren-mulgore",
@@ -1079,6 +1097,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Honorable protectors rooted in plains tradition, ritual, and communal strength, reflecting the classic tribal heart.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -1135,7 +1154,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 80-100 years"
-      ]
+      ],
+      "storyQuestion": "What tradition of your people shaped you most, and what called you beyond your homeland?"
     },
     {
       "id": "tauren-taunka",
@@ -1143,7 +1163,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Taunka",
       "description": "Cold-forged survivors of brutal climates, hardened by scarcity, resilience, and uncompromising pragmatism.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Horde-leaning",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -1151,12 +1172,12 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "WIS"
+          "stat": "CON"
         }
       ],
       "traits": [
         "Powerful Build",
-        "Natural Athlete",
+        "Cold Resistance",
         "Tundra Walker"
       ],
       "names": {
@@ -1200,7 +1221,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 80-100 years"
-      ]
+      ],
+      "storyQuestion": "How did hardship shape your personality in ways others notice immediately?"
     },
     {
       "id": "elf-blood",
@@ -1209,20 +1231,25 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Refined arcane aristocrats balancing elegance and ambition, pursuing magical mastery with relentless intensity.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "bonuses": [
         {
-          "value": 2,
-          "stat": "CHA"
+          "value": 1,
+          "stat": "DEX"
         },
         {
           "value": 1,
           "stat": "INT"
+        },
+        {
+          "value": 1,
+          "stat": "CHA"
         }
       ],
       "traits": [
         "Keen Senses",
-        "Arcane Affinity",
-        "Spell Mastery"
+        "Arcane Knowledge",
+        "Spell Turning"
       ],
       "names": {
         "male": [
@@ -1264,7 +1291,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: many hundreds of years"
-      ]
+      ],
+      "storyQuestion": "What personal value or habit sets you apart from other blood elves?"
     },
     {
       "id": "forsaken-elf",
@@ -1273,6 +1301,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Retaining a sharp, haunted elegance beneath undeath, they combine precision and bitterness into cold resolve.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 3,
       "bonuses": [
         {
           "value": 2,
@@ -1280,14 +1309,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "WIS"
+          "stat": "INT"
         }
       ],
       "traits": [
-        "Cannibalism",
-        "Touch of the Grave",
-        "Undead",
-        "Will of the Forsaken"
+        "Will of the Forsaken",
+        "Undead Nature",
+        "Arcane Knowledge"
       ],
       "names": {
         "male": [
@@ -1318,7 +1346,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: ageless unless destroyed"
-      ]
+      ],
+      "storyQuestion": "What part of your old self still survives in who you are now?"
     },
     {
       "id": "forsaken-human",
@@ -1327,6 +1356,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Carrying echoes of old kingdoms into undeath, they turn loss and vengeance into relentless determination.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 3,
       "bonuses": [
         {
           "value": 2,
@@ -1334,14 +1364,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "WIS"
+          "stat": "ANY"
         }
       ],
       "traits": [
-        "Cannibalism",
-        "Touch of the Grave",
-        "Undead",
-        "Will of the Forsaken"
+        "Will of the Forsaken",
+        "Undead Nature",
+        "Determination"
       ],
       "names": {
         "male": [
@@ -1431,7 +1460,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: ageless unless destroyed"
-      ]
+      ],
+      "storyQuestion": "If undeath was your second beginning, what did you become this time by choice, not by fate?"
     },
     {
       "id": "elf-nightborne",
@@ -1439,7 +1469,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Nightborne",
       "description": "Isolation-forged arcanists of ancient Suramar, wielding disciplined high magic with aristocratic poise.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Horde-leaning",
+      "difficulty": 2,
       "bonuses": [
         {
           "value": 2,
@@ -1447,15 +1478,13 @@ window.WOW_CHARACTER_OPTIONS = {
         },
         {
           "value": 1,
-          "stat": "CHA"
+          "stat": "DEX"
         }
       ],
       "traits": [
-        "Keen Senses",
-        "Lorekeeper",
+        "Arcane Knowledge",
         "Mental Warding",
-        "Superior Darkvision",
-        "Sunlight Sensitivity"
+        "Superior Darkvision"
       ],
       "names": {
         "male": [
@@ -1495,7 +1524,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: many hundreds to over a thousand years"
-      ]
+      ],
+      "storyQuestion": "What part of your identity matters most now that isolation is over?"
     },
     {
       "id": "goblin",
@@ -1504,20 +1534,21 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Explosive opportunists and brilliant dealmakers, thriving on risk, invention, and ruthless economic instinct.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
-          "stat": "DEX"
+          "stat": "CHA"
         },
         {
           "value": 1,
-          "stat": "CHA"
+          "stat": "INT"
         }
       ],
       "traits": [
         "Best Deals Anywhere",
         "Goblin Engineering",
-        "Time is Money"
+        "Dodge"
       ],
       "names": {
         "male": [
@@ -1560,7 +1591,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 70-90 years"
-      ]
+      ],
+      "storyQuestion": "What did survival and dealmaking teach you, and what's the one thing you won't sell?"
     },
     {
       "id": "orc-hunter-clan",
@@ -1568,20 +1600,25 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Hunter%20Clan%20Orc",
       "description": "Patient trackers of the wild, relying on ambush instinct, mobility, and deep fieldcraft.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Very Horde",
+      "difficulty": 1,
       "bonuses": [
         {
-          "value": 2,
+          "value": 1,
           "stat": "STR"
         },
         {
           "value": 1,
           "stat": "CON"
+        },
+        {
+          "value": 1,
+          "stat": "DEX"
         }
       ],
       "traits": [
         "Relentless Endurance",
-        "Agility",
+        "Surprise Attack",
         "Ambusher"
       ],
       "names": {
@@ -1626,7 +1663,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 75 years"
-      ]
+      ],
+      "storyQuestion": "What clan lesson still shapes your decisions when no one is watching?"
     },
     {
       "id": "orc-mystic-clan",
@@ -1634,10 +1672,11 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Mystic%20Clan%20Orc",
       "description": "Spirit-guided visionaries who merge ancestral tradition with shamanic insight and ritual strength.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Very Horde",
+      "difficulty": 1,
       "bonuses": [
         {
-          "value": 2,
+          "value": 1,
           "stat": "STR"
         },
         {
@@ -1696,7 +1735,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 75 years"
-      ]
+      ],
+      "storyQuestion": "What belief guides you personally, even when other orcs disagree?"
     },
     {
       "id": "orc-warrior-clan",
@@ -1704,7 +1744,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Warrior%20Clan%20Orc",
       "description": "Frontline conquerors of direct conflict, defined by ferocity, endurance, and battlefield dominance.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Very Horde",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -1713,15 +1754,11 @@ window.WOW_CHARACTER_OPTIONS = {
         {
           "value": 1,
           "stat": "CON"
-        },
-        {
-          "value": 1,
-          "stat": "STR"
         }
       ],
       "traits": [
         "Relentless Endurance",
-        "Powerful Build",
+        "Aggressive",
         "Savage Attacks"
       ],
       "names": {
@@ -1766,7 +1803,8 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "dataChips": [
         "Lifespan: around 75 years"
-      ]
+      ],
+      "storyQuestion": "When clan identity defines so much, what makes your way of honor, war, or leadership different from other orcs?"
     },
     {
       "id": "vulpera",
@@ -1774,7 +1812,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1d2a3a/e8ecff?text=Vulpera",
       "description": "Clever desert nomads who survive through resourcefulness, adaptability, and tightly bonded caravan community.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Horde-leaning",
+      "difficulty": 1,
       "bonuses": [
         {
           "value": 2,
@@ -1786,9 +1825,9 @@ window.WOW_CHARACTER_OPTIONS = {
         }
       ],
       "traits": [
-        "Survivalist",
-        "Escape Artist",
-        "Resourceful"
+        "Nomad's Knowledge",
+        "Fury of the Small",
+        "Keen Senses"
       ],
       "names": {
         "male": [
@@ -1819,7 +1858,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "dataChips": [
         "Lifespan: around 70-90 years"
       ],
-      "isAdditional": false
+      "isAdditional": false,
+      "storyQuestion": "What part of your story made you more than just a survivor of the road?"
     },
     {
       "id": "troll-forest",
@@ -1828,10 +1868,11 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Territorial ambushers of dense wilds, favoring brutal cunning, camouflage, and relentless close combat.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "traits": [
         "Regeneration",
         "Mask of the Wild",
-        "Wilderness Knowledge"
+        "Amani Instincts"
       ],
       "names": {
         "male": [
@@ -1873,14 +1914,15 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "bonuses": [
         {
-          "stat": "DEX",
-          "value": 1
-        },
-        {
           "stat": "CON",
           "value": 2
+        },
+        {
+          "stat": "DEX",
+          "value": 1
         }
-      ]
+      ],
+      "storyQuestion": "What personal code sets you apart from other forest trolls?"
     },
     {
       "id": "troll-ice",
@@ -1888,11 +1930,12 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Ice%20Troll",
       "description": "Frozen-land hunters tempered by scarcity, combining savage endurance with ruthless survival tactics.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Neutral",
+      "difficulty": 1,
       "traits": [
         "Regeneration",
         "Powerful Build",
-        "Tundra Walker"
+        "Frostborn Skin"
       ],
       "names": {
         "male": [
@@ -1934,14 +1977,15 @@ window.WOW_CHARACTER_OPTIONS = {
       ],
       "bonuses": [
         {
-          "stat": "DEX",
-          "value": 1
-        },
-        {
           "stat": "STR",
           "value": 2
+        },
+        {
+          "stat": "DEX",
+          "value": 1
         }
-      ]
+      ],
+      "storyQuestion": "What does strength mean to you beyond simply enduring hard times?"
     },
     {
       "id": "troll-jungle",
@@ -1950,9 +1994,10 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Fast, ritualistic hunters of the deep wild, channeling agility, frenzy, and loa-rooted ferocity.",
       "parentId": null,
       "faction": "Horde",
+      "difficulty": 1,
       "traits": [
         "Regeneration",
-        "Berserking",
+        "Berserk",
         "Voodoo Shuffle"
       ],
       "names": {
@@ -2006,7 +2051,8 @@ window.WOW_CHARACTER_OPTIONS = {
           "stat": "WIS",
           "value": 1
         }
-      ]
+      ],
+      "storyQuestion": "What part of your spirit makes you different from others in your tribe?"
     },
     {
       "id": "troll-zandalari",
@@ -2014,7 +2060,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/24384f/e8ecff?text=Zandalari%20Troll",
       "description": "Regal heirs of ancient empire, blending priestly power, martial discipline, and sovereign pride.",
       "parentId": null,
-      "faction": "Horde",
+      "faction": "Horde-leaning",
+      "difficulty": 1,
       "traits": [
         "Regeneration",
         "Ancient Lore",
@@ -2071,7 +2118,8 @@ window.WOW_CHARACTER_OPTIONS = {
           "stat": "CHA",
           "value": 1
         }
-      ]
+      ],
+      "storyQuestion": "What makes you stand out in a people defined by legacy and status?"
     },
     {
       "id": "arakkoa-high",
@@ -2079,6 +2127,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=High%20Arakkoa",
       "description": "Enigmatic avian mystics and hunters of spired ruins, balancing ritual wisdom with predatory precision.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "DEX",
@@ -2112,7 +2162,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 150 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What personal truth did you keep when your culture expected something else?"
     },
     {
       "id": "arakkoa-cursed",
@@ -2120,6 +2170,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Cursed%20Arakkoa",
       "description": "Shadow-touched outcasts, blending dark insight and twisted resilience into a haunting, unpredictable force.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "WIS",
@@ -2153,7 +2205,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 150 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "How did being cast down change the person you chose to become?"
     },
     {
       "id": "centaur",
@@ -2161,6 +2213,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Centaur",
       "description": "Relentless plains warbands built for speed, shock impact, and territorial dominance across open terrain.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "STR",
@@ -2194,7 +2248,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 70 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What personal drive pushes you beyond the life your people expected?"
     },
     {
       "id": "ethereal",
@@ -2202,6 +2256,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Ethereal",
       "description": "Energy-shrouded traders and arcane schemers, drifting between worlds through commerce and forbidden craft.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "INT",
@@ -2239,7 +2295,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "How did living in a world not built for your kind change how you adapt and survive?"
     },
     {
       "id": "furbolg",
@@ -2247,6 +2303,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Furbolg",
       "description": "Spiritual wilderness guardians who combine primal resilience with deep ancestral reverence.",
       "parentId": null,
+      "faction": "Neutral",
       "bonuses": [
         {
           "stat": "STR",
@@ -2257,6 +2314,7 @@ window.WOW_CHARACTER_OPTIONS = {
           "value": 1
         }
       ],
+      "difficulty": 2,
       "traits": [
         "Powerful Build",
         "Nature's Kin",
@@ -2280,7 +2338,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 300 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What gentle or fierce part of you surprises people most?"
     },
     {
       "id": "gnoll",
@@ -2288,6 +2346,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Gnoll",
       "description": "Feral pack-raiders who overwhelm prey through chaotic aggression, mobility, and ruthless opportunism.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "DEX",
@@ -2321,7 +2381,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 50 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What choice proves you're more than the worst expectations others have of gnolls?"
     },
     {
       "id": "leper-gnome",
@@ -2329,6 +2389,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Leper%20Gnome",
       "description": "Radiation-scarred survivors who weaponize unstable science and relentless improvisation.",
       "parentId": null,
+      "faction": "Alliance-leaning",
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "INT",
@@ -2369,7 +2431,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 250 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What keeps your identity strong despite stigma and hardship?"
     },
     {
       "id": "hobgoblin",
@@ -2377,6 +2439,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Hobgoblin",
       "description": "Militarized strategists who value rigid discipline, battlefield planning, and coordinated assault.",
       "parentId": null,
+      "faction": "Horde-leaning",
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "STR",
@@ -2417,7 +2481,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 90 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "When plans fail and titles mean nothing, what do you trust most?"
     },
     {
       "id": "elf-half",
@@ -2425,6 +2489,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Half-Elf",
       "description": "Half-elves bridge mortal and elven worlds, thriving through versatility, social fluency, and cultural balance.",
       "parentId": null,
+      "faction": "Alliance-leaning",
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "CHA",
@@ -2458,7 +2524,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 180 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "How did you turn living between worlds into a personal strength?"
     },
     {
       "id": "hozen",
@@ -2466,6 +2532,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Hozen",
       "description": "Chaotic jungle tricksters who rely on agility, improvisation, and shameless audacity.",
       "parentId": null,
+      "faction": "Neutral",
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "DEX",
@@ -2512,7 +2580,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 20 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "storyQuestion": "What deeper value do you hold that people don't expect from you?"
     },
     {
       "id": "vrykul",
@@ -2520,6 +2588,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Vrykul",
       "description": "Towering rune-marked warriors descended from titan-forged lines, feared for might and seafaring ferocity.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "STR",
@@ -2553,7 +2622,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 200 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What part of your heart stands out in a culture that prizes might?"
     },
     {
       "id": "jinyu",
@@ -2561,6 +2631,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Jinyu",
       "description": "Serene river-seers who interpret currents of water and fate, blending calm wisdom with fluid control.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "WIS",
@@ -2596,7 +2667,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 110 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Alliance-leaning",
+      "storyQuestion": "What personal calling matters most to you beyond tradition and prophecy?"
     },
     {
       "id": "jinyu-ankoan",
@@ -2604,6 +2676,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Ankoan",
       "description": "Disciplined deep-sea defenders hardened by endless war in dark waters and crushing depths.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "CON",
@@ -2637,7 +2710,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 100 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Alliance-leaning",
+      "storyQuestion": "How did war and loss change what kind of person you are now?"
     },
     {
       "id": "kobold",
@@ -2645,6 +2719,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Kobold",
       "description": "Obsessive tunnel-dwellers whose survival depends on traps, teamwork, and crafty engineering.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "DEX",
@@ -2678,7 +2753,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 35 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What makes you stand out from other kobolds who survive by fear and numbers?"
     },
     {
       "id": "mogu",
@@ -2686,6 +2762,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Mogu",
       "description": "Ancient empire-builders of brutal order, wielding titan-wrought might and tyrannical discipline.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "STR",
@@ -2734,7 +2811,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal change proves you are not trapped by old tyranny?"
     },
     {
       "id": "mantid",
@@ -2742,6 +2820,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Mantid",
       "description": "Ancient insectoid warriors of Pandaria, descended from aqir stock and tempered by the swarm cycle into cunning, disciplined killers.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "CON",
@@ -2781,7 +2860,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: up to around 800 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What individual purpose drives you beyond the swarm's old cycles?"
     },
     {
       "id": "murloc",
@@ -2789,6 +2869,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Murloc",
       "description": "Amphibious scavengers and reef hunters, thriving through pack instinct, sudden aggression, and uncanny familiarity with hostile waters.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "DEX",
@@ -2829,7 +2910,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 35-50 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal trait helps others see you as more than a stereotype?"
     },
     {
       "id": "naga",
@@ -2837,6 +2919,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Naga",
       "description": "Oceanic conquerors of cursed highborne blood, combining aristocratic cruelty with deadly aquatic mastery.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "CHA",
@@ -2878,7 +2961,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What part of your identity did you keep despite everything your people became?"
     },
     {
       "id": "ogre",
@@ -2886,6 +2970,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Ogre",
       "description": "Massive war-brutes who solve problems with raw force, intimidation, and stubborn battlefield endurance.",
       "parentId": null,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "STR",
@@ -2919,7 +3004,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 80 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What quality do you have that people never expect from an ogre?"
     },
     {
       "id": "quilboar",
@@ -2927,6 +3013,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Quilboar",
       "description": "Razorfen tribalists shaped by Agamaggan's legacy, known for stubborn ferocity, thorn-warren resilience, and brutal clan warfare.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "CON",
@@ -2994,7 +3081,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 45 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal value shaped you beyond clan rivalry and brutality?"
     },
     {
       "id": "saberon",
@@ -3002,6 +3090,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Saberon",
       "description": "Savage feline hunters whose culture exalts dominance, speed, and predatory close-quarters violence.",
       "parentId": null,
+      "hidden": true,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3035,7 +3125,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 55 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What makes your instincts serve your choices, not control them?"
     },
     {
       "id": "saurok",
@@ -3043,6 +3134,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Saurok",
       "description": "Independent lizard-men originally created by the mogu from sturdy Pandarian reptiles, now surviving as violent tribal raiders across Pandaria and the Great Sea.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3098,7 +3190,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "\"Racial Mount: Mushan | Formerly served the mogu empire\""
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What decision made you more than the role violence gave you?"
     },
     {
       "id": "sethrak",
@@ -3106,6 +3199,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Sethrak",
       "description": "Serpentfolk of storm-swept deserts, balancing venomous precision with zealous temple tradition.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3139,7 +3233,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 90 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What value keeps you steady when your people are divided by different loyalties and futures?"
     },
     {
       "id": "tauren-yaungol",
@@ -3147,13 +3242,14 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Yaungol",
       "description": "Pandarian warlike bovine nomads shaped by fire-scarred frontiers, proud of endurance and relentless will.",
       "parentId": null,
+      "difficulty": 2,
       "bonuses": [
         {
-          "stat": "STR",
+          "stat": "CON",
           "value": 2
         },
         {
-          "stat": "CON",
+          "stat": "STR",
           "value": 1
         }
       ],
@@ -3187,7 +3283,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 85 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What did a harsh life teach you that became your greatest strength?"
     },
     {
       "id": "tortollan",
@@ -3195,6 +3292,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Tortollan",
       "description": "Ancient traveling lorekeepers who pair heavy-shell endurance with patient wisdom and tradecraft.",
       "parentId": null,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "CON",
@@ -3228,7 +3326,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 300 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal mission matters more to you than trade, travel, or stories?"
     },
     {
       "id": "tolvir",
@@ -3236,6 +3335,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Tol%27vir",
       "description": "Uldum's titan-forged feline guardians, combining desert-hardened discipline with ancient stonebound purpose and imperial pride.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "CON",
@@ -3269,7 +3369,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries, longer in stonebound forms"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What part of your will shaped you beyond ancient duty?"
     },
     {
       "id": "blood-troll",
@@ -3277,6 +3378,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Blood%20Troll",
       "description": "Fanatical zealots of gore-soaked rites, channeling fear, frenzy, and primitive ritual violence.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3310,7 +3412,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 75 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What choice made you different from the violence your people are known for?"
     },
     {
       "id": "tuskarr",
@@ -3318,6 +3421,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Tuskarr",
       "description": "Warm-hearted arctic seafarers who endure frozen oceans through cooperation, grit, and practical skill.",
       "parentId": null,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "CON",
@@ -3369,7 +3473,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: around 150 years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal value anchors you when life gets hard?"
     },
     {
       "id": "nerubian",
@@ -3377,6 +3482,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Nerubian",
       "description": "Ancient spiderfolk strategists of subterranean empires, feared for cunning networks and superior intellect.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "INT",
@@ -3410,7 +3516,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "In a people known for intellect and ancient craft, what idea or pursuit sets your mind apart?"
     },
     {
       "id": "satyr",
@@ -3418,6 +3525,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Satyr",
       "description": "Corrupted forest predators who weaponize seduction, ambush, and fel-tainted malice.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "CHA",
@@ -3451,7 +3559,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: several centuries"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What part of yourself are you trying to reclaim or protect?"
     },
     {
       "id": "elf-felblood",
@@ -3459,6 +3568,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Felblood%20Elf",
       "description": "Blood elves twisted by demonic power, trading restraint for volatile magical hunger and cruelty.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "CHA",
@@ -3499,7 +3609,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: many hundreds of years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What keeps you from becoming only the power you wield?"
     },
     {
       "id": "elf-nightfallen",
@@ -3507,6 +3618,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Nightfallen",
       "description": "Starved descendants of Suramar, clinging to identity through arcwine, discipline, and hard-earned survival.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "INT",
@@ -3547,7 +3659,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: many hundreds of years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What did surviving dependence and decline teach you about who you are?"
     },
     {
       "id": "elf-wretched",
@@ -3555,6 +3668,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Wretched",
       "description": "Mana-warped outcasts consumed by magical deprivation, surviving through desperation, speed, and predatory instinct.",
       "parentId": null,
+      "difficulty": 4,
       "bonuses": [
         {
           "stat": "CON",
@@ -3595,7 +3709,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: many hundreds of years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What personal resolve helped you hold onto yourself through desperation?"
     },
     {
       "id": "elf-san-layn",
@@ -3603,6 +3718,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=San%27layn",
       "description": "Vampiric undead aristocrats who rule through terror, blood magic, and chilling courtly cruelty.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "CHA",
@@ -3636,7 +3752,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What part of your humanity or honor have you chosen not to lose?"
     },
     {
       "id": "elf-high",
@@ -3644,6 +3761,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=High%20Elf",
       "description": "Disciplined descendants of Quel'dorei tradition, blending refined arcane scholarship with ranger precision.",
       "parentId": null,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3684,14 +3802,16 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: many hundreds of years"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Alliance-leaning",
+      "storyQuestion": "What makes your path distinct from the long legacy your people carry?"
     },
     {
       "id": "keeper-dryad",
       "name": "Keeper of the Grove / Dryad",
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Keeper%20of%20the%20Grove%20%2F%20Dryad",
-      "description": "The children of Cenarius can be male keepers of the grove and female dryads. Nature-bound people and deeply attuned to healing, woodland magic, and the Emerald Dream.",
+      "description": "The children of Cenarius can be male keepers and female dryads. Nature-bound people and deeply attuned to healing, woodland magic, and the Emerald Dream.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "WIS",
@@ -3725,14 +3845,16 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: ageless unless destroyed"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What personal calling guides you beyond simply guarding nature?"
     },
     {
       "id": "harpy",
       "name": "Harpy",
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Harpy",
-      "description": "Matriarchal vicious winged raiders, mixing talon-fast mobility with shrill storm magic and a cruel instinct for despoiling any land they claim. They can only be female.",
+      "description": "Matriarchal, female winged raiders, mixing talon-fast mobility with shrill storm magic and a cruel instinct for despoiling any land they claim.",
       "parentId": null,
+      "difficulty": 3,
       "bonuses": [
         {
           "stat": "DEX",
@@ -3774,14 +3896,16 @@ window.WOW_CHARACTER_OPTIONS = {
         "Lifespan: 70"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Horde-leaning",
+      "storyQuestion": "What makes you different from the life and reputation your kind are known for?"
     },
     {
       "id": "drakonid",
       "name": "Drakonid",
       "image": "https://placehold.co/600x800/2b313f/e8ecff?text=Drakonid",
-      "description": "Bipedal dragonkin fashioned by the dragonflights to serve as loyal guards, soldiers, artisans, and caretakers. They lack true dragon flight, but make disciplined and realistic heroic adventurers.",
+      "description": "Fashioned by the dragonflights to serve as loyal guards, soldiers, artisans, and caretakers.",
       "parentId": null,
+      "difficulty": 1,
       "bonuses": [
         {
           "stat": "CON",
@@ -3824,7 +3948,8 @@ window.WOW_CHARACTER_OPTIONS = {
         "Languages: Draconic, Common, Orcish"
       ],
       "isAdditional": true,
-      "faction": "Neutral"
+      "faction": "Neutral",
+      "storyQuestion": "What choice proves you are more than just a servant of dragonflight duty?"
     }
   ],
   "classes": [
@@ -3834,11 +3959,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Druid",
       "description": "Warcraft-inspired class archetype for primal shapeshifting and nature magic.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Who taught you druidic ways, and what threat or imbalance pushed you out into the wider world?"
     },
     {
       "id": "druid-balance",
@@ -3846,6 +3973,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Balance%20Druid",
       "description": "Astral wardens who channel moonlight and starlight into devastating ranged spellcraft, weaving cosmic cycles into every battle.",
       "parentId": "druid",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -3863,7 +3991,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "Who taught you to read the moon and stars, and what imbalance are you trying to set right?"
     },
     {
       "id": "druid-feral",
@@ -3871,6 +4000,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Feral%20Druid",
       "description": "Apex predators who embrace tooth, claw, and instinct to stalk prey and tear through enemies with savage precision.",
       "parentId": "druid",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -3888,7 +4018,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What pushed you to embrace tooth and claw, and how do you keep your instincts from ruling you?"
     },
     {
       "id": "druid-guardian",
@@ -3896,6 +4027,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Guardian%20Druid",
       "description": "Colossal protectors embodying ancient ursine resilience, absorbing punishment and anchoring the front line.",
       "parentId": "druid",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -3913,7 +4045,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What oath made you the one who stands in harm's way, and what threat keeps you on that path?"
     },
     {
       "id": "druid-restoration",
@@ -3921,6 +4054,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Restoration%20Druid",
       "description": "Living conduits of renewal, mending wounds through verdant magic and sustaining allies through relentless conflict.",
       "parentId": "druid",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -3938,7 +4072,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Buffer"
-      ]
+      ],
+      "storyQuestion": "When did you first learn to mend life with nature's power, and who can you not afford to fail now?"
     },
     {
       "id": "hunter",
@@ -3946,18 +4081,21 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Hunter",
       "description": "Warcraft-inspired class archetype for martial ranged combat, tracking, and survival.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Animal Companion"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "What pushed you into the wilds, and what goal made you leave solitude to travel with others?"
     },
     {
       "id": "hunter-beast-master",
       "name": "Beast Master Hunter",
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Beast%20Master%20Hunter",
-      "description": "Among the most gifted hunters, there are those who have from birth felt a profound bond with the creatures of the wild. These beast masters are drawn to the perilous primal world, invigorated by its dangerous and untamed nature. Primitive landscape becomes home. Ferocious predator becomes kin.",
+      "description": "Gifted hunters bound to the wild, fighting beside ferocious companions through instinct, trust, and relentless coordination.",
       "parentId": "hunter",
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
@@ -3976,7 +4114,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Pet Class",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "How was your bond with your companion forged, and what hunt drives the two of you forward?"
     },
     {
       "id": "hunter-marksman",
@@ -3984,6 +4123,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Marksman%20Hunter",
       "description": "Peerless sharpshooters who end fights from impossible range, turning patience, positioning, and flawless aim into lethal artistry.",
       "parentId": "hunter",
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
@@ -4002,7 +4142,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "Where did you learn to make impossible shots, and what target are you determined to bring down?"
     },
     {
       "id": "hunter-survival",
@@ -4010,6 +4151,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Survival%20Hunter",
       "description": "Thriving at the edge of danger, they blend traps, grit, and close-quarters ferocity to dominate untamed battlefields.",
       "parentId": "hunter",
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
@@ -4028,7 +4170,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "What in the wild changed you most, and why do you still choose the hardest road?"
     },
     {
       "id": "mage",
@@ -4036,11 +4179,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Mage",
       "description": "Warcraft-inspired class archetype for disciplined arcane spellcasting.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Spellcasting Focus"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "How did you first unlock magic, and what knowledge or power are you chasing now?"
     },
     {
       "id": "mage-arcane",
@@ -4048,6 +4193,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Arcane%20Mage",
       "description": "Pursuers of pure magical theory, bending raw arcana into elegant, high-impact spellcraft that rewards precision and control.",
       "parentId": "mage",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -4065,7 +4211,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "How did you first unlock magic, and what knowledge or power are you chasing now?"
     },
     {
       "id": "mage-frost",
@@ -4073,6 +4220,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Frost%20Mage",
       "description": "Rulers of tempo and space who freeze foes in place while methodically overwhelming them with unrelenting glacial power.",
       "parentId": "mage",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -4090,7 +4238,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What drew you to frost over other magic, and what does that control mean to you now?"
     },
     {
       "id": "mage-fire",
@@ -4098,6 +4247,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Fire%20Mage",
       "description": "Explosive battle virtuosos, chaining ignition and critical bursts into cascading infernos that consume entire encounters.",
       "parentId": "mage",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -4115,7 +4265,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "What first ignited your hunger for flame, and what risk do you keep taking to unleash greater power?"
     },
     {
       "id": "monk",
@@ -4123,11 +4274,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Monk",
       "description": "Warcraft-inspired class archetype for chi-fueled martial discipline.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 8",
         "Chi"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Why did you leave your monastery, and what do you need to accomplish before you can return, if you even want to?"
     },
     {
       "id": "monk-brewmaster",
@@ -4135,6 +4288,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Brewmaster%20Monk",
       "description": "Unshakable brawlers, redirecting pain through disciplined brewing arts and turning chaos into controlled resilience.",
       "parentId": "monk",
+      "difficulty": 2,
       "dataChips": [
         "HP: 8",
         "Chi Mastery",
@@ -4152,7 +4306,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "How did you learn to carry pain with calm, and what keeps you balanced today?"
     },
     {
       "id": "monk-mistweaver",
@@ -4160,6 +4315,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Mistweaver%20Monk",
       "description": "Fusing martial grace with restorative mists, they preserve allies through fluid movement and tranquil spiritual focus.",
       "parentId": "monk",
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Chi Mastery",
@@ -4177,7 +4333,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Buffer"
-      ]
+      ],
+      "storyQuestion": "Who taught you to heal through mist and motion, and what vow sent you beyond your monastery walls?"
     },
     {
       "id": "monk-windwalker",
@@ -4185,6 +4342,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Windwalker%20Monk",
       "description": "Relentless combat dancers, combining speed, timing, and chi-infused strikes into elegant, crushing offense.",
       "parentId": "monk",
+      "difficulty": 2,
       "dataChips": [
         "HP: 8",
         "Chi Mastery",
@@ -4202,7 +4360,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Burst"
-      ]
+      ],
+      "storyQuestion": "What discipline honed your speed and strikes, and what challenge are you determined to overcome?"
     },
     {
       "id": "paladin",
@@ -4210,11 +4369,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Paladin",
       "description": "Warcraft-inspired class archetype for armored holy warfare and protection.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Divine Aura"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "How were you called to your oath, and what event turned that calling into a mission beyond your order?"
     },
     {
       "id": "paladin-holy",
@@ -4222,6 +4383,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Holy%20Paladin",
       "description": "Radiant battle-healers who uphold allies with sacred miracles while standing firm amid the fiercest pressure.",
       "parentId": "paladin",
+      "difficulty": 3,
       "dataChips": [
         "HP: 10",
         "Crusader Strike",
@@ -4239,7 +4401,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Healer"
-      ]
+      ],
+      "storyQuestion": "When were you first called to heal in the Light's name, and who are you trying to protect now?"
     },
     {
       "id": "paladin-protection",
@@ -4247,6 +4410,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Protection%20Paladin",
       "description": "Stalwart bulwarks of faith, shielding companions through consecrated defenses and unwavering resolve.",
       "parentId": "paladin",
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Crusader Strike",
@@ -4264,7 +4428,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Tank"
-      ]
+      ],
+      "storyQuestion": "What trial made you the shield others rely on, and whom have you sworn to stand before no matter the cost?"
     },
     {
       "id": "paladin-retribution",
@@ -4272,6 +4437,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Retribution%20Paladin",
       "description": "Zealous avengers, delivering righteous judgment through decisive weapon strikes empowered by divine wrath.",
       "parentId": "paladin",
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Crusader Strike",
@@ -4289,7 +4455,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Burst"
-      ]
+      ],
+      "storyQuestion": "What injustice set your righteous fury in motion, and what judgment are you determined to deliver?"
     },
     {
       "id": "priest",
@@ -4297,11 +4464,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Priest",
       "description": "Warcraft-inspired class archetype for divine casting, restoration, and spiritual power.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 6",
         "Channel Divinity"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Were you raised in your faith or called later, and what sacred duty or personal goal sent you into adventure?"
     },
     {
       "id": "priest-discipline",
@@ -4309,6 +4478,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Discipline%20Priest",
       "description": "Masters of balance between absolution and punishment, weaving preventative wards and atonement-fueled offense.",
       "parentId": "priest",
+      "difficulty": 3,
       "dataChips": [
         "HP: 6",
         "Channel Divinity",
@@ -4326,7 +4496,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Buffer"
-      ]
+      ],
+      "storyQuestion": "When did you learn to balance mercy and punishment, and what soul or cause keeps you walking that line?"
     },
     {
       "id": "priest-holy",
@@ -4334,6 +4505,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Holy%20Priest",
       "description": "Devoted restorers of life, channeling pure grace to stabilize allies and reverse catastrophic damage.",
       "parentId": "priest",
+      "difficulty": 2,
       "dataChips": [
         "HP: 6",
         "Channel Divinity",
@@ -4351,7 +4523,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "Were you raised for sacred healing or called to it later, and what duty sends you into danger now?"
     },
     {
       "id": "priest-shadow",
@@ -4359,6 +4532,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Shadow%20Priest",
       "description": "Embracing forbidden whispers, they weaponize void insight and mind-breaking pressure to unravel enemy will.",
       "parentId": "priest",
+      "difficulty": 3,
       "dataChips": [
         "HP: 6",
         "Channel Divinity",
@@ -4376,7 +4550,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Debuffer",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What drove you to listen to forbidden whispers, and what line do you refuse to cross?"
     },
     {
       "id": "rogue",
@@ -4384,11 +4559,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Rogue",
       "description": "Warcraft-inspired class archetype for stealth, precision, and opportunistic combat.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Cheap Shot"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "What break from your old life forced you onto this path, and why do you keep taking bigger risks?"
     },
     {
       "id": "rogue-assassin",
@@ -4396,6 +4573,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Assassin%20Rogue",
       "description": "Patient executioners who exploit poison, timing, and precision to eliminate targets before retaliation is possible.",
       "parentId": "rogue",
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Cheap Shot",
@@ -4413,7 +4591,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "What turned you into someone who kills from the shadows, and what keeps you there?"
     },
     {
       "id": "rogue-outlaw",
@@ -4421,6 +4600,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Outlaw%20Rogue",
       "description": "Daring skirmishers, thriving on audacity, dirty tricks, and relentless momentum in chaotic melee exchanges.",
       "parentId": "rogue",
+      "difficulty": 2,
       "dataChips": [
         "HP: 8",
         "Cheap Shot",
@@ -4438,7 +4618,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Party"
-      ]
+      ],
+      "storyQuestion": "What break from the old rules made you an outlaw, and what freedom or prize are you chasing?"
     },
     {
       "id": "rogue-subtlety",
@@ -4446,6 +4627,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Subtlety%20Rogue",
       "description": "Masters of the unseen strike, flowing through shadows to control engagements and deliver surgical finishers.",
       "parentId": "rogue",
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Cheap Shot",
@@ -4463,7 +4645,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "Who trained you to vanish and strike from shadow, and what keeps you in the dark?"
     },
     {
       "id": "shaman",
@@ -4471,11 +4654,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Shaman",
       "description": "Warcraft-inspired class archetype for elemental rites, totems, and ancestral power.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Totemic Bond"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Is adventuring a continuation of your duty to protect your lands, or a new path, and how do you handle relying on a group?"
     },
     {
       "id": "shaman-elemental",
@@ -4483,6 +4668,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Elemental%20Shaman",
       "description": "Commanders of storm, flame, and earth from range, unleashing volatile natural forces with disciplined ritual control.",
       "parentId": "shaman",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -4500,7 +4686,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "When did the elements first answer your call, and what force are you trying to calm or unleash?"
     },
     {
       "id": "shaman-enhancement",
@@ -4508,6 +4695,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Enhancement%20Shaman",
       "description": "Primal weapon mystics, infusing steel with elemental fury for explosive close-range pressure.",
       "parentId": "shaman",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -4525,7 +4713,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "When did you first feel the elements answer through your weapons, and why stay on this path?"
     },
     {
       "id": "shaman-restoration",
@@ -4533,6 +4722,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Restoration%20Shaman",
       "description": "Tidecallers of recovery, sustaining groups through ancestral rites, totems, and flowing restorative currents.",
       "parentId": "shaman",
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -4550,7 +4740,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "Who entrusted you with ancestral healing rites, and what people or land are you fighting to preserve?"
     },
     {
       "id": "warlock",
@@ -4558,11 +4749,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Warlock",
       "description": "Warcraft-inspired class archetype for fel sorcery, curses, and demonic power.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Fel Grimoire"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "What drove you to forbidden magic, and what line are you afraid you might cross to keep it?"
     },
     {
       "id": "warlock-affliction",
@@ -4570,6 +4763,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Affliction%20Warlock",
       "description": "Patient tormentors who spread ruinous curses and drain life over time until resistance collapses.",
       "parentId": "warlock",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Fel Grimoire",
@@ -4587,7 +4781,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Debuffer",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What desperation or ambition led you to ruinous curses, and who or what are you determined to wither?"
     },
     {
       "id": "warlock-demonology",
@@ -4595,6 +4790,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Demonology%20Warlock",
       "description": "Strategic summoners of infernal legions who overwhelm enemies through controlled demonic force.",
       "parentId": "warlock",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Fel Grimoire",
@@ -4612,7 +4808,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Summoner",
         "Pet Class"
-      ]
+      ],
+      "storyQuestion": "Why did you choose to command demons instead of flee them, and what control are you afraid to lose?"
     },
     {
       "id": "warlock-destruction",
@@ -4620,6 +4817,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Destruction%20Warlock",
       "description": "Engines of catastrophic power, converting volatile fel energy into annihilating bursts.",
       "parentId": "warlock",
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Fel Grimoire",
@@ -4637,7 +4835,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "What sparked your taste for catastrophic power, and what line do you fear you might burn past?"
     },
     {
       "id": "warrior",
@@ -4645,11 +4844,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Warrior",
       "description": "Warcraft-inspired class archetype for weapon mastery and frontline combat.",
       "parentId": null,
+      "difficulty": 1,
       "dataChips": [
         "HP: 10",
         "Combat Mastery"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Where did you learn to fight, and what cause makes you keep stepping back into danger?"
     },
     {
       "id": "warrior-arms",
@@ -4657,6 +4858,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Arms%20Warrior",
       "description": "Disciplined weapon masters, reading battle flow and delivering devastating, perfectly timed blows.",
       "parentId": "warrior",
+      "difficulty": 1,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -4674,7 +4876,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "Where did you master disciplined weaponcraft, and what cause keeps you stepping back onto the battlefield?"
     },
     {
       "id": "warrior-fury",
@@ -4682,6 +4885,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Fury%20Warrior",
       "description": "Embodying relentless aggression, they turn pain and momentum into overwhelming dual-weapon assault.",
       "parentId": "warrior",
+      "difficulty": 1,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -4699,7 +4903,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What taught you to turn pain into relentless aggression, and what enemy keeps feeding your fury?"
     },
     {
       "id": "warrior-protection",
@@ -4707,6 +4912,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Protection%20Warrior",
       "description": "Immovable defenders, using shield technique and battlefield command to absorb and control threats.",
       "parentId": "warrior",
+      "difficulty": 1,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -4724,7 +4930,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "What made you become a shield for others, and what or who are you sworn to protect?"
     },
     {
       "id": "death-knight",
@@ -4732,11 +4939,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Death%20Knight",
       "description": "Warcraft-inspired class archetype for runeblade combat, undeath, and dark resilience.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 10",
         "Runeblade Mastery"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "After breaking from the will that raised you, what part of your old life still binds you, and what part have you buried forever?"
     },
     {
       "id": "death-knight-frost",
@@ -4744,6 +4953,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Frost%20Death%20Knight",
       "description": "Channeling icy ruin through runeblades, they combine chilling control with crushing martial execution.",
       "parentId": "death-knight",
+      "difficulty": 4,
       "dataChips": [
         "HP: 10",
         "Undead",
@@ -4761,7 +4971,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Frontline"
-      ]
+      ],
+      "storyQuestion": "What part of your former life still lingers, and what vengeance or purpose drives you onward?"
     },
     {
       "id": "death-knight-blood",
@@ -4769,6 +4980,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Blood%20Death%20Knight",
       "description": "Life-stealing juggernauts, sustaining through grievous punishment and blood magic.",
       "parentId": "death-knight",
+      "difficulty": 4,
       "dataChips": [
         "HP: 10",
         "Undead",
@@ -4786,7 +4998,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What led you to blood magic for strength, and what part of yourself are you trying to hold onto?"
     },
     {
       "id": "death-knight-unholy",
@@ -4794,6 +5007,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Unholy%20Death%20Knight",
       "description": "Commanders of plague and undeath who grind down foes with relentless diseases and necrotic armies.",
       "parentId": "death-knight",
+      "difficulty": 4,
       "dataChips": [
         "HP: 10",
         "Undead",
@@ -4811,7 +5025,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Summoner",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "How did you come to command the dead, and what does that choice cost you?"
     },
     {
       "id": "demon-hunter",
@@ -4819,11 +5034,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3a2a1f/e8ecff?text=Demon%20Hunter",
       "description": "Warcraft-inspired class archetype for fel-fueled agility, vengeance, and demonic sacrifice.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamorphosis"
       ],
-      "bonuses": []
+      "bonuses": [],
+      "storyQuestion": "Why did you undergo the rites, and how do your scars and mutations shape who you are now?"
     },
     {
       "id": "demon-hunter-havoc",
@@ -4831,6 +5048,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Havoc%20Demon%20Hunter",
       "description": "Acrobatic slayers, using speed and fel-infused aggression to shred priority targets instantly.",
       "parentId": "demon-hunter",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Blind Sight",
@@ -4848,7 +5066,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Burst"
-      ]
+      ],
+      "storyQuestion": "What loss drove you to the fel, and what prey still haunts your every step?"
     },
     {
       "id": "demon-hunter-vengeance",
@@ -4856,6 +5075,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Vengeance%20Demon%20Hunter",
       "description": "Infernal wardens, enduring extreme pressure while punishing enemies with demonic retaliation.",
       "parentId": "demon-hunter",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Blind Sight",
@@ -4873,7 +5093,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What drove you to endure torment to protect others, and what failure will you never repeat?"
     },
     {
       "id": "demon-hunter-wrath",
@@ -4881,6 +5102,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b3427/e8ecff?text=Wrath%20Demon%20Hunter",
       "description": "Embodiments of unrestrained fel fury, converting pain and hatred into surging offensive power.",
       "parentId": "demon-hunter",
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Blind Sight",
@@ -4898,7 +5120,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What keeps your fel rage focused instead of consuming you, and who are you burning to destroy?"
     },
     {
       "id": "engineer",
@@ -4906,6 +5129,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/22323d/e8ecff?text=Engineer",
       "description": "Battlefield inventors who solve problems with machinery, precision tools, and controlled technical chaos.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Field Toolkit"
@@ -4922,7 +5146,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Explorer",
         "Buffer"
-      ]
+      ],
+      "storyQuestion": "How did you become Engineer, and what is driving you now?"
     },
     {
       "id": "engineer-tinker",
@@ -4930,6 +5155,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2b3f4d/e8ecff?text=Tinker",
       "description": "Battlefield inventors who solve problems with machinery, precision tools, and controlled technical chaos.",
       "parentId": "engineer",
+      "difficulty": 3,
       "linkChip": {
         "label": "Engineer Source",
         "url": "https://www.gmbinder.com/share/-MidcmnpaFzF5lAXNeMl"
@@ -4952,7 +5178,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Explorer"
-      ]
+      ],
+      "storyQuestion": "Who taught you to solve war with invention, and what creation are you building to change the fight?"
     },
     {
       "id": "engineer-sapper",
@@ -4960,6 +5187,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/453323/e8ecff?text=Sapper",
       "description": "Dominating chokepoints with explosives, traps, and demolition tactics, they punish overextension.",
       "parentId": "engineer",
+      "difficulty": 3,
       "linkChip": {
         "label": "Engineer Source",
         "url": "https://www.gmbinder.com/share/-MidcmnpaFzF5lAXNeMl"
@@ -4982,7 +5210,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "What battlefield taught you the language of explosives, and what target deserves your biggest blast?"
     },
     {
       "id": "engineer-steam-warrior",
@@ -4990,6 +5219,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3b3a2a/e8ecff?text=Steam%20Warrior",
       "description": "Fighting in pressurized mech-armor, they brawl on the frontline with reinforced plating and momentum weapons.",
       "parentId": "engineer",
+      "difficulty": 3,
       "linkChip": {
         "label": "Engineer Source",
         "url": "https://www.gmbinder.com/share/-MidcmnpaFzF5lAXNeMl"
@@ -5011,7 +5241,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What got you into the machine, and why cannot you live without it now?"
     },
     {
       "id": "engineer-techno-mage",
@@ -5019,6 +5250,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2f2a47/e8ecff?text=Techno%20Mage",
       "description": "Fusing arcane channels with machinery, they overcharge devices into volatile beam and pulse spellcraft.",
       "parentId": "engineer",
+      "difficulty": 5,
       "linkChip": {
         "label": "Engineer Source",
         "url": "https://www.gmbinder.com/share/-MidcmnpaFzF5lAXNeMl"
@@ -5041,7 +5273,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "How did you fuse arcane study with engineering, and what breakthrough are you chasing now?"
     },
     {
       "id": "bard",
@@ -5049,6 +5282,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3b2746/e8ecff?text=Bard",
       "description": "Amplifying allies and destabilizing enemies through performance, rhythm, and inspiring battlefield presence.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 8",
         "Bardic Inspiration",
@@ -5066,14 +5300,16 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Buffer",
         "Social"
-      ]
+      ],
+      "storyQuestion": "When did performance become power for you, and what are you trying to move in people now?"
     },
     {
-      "id": "hemomancer",
+      "id": "warlock-hemomancer",
       "name": "Hemomancer",
       "image": "https://placehold.co/600x800/4a2228/e8ecff?text=Hemomancer",
       "description": "Wielders of blood rites, converting pain and life-force into dangerous power, sustenance, and cursecraft.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Blood Rites",
@@ -5091,7 +5327,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Sustain DPS",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "What led you to blood magic, and what part of yourself does it keep costing?"
     },
     {
       "id": "starcaller",
@@ -5099,6 +5336,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1f2e52/e8ecff?text=Starcaller",
       "description": "Commanders of astral and celestial forces, bending fate and cosmic patterns to guide allies and punish foes.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Astral Magic",
@@ -5116,7 +5354,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "When did you first look to the stars for answers, and what are you still hoping they reveal?",
+      "hidden": true
     },
     {
       "id": "witch-doctor",
@@ -5124,6 +5364,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2a412f/e8ecff?text=Witch%20Doctor",
       "description": "Blending voodoo, spirit rites, and primal medicine, they curse enemies and sustain their companions.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Juju and Mojo",
@@ -5141,7 +5382,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Debuffer",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "What drew you into spirit rites and hexes, and what debt or promise still ties you to them?"
     },
     {
       "id": "apothecary",
@@ -5149,6 +5391,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2f3d35/e8ecff?text=Apothecary",
       "description": "Non-magical field healers who stabilize allies and swing tempo through compounds, tonics, and tactical debuffs.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Overdose",
@@ -5166,7 +5409,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Field Medic",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "What drew you to battlefield medicine and compounds, and who are you trying to save?"
     },
     {
       "id": "alchemist",
@@ -5174,6 +5418,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/324331/e8ecff?text=Alchemist",
       "description": "Leveraging transmutation and reactive brews, they buff teams, alter battle states, and solve practical problems.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Transmutation",
@@ -5191,7 +5436,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Buffer",
         "Explorer"
-      ]
+      ],
+      "storyQuestion": "When did experimentation become your path, and what formula are you still chasing?"
     },
     {
       "id": "druid-nightmare",
@@ -5199,6 +5445,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2e293d/e8ecff?text=Nightmare%20Druid",
       "description": "Wielders of corrupted dream magic, spreading fear, entropy, and reality-warping control.",
       "parentId": null,
+      "difficulty": 5,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -5217,7 +5464,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "What pulled you toward nightmare magic, and what keeps you from being lost in it?"
     },
     {
       "id": "druid-flame",
@@ -5225,6 +5473,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4b2a1f/e8ecff?text=Flame%20Druid",
       "description": "Wildfire channelers, trading calm restoration for aggressive burning pressure and renewal through ash.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -5243,7 +5492,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "When did you choose wildfire over calm growth, and what does that fire mean to you?"
     },
     {
       "id": "druid-dinomancer",
@@ -5251,6 +5501,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3c3422/e8ecff?text=Dinomancer",
       "description": "Invokers of primal saurian forms and instincts, overwhelming enemies with ancient ferocity.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Shapeshifting",
@@ -5269,7 +5520,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "What awakened your bond with primal saurian forms, and what does that power ask of you?",
+      "hidden": true
     },
     {
       "id": "druid-fungalmancer",
@@ -5277,6 +5530,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/324033/e8ecff?text=Fungalmancer",
       "description": "Spreaders of spores, symbiosis, and creeping growth, healing allies while degrading enemy momentum.",
       "parentId": null,
+      "difficulty": 5,
       "dataChips": [
         "HP: 8",
         "Sporecraft",
@@ -5294,7 +5548,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Debuffer",
         "Healer"
-      ]
+      ],
+      "storyQuestion": "How did you come to trust spores and decay as part of life, and what are you trying to restore?"
     },
     {
       "id": "hunter-shadow-hunter",
@@ -5302,6 +5557,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2a2e42/e8ecff?text=Shadow%20Hunter",
       "description": "Stalking from concealment, they mix ritual darts, curses, and precision shots to dismantle targets.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 10",
         "Spirit of the Loa",
@@ -5320,7 +5576,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "Who trained you in shadowed rites and precision hunting, and what prey still defines you?"
     },
     {
       "id": "hunter-gunner",
@@ -5328,6 +5585,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/35312a/e8ecff?text=Gunner",
       "description": "Experts in firearms discipline, volleys, and suppressive fire who dominate ranged engagements.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Focus Mastery",
@@ -5347,7 +5605,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "What made you trust powder and steel over older paths, and what shot are you waiting to take?"
     },
     {
       "id": "warrior-berserker",
@@ -5355,6 +5614,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/4a2b25/e8ecff?text=Berserker",
       "description": "Converting pain into rage-fueled offense, they thrive in prolonged melee where momentum never stops.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -5373,7 +5633,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Sustain DPS"
-      ]
+      ],
+      "storyQuestion": "When did rage become your language in battle, and what helps you return from it?",
+      "hidden": true
     },
     {
       "id": "warrior-gladiator",
@@ -5381,6 +5643,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3b3026/e8ecff?text=Gladiator",
       "description": "Arena weapon masters with superior dueling pressure, discipline, and spectacle-driven tactics.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -5399,7 +5662,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "What arena shaped you most, and who are you trying to prove yourself to now?"
     },
     {
       "id": "warrior-brawler",
@@ -5407,6 +5671,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/40322c/e8ecff?text=Brawler",
       "description": "Specialists in dirty close-quarters fighting, disruption, and relentless pressure in tight spaces.",
       "parentId": null,
+      "difficulty": 2,
       "dataChips": [
         "HP: 10",
         "Combat Mastery",
@@ -5425,7 +5690,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "What turned you into a dirty street fighter, and what keeps you reaching for every unfair edge?"
     },
     {
       "id": "mage-spellblade",
@@ -5433,6 +5699,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2d3150/e8ecff?text=Spellblade",
       "description": "Fusing arcane spellcraft and steel, they weave melee pressure with instant magical burst windows.",
       "parentId": null,
+      "difficulty": 5,
       "dataChips": [
         "HP: 8",
         "Cast and Slash",
@@ -5450,7 +5717,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Burst",
         "Skirmisher"
-      ]
+      ],
+      "storyQuestion": "When did blade and spell become one style for you, and what made that path worth the risk?"
     },
     {
       "id": "mage-chronomancer",
@@ -5458,6 +5726,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2a3a52/e8ecff?text=Chronomancer",
       "description": "Manipulators of tempo and time states who delay threats, accelerate allies, and rewrite key moments.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -5476,7 +5745,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Buffer"
-      ]
+      ],
+      "storyQuestion": "What made you study time itself, and what moment are you still trying to change?"
     },
     {
       "id": "mage-astromancer",
@@ -5484,6 +5754,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/1e3350/e8ecff?text=Astromancer",
       "description": "Channelers of stellar patterns into radiant barrages, prediction effects, and gravitational disruption.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -5502,7 +5773,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Ritualist",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "When did you begin reading fate in the stars, and which omen still guides you?"
     },
     {
       "id": "mage-illusionist",
@@ -5510,6 +5782,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2a2f4a/e8ecff?text=Illusionist",
       "description": "Confusers of perception and battlefield information, winning through deception and control rather than raw force.",
       "parentId": null,
+      "difficulty": 5,
       "dataChips": [
         "HP: 6",
         "Metamagic",
@@ -5528,7 +5801,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Crowd Control",
         "Social"
-      ]
+      ],
+      "storyQuestion": "What taught you to fight through deception, and what truth are you still hiding?"
     },
     {
       "id": "shaman-spiritwalker",
@@ -5536,6 +5810,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2e3d4c/e8ecff?text=Spiritwalker",
       "description": "Bridging worlds, they guide ancestors and allies with rites that stabilize and fortify the group.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -5554,7 +5829,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Healer",
         "Ritualist"
-      ]
+      ],
+      "storyQuestion": "When did the spirits first answer you, and what duty do they still place on you?"
     },
     {
       "id": "shaman-summoner",
@@ -5562,6 +5838,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2f3940/e8ecff?text=Summoner",
       "description": "Shamans who call elementals to aid them in battle, providing support, damage, and utility.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -5580,7 +5857,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Summoner",
         "Pet Class"
-      ]
+      ],
+      "storyQuestion": "What first called you to bind elementals, and what keeps that bond from breaking?"
     },
     {
       "id": "shaman-earthwarder",
@@ -5588,6 +5866,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/3b3d2e/e8ecff?text=Earthwarder",
       "description": "Anchors of the frontline through geomancy, barriers, and heavy mitigation rooted in stone and stability.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Totemist",
@@ -5606,7 +5885,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Frontline",
         "Healer"
-      ]
+      ],
+      "storyQuestion": "What made you take the path of stone and protection, and what land or people anchor you?"
     },
     {
       "id": "monk-runemaster",
@@ -5614,6 +5894,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2a3a3a/e8ecff?text=Runemaster",
       "description": "Inscribers of combat sigils who empower allies, restrict enemies, and chain disciplined martial techniques.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Chi Mastery",
@@ -5632,7 +5913,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Buffer",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "Who taught you rune craft in combat, and what mark are you trying to leave?"
     },
     {
       "id": "rogue-warden",
@@ -5640,6 +5922,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/233648/e8ecff?text=Warden",
       "description": "Enforcers of battlefield justice with disciplined pursuit, lockdown tools, and precise anti-mobility play.",
       "parentId": null,
+      "difficulty": 3,
       "dataChips": [
         "HP: 8",
         "Cheap Shot",
@@ -5658,7 +5941,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Crowd Control"
-      ]
+      ],
+      "storyQuestion": "What made you become a relentless pursuer, and what line do you refuse to let anyone cross?"
     },
     {
       "id": "rogue-pirate",
@@ -5666,6 +5950,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/304154/e8ecff?text=Pirate",
       "description": "Blending swashbuckling mobility, dueling pressure, and high-risk tactics, they dominate chaotic engagements.",
       "parentId": null,
+      "difficulty": 3,
       "linkChip": {
         "label": "Swashbuckler Source",
         "url": "https://dnd5e.wikidot.com/rogue:swashbuckler"
@@ -5688,7 +5973,9 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Party"
-      ]
+      ],
+      "storyQuestion": "What took you to a pirate's life, and what keeps you sailing instead of settling?",
+      "hidden": true
     },
     {
       "id": "warlock-necromancer",
@@ -5696,6 +5983,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/31253d/e8ecff?text=Necromancer",
       "description": "Commanders of death magic and undead servitors, grinding enemies down through attrition and dread.",
       "parentId": null,
+      "difficulty": 4,
       "dataChips": [
         "HP: 8",
         "Fel Grimoire",
@@ -5713,7 +6001,8 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Summoner",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "What made you choose death magic, and what part of that path still unsettles you?"
     },
     {
       "id": "warlock-soulreaver",
@@ -5721,6 +6010,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "image": "https://placehold.co/600x800/2f2538/e8ecff?text=Soulreaver",
       "description": "Fel-and-soul warlocks who fight like hexblades, carving enemies with cursed strikes and life-draining sorcery.",
       "parentId": null,
+      "difficulty": 5,
       "dataChips": [
         "HP: 8",
         "Fel-infused Strikes",
@@ -5738,255 +6028,474 @@ window.WOW_CHARACTER_OPTIONS = {
       "tags": [
         "Skirmisher",
         "Debuffer"
-      ]
+      ],
+      "storyQuestion": "When did you first touch soul-binding power, and what part of you has it changed?",
+      "hidden": true
     }
   ],
   "weapons": [
     {
-      "id": "club",
+      "id": "hammer-club",
       "name": "Club",
       "image": "https://placehold.co/800x600/4a3529/f2e8da?text=Club",
-      "tags": ["1d4", "Light"]
+      "tags": [
+        "1d4",
+        "Light"
+      ]
     },
     {
-      "id": "dagger",
+      "id": "sword-dagger",
       "name": "Dagger",
       "image": "https://placehold.co/800x600/3a3a40/f1f3f8?text=Dagger",
-      "tags": ["1d4", "Finesse", "Light", "Thrown"]
+      "tags": [
+        "1d4",
+        "Finesse",
+        "Light",
+        "Thrown"
+      ]
     },
     {
-      "id": "greatclub",
+      "id": "hammer-greatclub",
       "name": "Greatclub",
       "image": "https://placehold.co/800x600/4d392d/f1e7d8?text=Greatclub",
-      "tags": ["1d8", "2H"]
+      "tags": [
+        "1d8",
+        "2H"
+      ]
     },
     {
-      "id": "handaxe",
+      "id": "axe-handaxe",
       "name": "Handaxe",
       "image": "https://placehold.co/800x600/47352f/f2e7df?text=Handaxe",
-      "tags": ["1d6", "Light", "Thrown"]
+      "tags": [
+        "1d6",
+        "Light",
+        "Thrown"
+      ]
     },
     {
-      "id": "javelin",
+      "id": "spear-javelin",
       "name": "Javelin",
       "image": "https://placehold.co/800x600/4e4031/f3ebdf?text=Javelin",
-      "tags": ["1d6", "Thrown"]
+      "tags": [
+        "1d6",
+        "Thrown"
+      ]
     },
     {
-      "id": "light-hammer",
+      "id": "hammer-light",
       "name": "Light Hammer",
       "image": "https://placehold.co/800x600/45424a/f2f0f6?text=Light+Hammer",
-      "tags": ["1d4", "Light", "Thrown"]
+      "tags": [
+        "1d4",
+        "Light",
+        "Thrown"
+      ]
     },
     {
-      "id": "mace",
+      "id": "hammer-mace",
       "name": "Mace",
       "image": "https://placehold.co/800x600/40444a/edf1f7?text=Mace",
-      "tags": ["1d6"]
+      "tags": [
+        "1d6"
+      ]
     },
     {
       "id": "quarterstaff",
       "name": "Quarterstaff",
       "image": "https://placehold.co/800x600/4a3a2d/f2eadf?text=Quarterstaff",
-      "tags": ["1d6", "Versatile (1d8)"]
+      "tags": [
+        "1d6",
+        "Versatile (1d8)"
+      ]
     },
     {
       "id": "sickle",
       "name": "Sickle",
       "image": "https://placehold.co/800x600/37433a/e9f3ea?text=Sickle",
-      "tags": ["1d4", "Light"]
+      "tags": [
+        "1d4",
+        "Light"
+      ]
     },
     {
       "id": "spear",
       "name": "Spear",
       "image": "https://placehold.co/800x600/4f4334/f3ecdf?text=Spear",
-      "tags": ["1d6", "Thrown", "Versatile (1d8)"]
+      "tags": [
+        "1d6",
+        "Thrown",
+        "Versatile (1d8)"
+      ]
     },
     {
       "id": "dart",
       "name": "Dart",
       "image": "https://placehold.co/800x600/3c4048/f0f3f8?text=Dart",
-      "tags": ["1d4", "Finesse", "Thrown"]
+      "tags": [
+        "1d4",
+        "Finesse",
+        "Thrown"
+      ]
     },
     {
-      "id": "light-crossbow",
+      "id": "crossbow-light",
       "name": "Light Crossbow",
       "image": "https://placehold.co/800x600/473c34/f3e9dd?text=Light+Crossbow",
-      "tags": ["1d8",  "Loading", "2H"]
+      "tags": [
+        "1d8",
+        "Loading",
+        "2H"
+      ]
     },
     {
-      "id": "shortbow",
+      "id": "bow-shortbow",
       "name": "Shortbow",
       "image": "https://placehold.co/800x600/584733/f4ebdd?text=Shortbow",
-      "tags": ["1d6",  "2H"]
+      "tags": [
+        "1d6",
+        "2H"
+      ]
     },
     {
       "id": "sling",
       "name": "Sling",
       "image": "https://placehold.co/800x600/4b4039/f1ebe4?text=Sling",
-      "tags": ["1d4"]
+      "tags": [
+        "1d4"
+      ]
     },
     {
-      "id": "battleaxe",
+      "id": "wand",
+      "name": "Wand",
+      "image": "https://placehold.co/800x600/4b4039/f1ebe4?text=Wand",
+      "tags": [
+        "1d4"
+      ]
+    },
+    {
+      "id": "axe-battleaxe",
       "name": "Battleaxe",
       "image": "https://placehold.co/800x600/4c3a34/f3e7de?text=Battleaxe",
-      "tags": ["1d8", "Versatile (1d10)"]
+      "tags": [
+        "1d8",
+        "Versatile (1d10)"
+      ]
     },
     {
       "id": "flail",
       "name": "Flail",
       "image": "https://placehold.co/800x600/3d3530/f1e8df?text=Flail",
-      "tags": ["1d8"]
+      "tags": [
+        "1d8"
+      ]
     },
     {
-      "id": "glaive",
+      "id": "shovel",
+      "name": "Shovel",
+      "image": "https://placehold.co/800x600/3d3530/f1e8df?text=Shovel",
+      "tags": [
+        "1d10",
+        "2H"
+      ]
+    },
+    {
+      "id": "spear-glaive",
       "name": "Glaive",
       "image": "https://placehold.co/800x600/454139/f2ece3?text=Glaive",
-      "tags": ["1d10", "Heavy", "Reach", "2H"]
+      "tags": [
+        "1d10",
+        "Heavy",
+        "Reach",
+        "2H"
+      ]
     },
     {
-      "id": "greataxe",
+      "id": "axe-greataxe",
       "name": "Greataxe",
       "image": "https://placehold.co/800x600/43322d/f3e6de?text=Greataxe",
-      "tags": ["1d12", "Heavy", "2H"]
+      "tags": [
+        "1d12",
+        "Heavy",
+        "2H"
+      ]
     },
     {
-      "id": "greatsword",
+      "id": "sword-greatsword",
       "name": "Greatsword",
       "image": "https://placehold.co/800x600/39404a/f0f4f8?text=Greatsword",
-      "tags": ["2d6", "Heavy", "2H"]
+      "tags": [
+        "2d6",
+        "Heavy",
+        "2H"
+      ]
     },
     {
-      "id": "halberd",
+      "id": "spear-halberd",
       "name": "Halberd",
       "image": "https://placehold.co/800x600/484039/f2ebe2?text=Halberd",
-      "tags": ["1d10", "Heavy", "Reach", "2H"]
+      "tags": [
+        "1d10",
+        "Heavy",
+        "Reach",
+        "2H"
+      ]
     },
     {
-      "id": "lance",
+      "id": "spear-lance",
       "name": "Lance",
       "image": "https://placehold.co/800x600/514435/f4ecde?text=Lance",
-      "tags": ["1d10", "Heavy", "Reach", "2H"]
+      "tags": [
+        "1d10",
+        "Heavy",
+        "Reach",
+        "2H"
+      ]
     },
     {
-      "id": "longsword",
+      "id": "sword-longsword",
       "name": "Longsword",
       "image": "https://placehold.co/800x600/3a434d/f0f4f8?text=Longsword",
-      "tags": ["1d8", "Versatile (1d10)"]
+      "tags": [
+        "1d8",
+        "Versatile (1d10)"
+      ]
     },
     {
-      "id": "maul",
+      "id": "hammer-maul",
       "name": "Maul",
       "image": "https://placehold.co/800x600/433b35/f0e8e0?text=Maul",
-      "tags": ["2d6", "Heavy", "2H"]
+      "tags": [
+        "2d6",
+        "Heavy",
+        "2H"
+      ]
     },
     {
-      "id": "morningstar",
+      "id": "hammer-morningstar",
       "name": "Morningstar",
       "image": "https://placehold.co/800x600/423940/f1edf4?text=Morningstar",
-      "tags": ["1d8"]
+      "tags": [
+        "1d8"
+      ]
     },
     {
-      "id": "pike",
-      "name": "Pike",
-      "image": "https://placehold.co/800x600/4b4339/f3ede2?text=Pike",
-      "tags": ["1d10", "Heavy", "Reach", "2H"]
-    },
-    {
-      "id": "rapier",
+      "id": "sword-rapier",
       "name": "Rapier",
       "image": "https://placehold.co/800x600/353943/f3f5fa?text=Rapier",
-      "tags": ["1d8", "Finesse"]
+      "tags": [
+        "1d8",
+        "Finesse"
+      ]
     },
     {
-      "id": "scimitar",
+      "id": "sword-scimitar",
       "name": "Scimitar",
       "image": "https://placehold.co/800x600/40453d/f0f5ee?text=Scimitar",
-      "tags": ["1d6", "Finesse", "Light"]
+      "tags": [
+        "1d6",
+        "Finesse",
+        "Light"
+      ]
     },
     {
-      "id": "shortsword",
+      "id": "sword-tonfa",
+      "name": "Tonfa",
+      "image": "https://placehold.co/800x600/40453d/f0f5ee?text=Tonfa",
+      "tags": [
+        "1d6",
+        "Finesse",
+        "Light"
+      ]
+    },
+    {
+      "id": "sword-shortsword",
       "name": "Shortsword",
       "image": "https://placehold.co/800x600/39414a/f0f4f8?text=Shortsword",
-      "tags": ["1d6", "Finesse", "Light"]
+      "tags": [
+        "1d6",
+        "Finesse",
+        "Light"
+      ]
     },
     {
-      "id": "trident",
+      "id": "spear-trident",
       "name": "Trident",
       "image": "https://placehold.co/800x600/35505a/e8f7fb?text=Trident",
-      "tags": ["1d8", "Thrown", "Versatile (1d10)"]
+      "tags": [
+        "1d8",
+        "Thrown",
+        "Versatile (1d10)"
+      ]
     },
     {
-      "id": "warhammer",
+      "id": "hammer-warhammer",
       "name": "Warhammer",
       "image": "https://placehold.co/800x600/41454c/f0f3f8?text=Warhammer",
-      "tags": ["1d8", "Versatile (1d10)"]
+      "tags": [
+        "1d8",
+        "Versatile (1d10)"
+      ]
     },
     {
       "id": "war-pick",
       "name": "War Pick",
       "image": "https://placehold.co/800x600/434040/f2eeec?text=War+Pick",
-      "tags": ["1d8", "Versatile (1d10)"]
+      "tags": [
+        "1d8",
+        "Versatile (1d10)"
+      ]
     },
     {
       "id": "whip",
       "name": "Whip",
       "image": "https://placehold.co/800x600/4a362f/f4e7de?text=Whip",
-      "tags": ["1d4", "Finesse", "Reach"]
+      "tags": [
+        "1d4",
+        "Finesse",
+        "Reach"
+      ]
     },
     {
       "id": "blowgun",
       "name": "Blowgun",
       "image": "https://placehold.co/800x600/4c4337/f2ebe1?text=Blowgun",
-      "tags": ["1", "Loading"]
+      "tags": [
+        "1 damage",
+        "Loading",
+        "Stealthy"
+      ]
     },
     {
-      "id": "hand-crossbow",
+      "id": "pan",
+      "name": "Pan",
+      "image": "https://placehold.co/800x600/4c4337/f2ebe1?text=Pan",
+      "tags": [
+        "1d6",
+        "+1 AC"
+      ]
+    },
+    {
+      "id": "crossbow-hand",
       "name": "Hand Crossbow",
       "image": "https://placehold.co/800x600/423731/f3e7df?text=Hand+Crossbow",
-      "tags": ["1d6", "Light", "Loading"]
+      "tags": [
+        "1d6",
+        "Light",
+        "Loading"
+      ]
     },
     {
-      "id": "heavy-crossbow",
+      "id": "crossbow-heavy",
       "name": "Heavy Crossbow",
       "image": "https://placehold.co/800x600/403833/f2e8de?text=Heavy+Crossbow",
-      "tags": ["1d10", "Heavy", "Loading", "2H"]
+      "tags": [
+        "1d10",
+        "Heavy",
+        "Loading",
+        "2H"
+      ]
     },
     {
-      "id": "longbow",
+      "id": "bow-longbow",
       "name": "Longbow",
       "image": "https://placehold.co/800x600/584631/f4ebdd?text=Longbow",
-      "tags": ["1d8", "Heavy", "2H"]
+      "tags": [
+        "1d8",
+        "Heavy",
+        "2H"
+      ]
     },
     {
-      "id": "musket",
-      "name": "Musket",
-      "image": "https://placehold.co/800x600/3d342e/f2e8df?text=Musket",
-      "tags": ["1d12", "Loading", "2H"]
+      "id": "gun-rifle",
+      "name": "Rifle",
+      "image": "https://placehold.co/800x600/3d342e/f2e8df?text=Rifle",
+      "tags": [
+        "1d10",
+        "Heavy",
+        "Loading",
+        "2H"
+      ]
     },
     {
-      "id": "pistol",
+      "id": "gun-pistol",
       "name": "Pistol",
       "image": "https://placehold.co/800x600/403531/f3e9e1?text=Pistol",
-      "tags": ["1d10", "Loading"]
+      "tags": [
+        "1d6",
+        "Light",
+        "Loading"
+      ]
+    },
+    {
+      "id": "gun-scattergun",
+      "name": "Scattergun",
+      "image": "https://placehold.co/800x600/403531/f3e9e1?text=Scattergun",
+      "tags": [
+        "2d10",
+        "Loading",
+        "2H",
+        "Close Range"
+      ]
     },
     {
       "id": "totem",
       "name": "Totem",
       "image": "https://placehold.co/800x600/4b3f33/f3ece1?text=Totem",
-      "tags": ["2d8", "Heavy", "2H"]
+      "tags": [
+        "2d8",
+        "Heavy",
+        "2H"
+      ]
     },
     {
       "id": "warclaw",
       "name": "Warclaw",
       "image": "https://placehold.co/800x600/3d3841/f0eef6?text=Warclaw",
-      "tags": ["1d6", "Light", "Bound"]
+      "tags": [
+        "1d6",
+        "Light",
+        "Bound"
+      ]
     },
     {
       "id": "warglaive",
       "name": "Warglaive",
       "image": "https://placehold.co/800x600/394149/edf3f8?text=Warglaive",
-      "tags": ["1d8", "Light", "Thrown", "Returning"]
+      "tags": [
+        "1d8",
+        "Light",
+        "Thrown",
+        "Returning"
+      ]
+    },
+    {
+      "id": "shield-buckler",
+      "name": "Buckler",
+      "image": "https://placehold.co/800x600/3f3a33/f1ebe1?text=Buckler",
+      "tags": [
+        "Shield",
+        "+1 AC"
+      ]
+    },
+    {
+      "id": "shield",
+      "name": "Shield",
+      "image": "https://placehold.co/800x600/3f3a33/f1ebe1?text=Shield",
+      "tags": [
+        "Shield",
+        "+2 AC"
+      ]
+    },
+    {
+      "id": "shield-tower",
+      "name": "Tower Shield",
+      "image": "https://placehold.co/800x600/3f3a33/f1ebe1?text=Tower+Shield",
+      "tags": [
+        "Shield",
+        "+2 AC",
+        "STR-Based AC"
+      ]
     }
   ],
   "backgrounds": [
@@ -5995,811 +6504,1519 @@ window.WOW_CHARACTER_OPTIONS = {
       "name": "Acolyte",
       "description": "You served a temple in devotion, learning rites and sacred doctrine.",
       "proficiencies": {
-        "skills": ["Insight", "Religion"],
+        "skills": [
+          "Insight",
+          "Religion"
+        ],
         "tools": []
       },
       "languages": 2,
-      "equipment": ["Holy symbol", "prayer book", "5 sticks of incense", "vestments", "common clothes"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Holy symbol",
+        "prayer book",
+        "5 sticks of incense",
+        "vestments",
+        "common clothes"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Acolyte past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "charlatan",
       "name": "Charlatan",
       "description": "You lie, cheat, and swindle with charm and quick hands.",
       "proficiencies": {
-        "skills": ["Deception", "Sleight of Hand"],
-        "tools": ["Disguise kit", "Forgery kit"]
+        "skills": [
+          "Deception",
+          "Sleight of Hand"
+        ],
+        "tools": [
+          "Disguise kit",
+          "Forgery kit"
+        ]
       },
       "languages": 0,
-      "equipment": ["Disguise kit", "tools of the con", "fine clothes"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Disguise kit",
+        "tools of the con",
+        "fine clothes"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Charlatan past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "criminal",
       "name": "Criminal",
       "description": "Your past is shadowed in heists, cons, and back-alley dealings.",
       "proficiencies": {
-        "skills": ["Deception", "Stealth"],
-        "tools": ["One gaming set", "Thieves' tools"]
+        "skills": [
+          "Deception",
+          "Stealth"
+        ],
+        "tools": [
+          "One gaming set",
+          "Thieves' tools"
+        ]
       },
       "languages": 0,
-      "equipment": ["Crowbar", "dark common clothes with hood"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Crowbar",
+        "dark common clothes with hood"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Criminal past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "dark-apothecary",
       "name": "Dark Apothecary",
       "description": "You were once part of the Forsaken's alchemical elite, now seeking forbidden cures or chaos.",
       "proficiencies": {
-        "skills": ["Medicine", "Nature"],
-        "tools": ["Alchemist's supplies"]
+        "skills": [
+          "Medicine",
+          "Nature"
+        ],
+        "tools": [
+          "Alchemist's supplies"
+        ]
       },
       "languages": 1,
-      "equipment": ["Alchemist's supplies", "vial of suspicious fluid", "dark robes"],
-      "startingMoney": "10 gp"
+      "isAdditional": true,
+      "equipment": [
+        "Alchemist's supplies",
+        "vial of suspicious fluid",
+        "dark robes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Dark Apothecary past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "double-agent",
       "name": "Double Agent",
       "description": "You live between allegiances - spying, lying, and surviving by shifting loyalties.",
       "proficiencies": {
-        "skills": ["Deception", "Insight"],
-        "tools": ["Disguise kit", "Forgery kit"]
+        "skills": [
+          "Deception",
+          "Insight"
+        ],
+        "tools": [
+          "Disguise kit",
+          "Forgery kit"
+        ]
       },
       "languages": 2,
-      "equipment": ["Forged documents", "hidden blade", "cloak with secret pocket"],
-      "startingMoney": "15 gp"
+      "isAdditional": true,
+      "equipment": [
+        "Forged documents",
+        "hidden blade",
+        "cloak with secret pocket"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Double Agent past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "entertainer",
       "name": "Entertainer",
       "description": "Your art moves hearts - on the stage or in the streets.",
       "proficiencies": {
-        "skills": ["Acrobatics", "Performance"],
-        "tools": ["Disguise kit", "One musical instrument"]
+        "skills": [
+          "Acrobatics",
+          "Performance"
+        ],
+        "tools": [
+          "Disguise kit",
+          "One musical instrument"
+        ]
       },
       "languages": 0,
-      "equipment": ["Instrument", "costume"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Instrument",
+        "costume"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Entertainer past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "faction-fostered",
       "name": "Faction Fostered",
       "description": "Raised by one faction, now living among another - you carry dual cultural insights.",
       "proficiencies": {
-        "skills": ["Persuasion", "History"],
-        "tools": ["One gaming set"]
+        "skills": [
+          "Persuasion",
+          "History"
+        ],
+        "tools": [
+          "One gaming set"
+        ]
       },
       "languages": 2,
-      "equipment": ["Faction token", "travel journal", "fine clothes"],
-      "startingMoney": "10 gp"
+      "isAdditional": true,
+      "equipment": [
+        "Faction token",
+        "travel journal",
+        "fine clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Faction Fostered past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "folk-hero",
       "name": "Folk Hero",
       "description": "You rose from humble beginnings to stand against injustice.",
       "proficiencies": {
-        "skills": ["Animal Handling", "Survival"],
-        "tools": ["One artisan's tool", "Vehicles (land)"]
+        "skills": [
+          "Animal Handling",
+          "Survival"
+        ],
+        "tools": [
+          "One artisan's tool",
+          "Vehicles (land)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Artisan's tools", "shovel", "iron pot", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Artisan's tools",
+        "shovel",
+        "iron pot",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Folk Hero past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "gladiator",
       "name": "Gladiator",
       "description": "You earned fame in bloody pits, mastering the roar of crowds and foes alike.",
       "proficiencies": {
-        "skills": ["Acrobatics", "Performance"],
-        "tools": ["Disguise kit", "One unusual weapon as performance tool"]
+        "skills": [
+          "Acrobatics",
+          "Performance"
+        ],
+        "tools": [
+          "Disguise kit",
+          "One unusual weapon as performance tool"
+        ]
       },
       "languages": 0,
-      "equipment": ["Weapon", "costume"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Weapon",
+        "costume"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Gladiator past shape who you are, and what made you leave that life for adventure?"
     },
     {
-      "id": "guild-artisan",
-      "name": "Guild Artisan",
+      "id": "artisan",
+      "name": "Artisan",
       "description": "Craftsmanship and trade are your calling and legacy.",
       "proficiencies": {
-        "skills": ["Insight", "Persuasion"],
-        "tools": ["One artisan's tool"]
+        "skills": [
+          "Insight",
+          "Persuasion"
+        ],
+        "tools": [
+          "One artisan's tool"
+        ]
       },
       "languages": 1,
-      "equipment": ["Artisan's tools", "letter of introduction", "traveler's clothes"],
-      "startingMoney": "15 gp"
+      "equipment": [
+        "Artisan's tools",
+        "letter of introduction",
+        "traveler's clothes"
+      ],
+      "startingMoney": "15 gp",
+      "storyQuestion": "How did your Artisan past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "hermit",
       "name": "Hermit",
       "description": "You lived in isolation, touched by truth or madness.",
       "proficiencies": {
-        "skills": ["Medicine", "Religion"],
-        "tools": ["Herbalism kit"]
+        "skills": [
+          "Medicine",
+          "Religion"
+        ],
+        "tools": [
+          "Herbalism kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["Scroll case", "blank book", "winter blanket", "common clothes"],
-      "startingMoney": "5 gp"
+      "equipment": [
+        "Scroll case",
+        "blank book",
+        "winter blanket",
+        "common clothes"
+      ],
+      "startingMoney": "5 gp",
+      "storyQuestion": "How did your Hermit past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "kirin-tor-apprentice",
       "name": "Kirin Tor Apprentice",
       "description": "Trained in the magical academy of Dalaran, you pursue arcane mastery and wisdom.",
       "proficiencies": {
-        "skills": ["Arcana", "History"],
-        "tools": ["Calligrapher's supplies"]
+        "skills": [
+          "Arcana",
+          "History"
+        ],
+        "tools": [
+          "Calligrapher's supplies"
+        ]
       },
       "languages": 2,
-      "equipment": ["Spellbook", "calligrapher's supplies", "apprentice robes"],
-      "startingMoney": "10 gp"
+      "isAdditional": true,
+      "equipment": [
+        "Spellbook",
+        "calligrapher's supplies",
+        "apprentice robes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Kirin Tor Apprentice past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "knight",
       "name": "Knight",
       "description": "Trained in courtly warfare, you uphold noble ideals or personal codes.",
       "proficiencies": {
-        "skills": ["History", "Persuasion"],
-        "tools": ["One gaming set"]
+        "skills": [
+          "History",
+          "Persuasion"
+        ],
+        "tools": [
+          "One gaming set"
+        ]
       },
       "languages": 1,
-      "equipment": ["Banner", "trophy", "fine clothes"],
-      "startingMoney": "20 gp"
+      "equipment": [
+        "Banner",
+        "trophy",
+        "fine clothes"
+      ],
+      "startingMoney": "20 gp",
+      "storyQuestion": "How did your Knight past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "noble",
       "name": "Noble",
       "description": "Born into power, you wield influence - or flee it.",
       "proficiencies": {
-        "skills": ["History", "Persuasion"],
-        "tools": ["One gaming set"]
+        "skills": [
+          "History",
+          "Persuasion"
+        ],
+        "tools": [
+          "One gaming set"
+        ]
       },
       "languages": 1,
-      "equipment": ["Signet ring", "scroll of pedigree", "fine clothes"],
-      "startingMoney": "25 gp"
+      "equipment": [
+        "Signet ring",
+        "scroll of pedigree",
+        "fine clothes"
+      ],
+      "startingMoney": "25 gp",
+      "storyQuestion": "How did your Noble past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "outlander",
       "name": "Outlander",
       "description": "The wilds are your home, and the city your jungle.",
       "proficiencies": {
-        "skills": ["Athletics", "Survival"],
-        "tools": ["One musical instrument"]
+        "skills": [
+          "Athletics",
+          "Survival"
+        ],
+        "tools": [
+          "One musical instrument"
+        ]
       },
       "languages": 1,
-      "equipment": ["Staff", "hunting trap", "trophy", "traveler's clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Staff",
+        "hunting trap",
+        "trophy",
+        "traveler's clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Outlander past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "pirate",
       "name": "Pirate",
       "description": "Sailing and stealing, your code is wind and blood.",
       "proficiencies": {
-        "skills": ["Athletics", "Perception"],
-        "tools": ["Navigator's tools", "Vehicles (water)"]
+        "skills": [
+          "Athletics",
+          "Perception"
+        ],
+        "tools": [
+          "Navigator's tools",
+          "Vehicles (water)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Belaying pin", "rope", "trophy", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Belaying pin",
+        "rope",
+        "trophy",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Pirate past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "sage",
       "name": "Sage",
       "description": "Knowledge is your weapon, hoarded in scrolls and secrets.",
       "proficiencies": {
-        "skills": ["Arcana", "History"],
+        "skills": [
+          "Arcana",
+          "History"
+        ],
         "tools": []
       },
       "languages": 2,
-      "equipment": ["Bottle of ink", "quill", "small knife", "letter from dead colleague", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Bottle of ink",
+        "quill",
+        "small knife",
+        "letter from dead colleague",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Sage past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "sailor",
       "name": "Sailor",
       "description": "The sea's salt is in your veins, and storm-song in your heart.",
       "proficiencies": {
-        "skills": ["Athletics", "Perception"],
-        "tools": ["Navigator's tools", "Vehicles (water)"]
+        "skills": [
+          "Athletics",
+          "Perception"
+        ],
+        "tools": [
+          "Navigator's tools",
+          "Vehicles (water)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Belaying pin", "rope", "trophy", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Belaying pin",
+        "rope",
+        "trophy",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Sailor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "soldier",
       "name": "Soldier",
       "description": "You've known battle, command, and the weight of orders.",
       "proficiencies": {
-        "skills": ["Athletics", "Intimidation"],
-        "tools": ["One gaming set", "Vehicles (land)"]
+        "skills": [
+          "Athletics",
+          "Intimidation"
+        ],
+        "tools": [
+          "One gaming set",
+          "Vehicles (land)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Insignia", "trophy", "bone dice", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Insignia",
+        "trophy",
+        "bone dice",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Soldier past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "urchin",
       "name": "Urchin",
       "description": "Streets taught you survival, sharp eyes, and quicker hands.",
       "proficiencies": {
-        "skills": ["Sleight of Hand", "Stealth"],
-        "tools": ["Disguise kit", "Thieves' tools"]
+        "skills": [
+          "Sleight of Hand",
+          "Stealth"
+        ],
+        "tools": [
+          "Disguise kit",
+          "Thieves' tools"
+        ]
       },
       "languages": 0,
-      "equipment": ["Small knife", "map of city", "pet mouse", "token of parents", "common clothes"],
-      "startingMoney": "10 gp"
+      "equipment": [
+        "Small knife",
+        "map of city",
+        "pet mouse",
+        "token of parents",
+        "common clothes"
+      ],
+      "startingMoney": "10 gp",
+      "storyQuestion": "How did your Urchin past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "adventurer",
       "name": "Adventurer",
       "description": "A seasoned traveler who survives by sharp instincts, field skill, and hard-earned grit.",
       "proficiencies": {
-        "skills": ["Athletics", "Perception"],
-        "tools": ["Thieves' Tools"]
+        "skills": [
+          "Athletics",
+          "Perception"
+        ],
+        "tools": [
+          "Thieves' Tools"
+        ]
       },
       "languages": 1,
-      "equipment": ["Wooden training sword", "traveler's clothes", "cloak", "shovel", "crowbar", "trophy from your first adventure"],
+      "equipment": [
+        "Wooden training sword",
+        "traveler's clothes",
+        "cloak",
+        "shovel",
+        "crowbar",
+        "trophy from your first adventure"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Adventurer_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Adventurer past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "archivist",
       "name": "Archivist",
       "description": "You preserve stories, records, and hidden truths, turning knowledge into leverage.",
       "proficiencies": {
-        "skills": ["History", "Performance"],
-        "tools": ["One musical instrument"]
+        "skills": [
+          "History",
+          "Performance"
+        ],
+        "tools": [
+          "One musical instrument"
+        ]
       },
       "languages": 1,
-      "equipment": ["Musical instrument", "traveler's clothes", "leather-bound journal", "inkwell", "pen"],
+      "equipment": [
+        "Musical instrument",
+        "traveler's clothes",
+        "leather-bound journal",
+        "inkwell",
+        "pen"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Archivist_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Archivist past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "cook",
       "name": "Cook",
       "description": "Your meals uplift allies and open doors, backed by practical kitchen mastery.",
       "proficiencies": {
-        "skills": ["Insight", "Performance"],
-        "tools": ["Cook's Utensils"]
+        "skills": [
+          "Insight",
+          "Performance"
+        ],
+        "tools": [
+          "Cook's Utensils"
+        ]
       },
       "languages": 2,
-      "equipment": ["Mess kit", "cook's utensils", "bottle of cooking oil", "spice kit", "recipe book", "iron pot"],
+      "equipment": [
+        "Mess kit",
+        "cook's utensils",
+        "bottle of cooking oil",
+        "spice kit",
+        "recipe book",
+        "iron pot"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Cook_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Cook past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "doctor",
       "name": "Doctor",
       "description": "You studied anatomy and treatment in depth, serving as a learned battlefield healer.",
       "proficiencies": {
-        "skills": ["Investigation", "Medicine"],
-        "tools": ["Herbalism kit"]
+        "skills": [
+          "Investigation",
+          "Medicine"
+        ],
+        "tools": [
+          "Herbalism kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["Doctoral notes", "doctor's certification", "common clothes", "bedroll", "blanket", "2-person tent"],
+      "equipment": [
+        "Doctoral notes",
+        "doctor's certification",
+        "common clothes",
+        "bedroll",
+        "blanket",
+        "2-person tent"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Doctor_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Doctor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "envoy",
       "name": "Envoy",
       "description": "A trained representative skilled in diplomacy, negotiation, and courtly maneuvering.",
       "proficiencies": {
-        "skills": ["Persuasion", "History"],
+        "skills": [
+          "Persuasion",
+          "History"
+        ],
         "tools": []
       },
       "languages": 2,
-      "equipment": ["Journal of meetings and contacts", "letter of introduction", "bottle of black ink", "quill", "common clothes", "traveler's clothes"],
+      "equipment": [
+        "Journal of meetings and contacts",
+        "letter of introduction",
+        "bottle of black ink",
+        "quill",
+        "common clothes",
+        "traveler's clothes"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Envoy_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Envoy past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "executioner",
       "name": "Executioner",
       "description": "You carry a grim professional reputation built on intimidation and brutal certainty.",
       "proficiencies": {
-        "skills": ["Intimidation", "Investigation"],
-        "tools": ["Poisoner's Kit"]
+        "skills": [
+          "Intimidation",
+          "Investigation"
+        ],
+        "tools": [
+          "Poisoner's Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["50 feet of hempen rope with noose", "black hood", "butcher's frock", "knife", "farewell letter from a condemned criminal"],
+      "equipment": [
+        "50 feet of hempen rope with noose",
+        "black hood",
+        "butcher's frock",
+        "knife",
+        "farewell letter from a condemned criminal"
+      ],
       "startingMoney": "8 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Executioner_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Executioner past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "farmer",
       "name": "Farmer",
       "description": "Life of labor and seasons taught you patience, resilience, and practical know-how.",
       "proficiencies": {
-        "skills": ["Animal Handling", "Nature"],
-        "tools": ["Farm Implements", "Vehicles (land)"]
+        "skills": [
+          "Animal Handling",
+          "Nature"
+        ],
+        "tools": [
+          "Farm Implements",
+          "Vehicles (land)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Farm tool", "set of work clothes", "wide-brimmed hat", "trade goods"],
+      "equipment": [
+        "Farm tool",
+        "set of work clothes",
+        "wide-brimmed hat",
+        "trade goods"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Farmer_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Farmer past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "janitor",
       "name": "Janitor",
       "description": "You know every hallway and hidden corner, with a talent for spotting what others miss.",
       "proficiencies": {
-        "skills": ["Persuasion", "Investigation"],
-        "tools": ["One gaming set", "One artisan's tool"]
+        "skills": [
+          "Persuasion",
+          "Investigation"
+        ],
+        "tools": [
+          "One gaming set",
+          "One artisan's tool"
+        ]
       },
       "languages": 0,
-      "equipment": ["Sponge", "mop", "cleaning fluid", "site sketch", "common clothes"],
+      "equipment": [
+        "Sponge",
+        "mop",
+        "cleaning fluid",
+        "site sketch",
+        "common clothes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Janitor_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Janitor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "lone-survivor",
       "name": "Lone Survivor",
       "description": "You endured catastrophe alone and learned to trust instinct over comfort.",
       "proficiencies": {
-        "skills": ["Survival", "Perception"],
-        "tools": ["One artisan's tool", "Vehicles (water)"]
+        "skills": [
+          "Survival",
+          "Perception"
+        ],
+        "tools": [
+          "One artisan's tool",
+          "Vehicles (water)"
+        ]
       },
       "languages": 0,
-      "equipment": ["Personal trinket from your past", "worn travel clothes", "backpack", "life journal"],
+      "equipment": [
+        "Personal trinket from your past",
+        "worn travel clothes",
+        "backpack",
+        "life journal"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Lone_Survivor_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Lone Survivor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "metal-worker",
       "name": "Metal Worker",
       "description": "You shaped steel for coin and pride, mastering forge-work through discipline.",
       "proficiencies": {
-        "skills": ["Athletics", "Insight"],
-        "tools": ["Smith's tools"]
+        "skills": [
+          "Athletics",
+          "Insight"
+        ],
+        "tools": [
+          "Smith's tools"
+        ]
       },
       "languages": 1,
-      "equipment": ["Set of smith's tools", "sledge hammer", "merchant's scale", "work apron", "leather gloves", "common clothes"],
+      "equipment": [
+        "Set of smith's tools",
+        "sledge hammer",
+        "merchant's scale",
+        "work apron",
+        "leather gloves",
+        "common clothes"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Metal_Worker_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Metal Worker past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "monster-hunter",
       "name": "Monster Hunter",
       "description": "You track, study, and kill unnatural threats with prepared methods and trophies to prove it.",
       "proficiencies": {
-        "skills": ["Survival", "Nature"],
-        "tools": ["Poisoner's Kit", "Herbalism Kit"]
+        "skills": [
+          "Survival",
+          "Nature"
+        ],
+        "tools": [
+          "Poisoner's Kit",
+          "Herbalism Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["Traveler's clothes", "herbalism kit", "monster trophy", "5 days of rations"],
+      "equipment": [
+        "Traveler's clothes",
+        "herbalism kit",
+        "monster trophy",
+        "5 days of rations"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Monster_Hunter_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Monster Hunter past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "slave",
       "name": "Slave",
       "description": "You survived oppression through obedience, endurance, and the will to outlast your chains.",
       "proficiencies": {
-        "skills": ["Performance", "Survival"],
-        "tools": ["One tool worth 15 gp or less"]
+        "skills": [
+          "Performance",
+          "Survival"
+        ],
+        "tools": [
+          "One tool worth 15 gp or less"
+        ]
       },
       "languages": 0,
-      "equipment": ["One tool you are proficient with", "one simple melee weapon", "clothes fit for your assigned role"],
+      "equipment": [
+        "One tool you are proficient with",
+        "one simple melee weapon",
+        "clothes fit for your assigned role"
+      ],
       "startingMoney": "1 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Slave_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Slave past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "wronged-hero",
       "name": "Wronged Hero",
       "description": "Once celebrated, you now live in exile, carrying equal parts resolve and resentment.",
       "proficiencies": {
-        "skills": ["Intimidation", "Insight"],
-        "tools": ["Disguise Kit", "Forgery Kit"]
+        "skills": [
+          "Intimidation",
+          "Insight"
+        ],
+        "tools": [
+          "Disguise Kit",
+          "Forgery Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["Journal from your days of glory", "common clothes"],
+      "equipment": [
+        "Journal from your days of glory",
+        "common clothes"
+      ],
       "startingMoney": "20 gp",
       "isAdditional": true,
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Wronged_Hero_(5e_Background)"
-      }
+      },
+      "storyQuestion": "How did your Wronged Hero past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "apothecary",
       "name": "Apothecary",
       "description": "You are one of the few healers who studies disease, cures, and alchemical remedies for common folk.",
       "proficiencies": {
-        "skills": ["Medicine", "Nature"],
-        "tools": ["Herbalism Kit"]
+        "skills": [
+          "Medicine",
+          "Nature"
+        ],
+        "tools": [
+          "Herbalism Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["Herbalism kit", "merchant's scale", "set of common clothes"],
+      "equipment": [
+        "Herbalism kit",
+        "merchant's scale",
+        "set of common clothes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Apothecary_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Apothecary_(5e_Background)"
+      },
+      "storyQuestion": "How did your Apothecary past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "arcane-thief",
       "name": "Arcane Thief",
       "description": "You steal and copy spells from wizards, then sell arcane secrets to buyers who can pay.",
       "proficiencies": {
-        "skills": ["Choose two from Arcana, History, Sleight of Hand, or Stealth"],
-        "tools": ["Choose one from Disguise Kit, Forgery Kit, or Thieves' Tools"]
+        "skills": [
+          "Choose two from Arcana, History, Sleight of Hand, or Stealth"
+        ],
+        "tools": [
+          "Choose one from Disguise Kit, Forgery Kit, or Thieves' Tools"
+        ]
       },
       "languages": 1,
-      "equipment": ["Chosen tool kit", "scholar's pack", "silken rope (50 ft) with grappling hook", "spellbook", "fine clothes with hooded cloak"],
+      "equipment": [
+        "Chosen tool kit",
+        "scholar's pack",
+        "silken rope (50 ft) with grappling hook",
+        "spellbook",
+        "fine clothes with hooded cloak"
+      ],
       "startingMoney": "30 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Arcane_Thief_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Arcane_Thief_(5e_Background)"
+      },
+      "storyQuestion": "How did your Arcane Thief past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "bodyguard",
       "name": "Bodyguard",
       "description": "You devoted your life to protecting others, whether from the shadows or by standing as their shield.",
       "proficiencies": {
-        "skills": ["Choose two between Perception, Intimidation, Investigation, and Survival"],
+        "skills": [
+          "Choose two between Perception, Intimidation, Investigation, and Survival"
+        ],
         "tools": []
       },
       "languages": 1,
-      "equipment": ["healing potion", "shield", "hooded cloak", "set of common clothes"],
+      "equipment": [
+        "healing potion",
+        "shield",
+        "hooded cloak",
+        "set of common clothes"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Bodyguard_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Bodyguard_(5e_Background)"
+      },
+      "storyQuestion": "How did your Bodyguard past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "bounty-hunter",
       "name": "Bounty Hunter",
       "description": "You tracked marks for coin, hunting fugitives across civilized lands for paying clients.",
       "proficiencies": {
-        "skills": ["Pick two from Perception, Insight, Survival, Investigation, Stealth, History"],
-        "tools": ["Thieves' Tools"]
+        "skills": [
+          "Pick two from Perception, Insight, Survival, Investigation, Stealth, History"
+        ],
+        "tools": [
+          "Thieves' Tools"
+        ]
       },
       "languages": 1,
-      "equipment": ["ink bottle", "ink pen", "5 pages of parchment", "2 hunting traps", "set of traveler's clothes", "3 bounty trinkets", "Thieves' Tools"],
+      "equipment": [
+        "ink bottle",
+        "ink pen",
+        "5 pages of parchment",
+        "2 hunting traps",
+        "set of traveler's clothes",
+        "3 bounty trinkets",
+        "Thieves' Tools"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Bounty_Hunter_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Bounty_Hunter_(5e_Background)"
+      },
+      "storyQuestion": "How did your Bounty Hunter past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "city-guard",
       "name": "City Guard",
       "description": "You served as part of a city watch, enforcing order and standing ready during raids or sieges.",
       "proficiencies": {
-        "skills": ["Athletics or Acrobatics", "Insight or Investigation"],
-        "tools": ["Musical Instrument - Horn"]
+        "skills": [
+          "Athletics or Acrobatics",
+          "Insight or Investigation"
+        ],
+        "tools": [
+          "Musical Instrument - Horn"
+        ]
       },
       "languages": 1,
-      "equipment": ["horn", "set of common clothes", "city insignia necklace", "pair of shackles", "2 keys", "guard's cloak"],
+      "equipment": [
+        "horn",
+        "set of common clothes",
+        "city insignia necklace",
+        "pair of shackles",
+        "2 keys",
+        "guard's cloak"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/City_Guard_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/City_Guard_(5e_Background)"
+      },
+      "storyQuestion": "How did your City Guard past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "demonologist",
       "name": "Demonologist",
       "description": "You dedicated your life to studying fiends, their origins, and the rites used against or with them.",
       "proficiencies": {
-        "skills": ["Choose two: Arcana, History, or Religion"],
+        "skills": [
+          "Choose two: Arcana, History, or Religion"
+        ],
         "tools": []
       },
       "languages": 0,
-      "equipment": ["backpack", "set of common clothes", "hooded cloak", "silvered or cold-iron weapon", "bedroll", "tattered scrolls", "fiend lore books"],
+      "equipment": [
+        "backpack",
+        "set of common clothes",
+        "hooded cloak",
+        "silvered or cold-iron weapon",
+        "bedroll",
+        "tattered scrolls",
+        "fiend lore books"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Demonologist_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Demonologist_(5e_Background)"
+      },
+      "storyQuestion": "How did your Demonologist past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "exiled-knight",
       "name": "Exiled Knight",
       "description": "You are a disgraced knight cast out from your order, carrying rank, shame, and hard-earned discipline.",
       "proficiencies": {
-        "skills": ["History", "Persuasion or Intuition"],
-        "tools": ["One type of gaming set", "smith's tools"]
+        "skills": [
+          "History",
+          "Persuasion or Intuition"
+        ],
+        "tools": [
+          "One type of gaming set",
+          "smith's tools"
+        ]
       },
       "languages": 1,
-      "equipment": ["set of traveler's clothes", "battered insignia of your former order", "broken blade or damaged weapon"],
+      "equipment": [
+        "set of traveler's clothes",
+        "battered insignia of your former order",
+        "broken blade or damaged weapon"
+      ],
       "startingMoney": "1 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Exiled_Knight_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Exiled_Knight_(5e_Background)"
+      },
+      "storyQuestion": "How did your Exiled Knight past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "explorer",
       "name": "Explorer",
       "description": "You ventured into dangerous unknown lands, seeking mystery, treasure, and forgotten places.",
       "proficiencies": {
-        "skills": ["Acrobatics", "Animal Handling"],
-        "tools": ["Herbalism Kit", "Vehicles (land) or Vehicles (water)"]
+        "skills": [
+          "Acrobatics",
+          "Animal Handling"
+        ],
+        "tools": [
+          "Herbalism Kit",
+          "Vehicles (land) or Vehicles (water)"
+        ]
       },
       "languages": 0,
-      "equipment": ["climber's kit", "Herbalism Kit", "set of traveler's clothes", "small telescope"],
+      "equipment": [
+        "climber's kit",
+        "Herbalism Kit",
+        "set of traveler's clothes",
+        "small telescope"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Explorer_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Explorer_(5e_Background)"
+      },
+      "storyQuestion": "How did your Explorer past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "fallen-hero",
       "name": "Fallen Hero",
       "description": "Once admired, you now walk with a tragic past and a reputation stained by failure or betrayal.",
       "proficiencies": {
-        "skills": ["Intimidation", "Survival"],
-        "tools": ["Disguise Kit"]
+        "skills": [
+          "Intimidation",
+          "Survival"
+        ],
+        "tools": [
+          "Disguise Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["set of traveler's clothes with hood", "trinket from your tragic fate"],
+      "equipment": [
+        "set of traveler's clothes with hood",
+        "trinket from your tragic fate"
+      ],
       "startingMoney": "25 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Fallen_Hero_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Fallen_Hero_(5e_Background)"
+      },
+      "storyQuestion": "How did your Fallen Hero past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "gravetender",
       "name": "Gravetender",
       "description": "You worked among graves and funerary duties, learning secrets buried with the dead.",
       "proficiencies": {
-        "skills": ["Choose two from Sleight of Hand, Stealth, History, Religion, or Investigation"],
-        "tools": ["Mason's Tools", "Carpenter's Tools"]
+        "skills": [
+          "Choose two from Sleight of Hand, Stealth, History, Religion, or Investigation"
+        ],
+        "tools": [
+          "Mason's Tools",
+          "Carpenter's Tools"
+        ]
       },
       "languages": 0,
-      "equipment": ["trusty shovel", "ruined trinket from an old acquaintance", "set of common clothes"],
+      "equipment": [
+        "trusty shovel",
+        "ruined trinket from an old acquaintance",
+        "set of common clothes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Gravetender_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Gravetender_(5e_Background)"
+      },
+      "storyQuestion": "How did your Gravetender past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "outlandborn",
       "name": "Outlandborn",
       "description": "You are bound by a dark pact and hardened by fel-scarred Outland influences rather than infernal courts.",
       "proficiencies": {
-        "skills": ["Religion", "Persuasion"],
-        "tools": ["One type of gaming set"]
+        "skills": [
+          "Religion",
+          "Persuasion"
+        ],
+        "tools": [
+          "One type of gaming set"
+        ]
       },
       "languages": 0,
-      "equipment": ["contract describing your duties and punishments", "set of common clothes", "bone dice or playing cards"],
+      "equipment": [
+        "contract describing your duties and punishments",
+        "set of common clothes",
+        "bone dice or playing cards"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Hellborn_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Hellborn_(5e_Background)"
+      },
+      "storyQuestion": "How did your Outlandborn past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "mercenary",
       "name": "Mercenary",
       "description": "You sold your martial skill to employers for coin, surviving campaigns as a soldier of fortune.",
       "proficiencies": {
-        "skills": ["Intimidation", "Perception"],
-        "tools": ["One type of gaming set", "Vehicles (land)"]
+        "skills": [
+          "Intimidation",
+          "Perception"
+        ],
+        "tools": [
+          "One type of gaming set",
+          "Vehicles (land)"
+        ]
       },
       "languages": 0,
-      "equipment": ["proof of your first completed contract", "set of common clothes", "one gaming set"],
+      "equipment": [
+        "proof of your first completed contract",
+        "set of common clothes",
+        "one gaming set"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Mercenary_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Mercenary_(5e_Background)"
+      },
+      "storyQuestion": "How did your Mercenary past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "occultist",
       "name": "Occultist",
       "description": "You delved into forbidden esoteric rites and hidden lore others fear to read.",
       "proficiencies": {
-        "skills": ["Choose two of Deception, Investigation, Religion"],
-        "tools": ["Alchemist's supplies"]
+        "skills": [
+          "Choose two of Deception, Investigation, Religion"
+        ],
+        "tools": [
+          "Alchemist's supplies"
+        ]
       },
       "languages": 0,
-      "equipment": ["censer", "occult focus", "Alchemist's supplies", "set of common clothes", "forbidden lore tomes"],
+      "equipment": [
+        "censer",
+        "occult focus",
+        "Alchemist's supplies",
+        "set of common clothes",
+        "forbidden lore tomes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Occultist_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Occultist_(5e_Background)"
+      },
+      "storyQuestion": "How did your Occultist past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "cultist",
       "name": "Cultist",
       "description": "You served an ancient cult devoted to a dreadful power and now walk beyond that circle.",
       "proficiencies": {
-        "skills": ["Arcana", "Religion"],
-        "tools": ["Poisoner's Kit"]
+        "skills": [
+          "Arcana",
+          "Religion"
+        ],
+        "tools": [
+          "Poisoner's Kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["set of traveler's clothes", "holy symbol", "marked dagger"],
+      "equipment": [
+        "set of traveler's clothes",
+        "holy symbol",
+        "marked dagger"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Ancient_Cultist_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Ancient_Cultist_(5e_Background)"
+      },
+      "storyQuestion": "How did your Cultist past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "scavenger",
       "name": "Scavenger",
       "description": "You lived by salvaging scraps and valuables from ruins and refuse others ignore.",
       "proficiencies": {
-        "skills": ["Investigation", "Perception"],
-        "tools": ["One type of artisan's tools"]
+        "skills": [
+          "Investigation",
+          "Perception"
+        ],
+        "tools": [
+          "One type of artisan's tools"
+        ]
       },
       "languages": 0,
-      "equipment": ["scavenged trinket", "set of common clothes", "warm blanket", "leather sack"],
+      "equipment": [
+        "scavenged trinket",
+        "set of common clothes",
+        "warm blanket",
+        "leather sack"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Scavenger_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Scavenger_(5e_Background)"
+      },
+      "storyQuestion": "How did your Scavenger past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "city-worker",
       "name": "City Worker",
       "description": "You handled the thankless labor that keeps a city running despite poor pay and little respect.",
       "proficiencies": {
-        "skills": ["Perception", "Athletics"],
-        "tools": ["One gaming set"]
+        "skills": [
+          "Perception",
+          "Athletics"
+        ],
+        "tools": [
+          "One gaming set"
+        ]
       },
       "languages": 0,
-      "equipment": ["broom", "shovel", "hooded lantern", "common clothes"],
+      "equipment": [
+        "broom",
+        "shovel",
+        "hooded lantern",
+        "common clothes"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/City_Worker_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/City_Worker_(5e_Background)"
+      },
+      "storyQuestion": "How did your City Worker past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "debt-collector",
       "name": "Debt Collector",
       "description": "You enforced payments and extracted debts through intimidation, insight, and underworld pressure.",
       "proficiencies": {
-        "skills": ["Insight", "Intimidation"],
-        "tools": ["Thieves' tools or Forgery kit"]
+        "skills": [
+          "Insight",
+          "Intimidation"
+        ],
+        "tools": [
+          "Thieves' tools or Forgery kit"
+        ]
       },
       "languages": 1,
-      "equipment": ["short club", "signet ring", "stack of IOUs", "set of traveler's clothes"],
+      "equipment": [
+        "short club",
+        "signet ring",
+        "stack of IOUs",
+        "set of traveler's clothes"
+      ],
       "startingMoney": "20 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Debt_Collector_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Debt_Collector_(5e_Background)"
+      },
+      "storyQuestion": "How did your Debt Collector past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "drunken-bum",
       "name": "Drunken Bum",
       "description": "You survived on streets and taverns with a hustler's hands and a performer's distractions.",
       "proficiencies": {
-        "skills": ["Performance", "Sleight of Hand"],
-        "tools": ["One type of gaming set"]
+        "skills": [
+          "Performance",
+          "Sleight of Hand"
+        ],
+        "tools": [
+          "One type of gaming set"
+        ]
       },
       "languages": 1,
-      "equipment": ["flask", "set of dice or deck of cards", "well-worn common clothes"],
+      "equipment": [
+        "flask",
+        "set of dice or deck of cards",
+        "well-worn common clothes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Drunken_Bum_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Drunken_Bum_(5e_Background)"
+      },
+      "storyQuestion": "How did your Drunken Bum past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "inventor",
       "name": "Inventor",
       "description": "You turn unusual ideas into practical designs using craft, theory, and magical experimentation.",
       "proficiencies": {
-        "skills": ["Arcana", "Investigation"],
-        "tools": ["Tinker's Tools"]
+        "skills": [
+          "Arcana",
+          "Investigation"
+        ],
+        "tools": [
+          "Tinker's Tools"
+        ]
       },
       "languages": 0,
-      "equipment": ["set of common clothes", "Tinker's Tools", "hammer", "hourglass", "magnifying glass"],
+      "equipment": [
+        "set of common clothes",
+        "Tinker's Tools",
+        "hammer",
+        "hourglass",
+        "magnifying glass"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Inventor_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Inventor_(5e_Background)"
+      },
+      "storyQuestion": "How did your Inventor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "feral-child",
       "name": "Feral Child",
       "description": "Lost young in the wild, you learned survival and animal instincts before living among civilization.",
       "proficiencies": {
-        "skills": ["Survival", "Animal Handling"],
-        "tools": ["Herbalism kit", "Poisoner's kit"]
+        "skills": [
+          "Survival",
+          "Animal Handling"
+        ],
+        "tools": [
+          "Herbalism kit",
+          "Poisoner's kit"
+        ]
       },
       "languages": 0,
-      "equipment": ["herbalism kit", "wild-collected trinket", "set of traveler's clothes", "animal fur patch", "large waterskin"],
+      "equipment": [
+        "herbalism kit",
+        "wild-collected trinket",
+        "set of traveler's clothes",
+        "animal fur patch",
+        "large waterskin"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Feral_Child_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Feral_Child_(5e_Background)"
+      },
+      "storyQuestion": "How did your Feral Child past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "nomad",
       "name": "Nomad",
       "description": "You lived as a wanderer between settlements, carrying stories, songs, and road wisdom.",
       "proficiencies": {
-        "skills": ["Performance", "Survival"],
-        "tools": ["A musical instrument of your choice"]
+        "skills": [
+          "Performance",
+          "Survival"
+        ],
+        "tools": [
+          "A musical instrument of your choice"
+        ]
       },
       "languages": 1,
-      "equipment": ["bedroll", "set of traveler's clothes", "blanket", "ink pen", "vial of ink", "journal of previous travels", "trinket from your travels"],
+      "equipment": [
+        "bedroll",
+        "set of traveler's clothes",
+        "blanket",
+        "ink pen",
+        "vial of ink",
+        "journal of previous travels",
+        "trinket from your travels"
+      ],
       "startingMoney": "5 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Nomad_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Nomad_(5e_Background)"
+      },
+      "storyQuestion": "How did your Nomad past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "oracle",
       "name": "Oracle",
       "description": "You interpret omens and divine insight, serving as a spiritual guide through signs and prophecy.",
       "proficiencies": {
-        "skills": ["Insight", "Religion"],
+        "skills": [
+          "Insight",
+          "Religion"
+        ],
         "tools": []
       },
       "languages": 2,
-      "equipment": ["set of common clothes", "set of divination tools"],
+      "equipment": [
+        "set of common clothes",
+        "set of divination tools"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Oracle_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Oracle_(5e_Background)"
+      },
+      "storyQuestion": "How did your Oracle past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "outcast",
       "name": "Outcast",
       "description": "Once part of a clan or community, you were exiled and now survive at the edge of every society.",
       "proficiencies": {
-        "skills": ["Choose two from Sleight of Hand, Stealth, Perception, and Survival"],
-        "tools": ["One type of gaming set of your choice"]
+        "skills": [
+          "Choose two from Sleight of Hand, Stealth, Perception, and Survival"
+        ],
+        "tools": [
+          "One type of gaming set of your choice"
+        ]
       },
       "languages": 1,
-      "equipment": ["outcast's pack", "childhood trinket", "one gaming set", "set of common clothes"],
+      "equipment": [
+        "outcast's pack",
+        "childhood trinket",
+        "one gaming set",
+        "set of common clothes"
+      ],
       "startingMoney": "10 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Outcast_(5e_Background)" }
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Outcast_(5e_Background)"
+      },
+      "storyQuestion": "How did your Outcast past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "researcher",
       "name": "Researcher",
       "description": "You pursued mysteries through disciplined study, collecting data and tools instead of glory.",
       "proficiencies": {
-        "skills": ["Choose two from History, Athletics, Arcana, Investigation, Perception, Religion, Medicine, or Insight"],
-        "tools": ["Choose one tool set related to your area of study"]
+        "skills": [
+          "Choose two from History, Athletics, Arcana, Investigation, Perception, Religion, Medicine, or Insight"
+        ],
+        "tools": [
+          "Choose one tool set related to your area of study"
+        ]
       },
       "languages": 1,
-      "equipment": ["set of fine clothes", "chosen tool set", "research notebook", "study trinket"],
+      "equipment": [
+        "set of fine clothes",
+        "chosen tool set",
+        "research notebook",
+        "study trinket"
+      ],
       "startingMoney": "15 gp",
       "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Researcher_(5e_Background)" }
-    },
-    {
-      "id": "smuggler",
-      "name": "Smuggler",
-      "description": "The smuggler is listed on D&D Wiki as a background from Ghosts of Saltmarsh.",
-      "proficiencies": {
-        "skills": [],
-        "tools": []
+      "linkChip": {
+        "label": "Background Source",
+        "url": "https://www.dandwiki.com/wiki/Researcher_(5e_Background)"
       },
-      "languages": 0,
-      "equipment": [],
-      "startingMoney": "",
-      "isAdditional": true,
-      "linkChip": { "label": "Background Source", "url": "https://www.dandwiki.com/wiki/Smuggler_(5e_Background)" }
+      "storyQuestion": "How did your Researcher past shape who you are, and what made you leave that life for adventure?"
     }
   ]
 };
+
+const normalizeDifficulty = (value) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 3;
+  return Math.min(5, Math.max(1, Math.round(parsed)));
+};
+
+window.WOW_CHARACTER_OPTIONS.races = (window.WOW_CHARACTER_OPTIONS.races || []).map((item) => ({
+  ...item,
+  difficulty: normalizeDifficulty(item?.difficulty)
+}));
+
+window.WOW_CHARACTER_OPTIONS.classes = (window.WOW_CHARACTER_OPTIONS.classes || []).map((item) => ({
+  ...item,
+  difficulty: normalizeDifficulty(item?.difficulty)
+}));
