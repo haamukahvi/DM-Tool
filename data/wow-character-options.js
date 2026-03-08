@@ -6726,18 +6726,92 @@ window.WOW_CHARACTER_OPTIONS = {
           "Insight",
           "Religion"
         ],
-        "tools": []
+        "tools": [
+          "calligrapher's supplies"
+        ]
       },
       "languages": 2,
       "equipment": [
-        "Holy symbol",
+        "calligrapher's supplies",
         "prayer book",
-        "5 sticks of incense",
-        "vestments",
-        "common clothes"
+        "incense sticks",
+        "parchment",
+        "robe"
       ],
-      "startingMoney": "15 gp",
+      "startingMoney": "10 gp",
+      "featId": "magic-initiate",
       "storyQuestion": "How did your Acolyte past shape who you are, and what made you leave that life for adventure?"
+    },
+    {
+      "id": "merchant",
+      "name": "Merchant",
+      "description": "You learned trade, travel routes, and the art of making profitable deals.",
+      "proficiencies": {
+        "skills": [
+          "Animal Handling",
+          "Persuasion"
+        ],
+        "tools": [
+          "Navigator's Tools"
+        ]
+      },
+      "languages": 0,
+      "equipment": [
+        "Navigator's Tools",
+        "2 pouches",
+        "traveler's clothes"
+      ],
+      "startingMoney": "22 gp",
+      "featId": "lucky",
+      "storyQuestion": "How did your Merchant past shape who you are, and what made you leave that life for adventure?"
+    },
+    {
+      "id": "scribe",
+      "name": "Scribe",
+      "description": "You copy, draft, and study texts with a sharp eye for detail and errors.",
+      "proficiencies": {
+        "skills": [
+          "Investigation",
+          "Perception"
+        ],
+        "tools": [
+          "Calligrapher's Supplies"
+        ]
+      },
+      "languages": 0,
+      "equipment": [
+        "Calligrapher's Supplies",
+        "fine clothes",
+        "lantern",
+        "parchment"
+      ],
+      "startingMoney": "23 gp",
+      "featId": "skilled",
+      "storyQuestion": "How did your Scribe past shape who you are, and what made you leave that life for adventure?"
+    },
+    {
+      "id": "guide",
+      "name": "Guide",
+      "description": "You are an outdoors expert who blends survival skill with practical wild magic.",
+      "proficiencies": {
+        "skills": [
+          "Stealth",
+          "Survival"
+        ],
+        "tools": [
+          "Cartographer's Tools"
+        ]
+      },
+      "languages": 0,
+      "equipment": [
+        "Cartographer's Tools",
+        "bedroll",
+        "tent",
+        "traveler's clothes"
+      ],
+      "startingMoney": "3 gp",
+      "featId": "magic-initiate",
+      "storyQuestion": "How did your Guide past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "charlatan",
@@ -6749,17 +6823,17 @@ window.WOW_CHARACTER_OPTIONS = {
           "Sleight of Hand"
         ],
         "tools": [
-          "Disguise kit",
           "Forgery kit"
         ]
       },
       "languages": 0,
       "equipment": [
-        "Disguise kit",
-        "tools of the con",
+        "Forgery kit",
+        "costume",
         "fine clothes"
       ],
       "startingMoney": "15 gp",
+      "featId": "skilled",
       "storyQuestion": "How did your Charlatan past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -6768,20 +6842,22 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Your past is shadowed in heists, cons, and back-alley dealings.",
       "proficiencies": {
         "skills": [
-          "Deception",
+          "Sleight of Hand",
           "Stealth"
         ],
         "tools": [
-          "One gaming set",
           "Thieves' tools"
         ]
       },
       "languages": 0,
       "equipment": [
+        "thieves' tools",
         "Crowbar",
-        "dark common clothes with hood"
+        "traveler's clothes",
+        "2 pouches",
       ],
       "startingMoney": "15 gp",
+      "featId": "alert",
       "storyQuestion": "How did your Criminal past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -6817,13 +6893,13 @@ window.WOW_CHARACTER_OPTIONS = {
           "Insight"
         ],
         "tools": [
-          "Disguise kit",
-          "Forgery kit"
+          "Disguise kit"
         ]
       },
       "languages": 2,
       "isAdditional": true,
       "equipment": [
+        "disguise kit",
         "Forged documents",
         "hidden blade",
         "cloak with secret pocket"
@@ -6841,15 +6917,18 @@ window.WOW_CHARACTER_OPTIONS = {
           "Performance"
         ],
         "tools": [
-          "Disguise kit",
           "One musical instrument"
         ]
       },
       "languages": 0,
       "equipment": [
         "Instrument",
-        "costume"
+        "2 costumes",
+        "mirror",
+        "perfume",
+        "traveler's clothes"
       ],
+      "featId": "musician",
       "startingMoney": "15 gp",
       "storyQuestion": "How did your Entertainer past shape who you are, and what made you leave that life for adventure?"
     },
@@ -6869,36 +6948,13 @@ window.WOW_CHARACTER_OPTIONS = {
       "languages": 2,
       "isAdditional": true,
       "equipment": [
+        "one gaming set",
         "Faction token",
         "travel journal",
         "fine clothes"
       ],
       "startingMoney": "10 gp",
       "storyQuestion": "How did your Faction Fostered past shape who you are, and what made you leave that life for adventure?"
-    },
-    {
-      "id": "folk-hero",
-      "name": "Folk Hero",
-      "description": "You rose from humble beginnings to stand against injustice.",
-      "proficiencies": {
-        "skills": [
-          "Animal Handling",
-          "Survival"
-        ],
-        "tools": [
-          "One artisan's tool",
-          "Vehicles (land)"
-        ]
-      },
-      "languages": 0,
-      "equipment": [
-        "Artisan's tools",
-        "shovel",
-        "iron pot",
-        "common clothes"
-      ],
-      "startingMoney": "10 gp",
-      "storyQuestion": "How did your Folk Hero past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "gladiator",
@@ -6919,6 +6975,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "Weapon",
         "costume"
       ],
+      "isAdditional": true,
       "startingMoney": "15 gp",
       "storyQuestion": "How did your Gladiator past shape who you are, and what made you leave that life for adventure?"
     },
@@ -6928,7 +6985,7 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "Craftsmanship and trade are your calling and legacy.",
       "proficiencies": {
         "skills": [
-          "Insight",
+          "Investigation",
           "Persuasion"
         ],
         "tools": [
@@ -6938,10 +6995,11 @@ window.WOW_CHARACTER_OPTIONS = {
       "languages": 1,
       "equipment": [
         "Artisan's tools",
-        "letter of introduction",
+        "2 pouches",
         "traveler's clothes"
       ],
-      "startingMoney": "15 gp",
+      "startingMoney": "30 gp",
+      "featId": "crafter",
       "storyQuestion": "How did your Artisan past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -6959,12 +7017,14 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "languages": 1,
       "equipment": [
-        "Scroll case",
-        "blank book",
-        "winter blanket",
-        "common clothes"
+        "bedroll",
+        "herbalism kit",
+        "book",
+        "lantern",
+        "traveler's clothes"
       ],
-      "startingMoney": "5 gp",
+      "startingMoney": "10 gp",
+      "featId": "healer",
       "storyQuestion": "How did your Hermit past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -6988,11 +7048,12 @@ window.WOW_CHARACTER_OPTIONS = {
         "apprentice robes"
       ],
       "startingMoney": "10 gp",
+      "featId": "magic-initiate",
       "storyQuestion": "How did your Kirin Tor Apprentice past shape who you are, and what made you leave that life for adventure?"
     },
     {
-      "id": "knight",
-      "name": "Knight",
+      "id": "guard",
+      "name": "Guard",
       "description": "Trained in courtly warfare, you uphold noble ideals or personal codes.",
       "proficiencies": {
         "skills": [
@@ -7005,12 +7066,14 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "languages": 1,
       "equipment": [
-        "Banner",
-        "trophy",
-        "fine clothes"
+        "lantern",
+        "one gaming set",
+        "manacles",
+        "traveler's clothes"
       ],
-      "startingMoney": "20 gp",
-      "storyQuestion": "How did your Knight past shape who you are, and what made you leave that life for adventure?"
+      "startingMoney": "10 gp",
+      "featId": "alert",
+      "storyQuestion": "How did your Guard past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "noble",
@@ -7028,10 +7091,12 @@ window.WOW_CHARACTER_OPTIONS = {
       "languages": 1,
       "equipment": [
         "Signet ring",
-        "scroll of pedigree",
+        "one gaming set",
+        "perfume",
         "fine clothes"
       ],
-      "startingMoney": "25 gp",
+      "startingMoney": "30 gp",
+      "featId": "skilled",
       "storyQuestion": "How did your Noble past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -7050,11 +7115,12 @@ window.WOW_CHARACTER_OPTIONS = {
       "languages": 1,
       "equipment": [
         "Staff",
-        "hunting trap",
-        "trophy",
+        "one musical instrument",
+        "rope",
         "traveler's clothes"
       ],
       "startingMoney": "10 gp",
+      "isAdditional": true,
       "storyQuestion": "How did your Outlander past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -7067,18 +7133,18 @@ window.WOW_CHARACTER_OPTIONS = {
           "Perception"
         ],
         "tools": [
-          "Navigator's tools",
-          "Vehicles (water)"
+          "Navigator's tools"
         ]
       },
       "languages": 0,
       "equipment": [
-        "Belaying pin",
+        "navigator's tools",
         "rope",
         "trophy",
         "common clothes"
       ],
       "startingMoney": "10 gp",
+      "isAdditional": true,
       "storyQuestion": "How did your Pirate past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -7090,17 +7156,19 @@ window.WOW_CHARACTER_OPTIONS = {
           "Arcana",
           "History"
         ],
-        "tools": []
+        "tools": [
+          "Calligrapher's supplies"
+        ]
       },
       "languages": 2,
       "equipment": [
-        "Bottle of ink",
-        "quill",
-        "small knife",
-        "letter from dead colleague",
-        "common clothes"
+        "calligrapher's supplies",
+        "book",
+        "parchment",
+        "robe"
       ],
       "startingMoney": "10 gp",
+      "featId": "magic-initiate",
       "storyQuestion": "How did your Sage past shape who you are, and what made you leave that life for adventure?"
     },
     {
@@ -7109,72 +7177,72 @@ window.WOW_CHARACTER_OPTIONS = {
       "description": "The sea's salt is in your veins, and storm-song in your heart.",
       "proficiencies": {
         "skills": [
-          "Athletics",
+          "Acrobatics",
           "Perception"
         ],
         "tools": [
-          "Navigator's tools",
-          "Vehicles (water)"
+          "Navigator's tools"
         ]
       },
       "languages": 0,
       "equipment": [
-        "Belaying pin",
+        "navigator's tools",
         "rope",
         "trophy",
-        "common clothes"
+        "traveler's clothes"
       ],
       "startingMoney": "10 gp",
+      "featId": "tavern-brawler",
       "storyQuestion": "How did your Sailor past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "soldier",
       "name": "Soldier",
-      "description": "You've known battle, command, and the weight of orders.",
+      "description": "You were trained for war and disciplined by life on the battlefield.",
       "proficiencies": {
         "skills": [
           "Athletics",
           "Intimidation"
         ],
         "tools": [
-          "One gaming set",
-          "Vehicles (land)"
+          "One gaming set"
         ]
       },
       "languages": 0,
       "equipment": [
+        "one gaming set",
         "Insignia",
         "trophy",
-        "bone dice",
-        "common clothes"
+        "traveler's clothes"
       ],
       "startingMoney": "10 gp",
+      "featId": "savage-attacker",
       "storyQuestion": "How did your Soldier past shape who you are, and what made you leave that life for adventure?"
     },
     {
-      "id": "urchin",
-      "name": "Urchin",
-      "description": "Streets taught you survival, sharp eyes, and quicker hands.",
+      "id": "wayfarer",
+      "name": "Wayfarer",
+      "description": "A streetwise survivor, you learned to endure hardship and carve your own path.",
       "proficiencies": {
         "skills": [
-          "Sleight of Hand",
+          "Insight",
           "Stealth"
         ],
         "tools": [
-          "Disguise kit",
           "Thieves' tools"
         ]
       },
       "languages": 0,
       "equipment": [
-        "Small knife",
-        "map of city",
-        "pet mouse",
-        "token of parents",
-        "common clothes"
+        "dice",
+        "thieves' tools",
+        "bedroll",
+        "2 pouches",
+        "traveler's clothes"
       ],
       "startingMoney": "10 gp",
-      "storyQuestion": "How did your Urchin past shape who you are, and what made you leave that life for adventure?"
+      "featId": "lucky",
+      "storyQuestion": "How did your Wayfarer past shape who you are, and what made you leave that life for adventure?"
     },
     {
       "id": "adventurer",
@@ -7191,7 +7259,6 @@ window.WOW_CHARACTER_OPTIONS = {
       },
       "languages": 1,
       "equipment": [
-        "Wooden training sword",
         "traveler's clothes",
         "cloak",
         "shovel",
@@ -7374,7 +7441,7 @@ window.WOW_CHARACTER_OPTIONS = {
         "trade goods"
       ],
       "startingMoney": "5 gp",
-      "isAdditional": true,
+      "featId": "tough",
       "linkChip": {
         "label": "Background Source",
         "url": "https://www.dandwiki.com/wiki/Farmer_(5e_Background)"
@@ -8220,6 +8287,375 @@ window.WOW_CHARACTER_OPTIONS = {
         "url": "https://www.dandwiki.com/wiki/Researcher_(5e_Background)"
       },
       "storyQuestion": "How did your Researcher past shape who you are, and what made you leave that life for adventure?"
+    }
+  ],
+  "feats": [
+    {
+      "id": "alert",
+      "name": "Alert",
+      "description": "Add Proficiency Bonus to Initiative roll. Swap Initiative with one willing ally immediately after rolling.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:alert"
+      }
+    },
+    {
+      "id": "crafter",
+      "name": "Crafter",
+      "description": "Proficiency with 3 Artisan's Tools. 20% discount on nonmagical items. Craft one piece of temporary gear after a Long Rest.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:crafter"
+      }
+    },
+    {
+      "id": "healer",
+      "name": "Healer",
+      "description": "Ally spends one Hit Die and gains HP = roll + your Proficiency Bonus. Reroll 1s when determining HP restored.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:healer"
+      }
+    },
+    {
+      "id": "lucky",
+      "name": "Lucky",
+      "description": "Spend 1 Luck Point for Advantage on a D20 Test or to impose Disadvantage on an attack against you.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:lucky"
+      }
+    },
+    {
+      "id": "magic-initiate",
+      "name": "Magic Initiate",
+      "description": "Learn 2 cantrips and 1 1st-level spell (Cleric, Druid, or Wizard). Cast the 1st-level spell for free 1/Long Rest.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:magic-initiate"
+      }
+    },
+    {
+      "id": "musician",
+      "name": "Musician",
+      "description": "Proficiency with 3 Musical Instruments. Finish a Rest, grant Heroic Inspiration to allies (number equals Proficiency Bonus).",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:musician"
+      }
+    },
+    {
+      "id": "savage-attacker",
+      "name": "Savage Attacker",
+      "description": "When hitting with a weapon, roll the weapon's damage dice twice and use either roll against the target (1/turn).",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:savage-attacker"
+      }
+    },
+    {
+      "id": "skilled",
+      "name": "Skilled",
+      "description": "Gain proficiency in any combination of three skills or tools of your choice.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:skilled"
+      }
+    },
+    {
+      "id": "tavern-brawler",
+      "name": "Tavern Brawler",
+      "description": "Unarmed Strike deals 1d4 + Str mod (reroll 1s). Proficiency with improvised weapons. Unarmed Strike hit allows 5 ft push (1/turn).",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:tavern-brawler"
+      }
+    },
+    {
+      "id": "tough",
+      "name": "Tough",
+      "description": "Max HP increases by double your current level, plus 2 HP every time you gain a level thereafter.",
+      "linkChip": {
+        "label": "Feat Source",
+        "url": "http://dnd2024.wikidot.com/feat:tough"
+      }
+    },
+    {
+      "id": "actor",
+      "name": "Actor",
+      "description": "+1 Cha. Advantage on Deception/Performance while disguised. Mimicry must pass Wisdom (Insight) check to be seen as faked.",
+      "requirements": { "text": "Charisma 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:actor" }
+    },
+    {
+      "id": "athlete",
+      "name": "Athlete",
+      "description": "+1 Str or Dex. Gain Climb Speed. Stand up with 5 ft movement. Make running Jumps after moving 5 ft.",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:athlete" }
+    },
+    {
+      "id": "charger",
+      "name": "Charger",
+      "description": "+1 Str or Dex. Dash Speed +10 ft. Move 10+ ft before melee hit for +1d8 damage or push 10 ft (1/turn).",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:charger" }
+    },
+    {
+      "id": "chef",
+      "name": "Chef",
+      "description": "+1 Con or Wis. Proficiency with Cook's Utensils. Short Rest food grants +1d8 HP to Hit Dice. Cook treats for Temporary HP.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:chef" }
+    },
+    {
+      "id": "crossbow-expert",
+      "name": "Crossbow Expert",
+      "description": "+1 Dex. Ignore Loading property of crossbows. No Disadvantage in melee. Add modifier to extra attack damage of Light weapon.",
+      "requirements": { "text": "Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:crossbow-expert" }
+    },
+    {
+      "id": "crusher",
+      "name": "Crusher",
+      "description": "+1 Str or Con. Bludgeoning hit pushes target 5 ft (1/turn). Critical Bludgeoning hit grants Advantage on attacks vs target.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:crusher" }
+    },
+    {
+      "id": "defensive-duelist",
+      "name": "Defensive Duelist",
+      "description": "+1 Dex. Holding Finesse weapon, use Reaction when hit by melee attack to add Proficiency Bonus to AC, possibly causing a miss.",
+      "requirements": { "text": "Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:defensive-duelist" }
+    },
+    {
+      "id": "dual-wielder",
+      "name": "Dual Wielder",
+      "description": "+1 Str or Dex. Extra attack works with any non-Two-Handed melee weapon. You can draw/stow two weapons.",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:dual-wielder" }
+    },
+    {
+      "id": "durable",
+      "name": "Durable",
+      "description": "+1 Con. Advantage on Death Saves. Bonus Action to spend a Hit Die and regain HP equal to the result.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:durable" }
+    },
+    {
+      "id": "elemental-adept",
+      "name": "Elemental Adept",
+      "description": "Repeatable. +1 Int, Wis, or Cha. Spells ignore Resistance to chosen type and treat 1s on damage dice as 2s for this type.",
+      "requirements": { "text": "Spellcasting or Pact Magic Feature" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:elemental-adept" }
+    },
+    {
+      "id": "fey-touched",
+      "name": "Fey-Touched",
+      "description": "+1 Int, Wis, or Cha. Misty Step and one 1st-level Divination/Enchantment spell prepared. Cast each for free 1/Long Rest.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:fey-touched" }
+    },
+    {
+      "id": "grappler",
+      "name": "Grappler",
+      "description": "+1 Str or Dex. Unarmed Strike can damage + Grapple (1/turn). Advantage on attacks vs Grappled target. Move grappled target.",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:grappler" }
+    },
+    {
+      "id": "great-weapon-master",
+      "name": "Great Weapon Master",
+      "description": "+1 Str. Heavy weapon hits deal extra damage (Proficiency Bonus). Critical Hit or reduce to 0 HP allows one Bonus attack.",
+      "requirements": { "text": "Strength 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:great-weapon-master" }
+    },
+    {
+      "id": "heavily-armored",
+      "name": "Heavily Armored",
+      "description": "+1 Str or Con. Gain proficiency with Heavy armor.",
+      "requirements": { "text": "Medium Armor Training" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:heavily-armored" }
+    },
+    {
+      "id": "heavy-armor-master",
+      "name": "Heavy Armor Master",
+      "description": "+1 Str or Con. While wearing Heavy armor, reduce Bludgeoning, Piercing, and Slashing damage taken by Proficiency Bonus.",
+      "requirements": { "text": "Heavy Armor Training" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:heavy-armor-master" }
+    },
+    {
+      "id": "inspiring-leader",
+      "name": "Inspiring Leader",
+      "description": "+1 Wis or Cha. After a Rest, up to six allies gain Temporary HP equal to your level + the ability modifier.",
+      "requirements": { "text": "Wisdom or Charisma 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:inspiring-leader" }
+    },
+    {
+      "id": "keen-mind",
+      "name": "Keen Mind",
+      "description": "+1 Int. Gain Proficiency/Expertise in Arcana, History, Investigation, Nature, or Religion skill. Study Action as a Bonus Action.",
+      "requirements": { "text": "Intelligence 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:keen-mind" }
+    },
+    {
+      "id": "lightly-armored",
+      "name": "Lightly Armored",
+      "description": "+1 Str or Dex. Gain proficiency with Light armor and Shields.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:lightly-armored" }
+    },
+    {
+      "id": "mage-slayer",
+      "name": "Mage Slayer",
+      "description": "+1 Str or Dex. Damaging concentrated target gives Disadvantage on save. Turn failed Int/Wis/Cha save into success 1/Rest.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:mage-slayer" }
+    },
+    {
+      "id": "martial-weapon-training",
+      "name": "Martial Weapon Training",
+      "description": "+1 Str or Dex. Gain proficiency with Martial weapons.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:martial-weapon-training" }
+    },
+    {
+      "id": "medium-armor-master",
+      "name": "Medium Armor Master",
+      "description": "+1 Str or Dex. While wearing Medium armor, add 3 to AC (instead of 2) if Dexterity score is 16 or higher.",
+      "requirements": { "text": "Medium Armor Training" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:medium-armor-master" }
+    },
+    {
+      "id": "moderately-armored",
+      "name": "Moderately Armored",
+      "description": "+1 Str or Dex. Gain proficiency with Medium armor.",
+      "requirements": { "text": "Light Armor Training" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:moderately-armored" }
+    },
+    {
+      "id": "mounted-combatant",
+      "name": "Mounted Combatant",
+      "description": "+1 Str, Dex, or Wis. Advantage on attacks vs smaller unmounted creatures. Mount takes half damage on failed Dex save.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:mounted-combatant" }
+    },
+    {
+      "id": "observant",
+      "name": "Observant",
+      "description": "+1 Int or Wis. Gain Proficiency/Expertise in Insight, Investigation, or Perception. Search Action as a Bonus Action.",
+      "requirements": { "text": "Intelligence or Wisdom 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:observant" }
+    },
+    {
+      "id": "piercer",
+      "name": "Piercer",
+      "description": "+1 Str or Dex. Piercing hit to reroll one damage die (1/turn). Critical Piercing hit rolls one additional damage die.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:piercer" }
+    },
+    {
+      "id": "poisoner",
+      "name": "Poisoner",
+      "description": "+1 Dex or Int. Poison damage ignores Resistance. Brew poison doses (50 GP/hr) that deal 2d8 Poison damage.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:poisoner" }
+    },
+    {
+      "id": "polearm-master",
+      "name": "Polearm Master",
+      "description": "+1 Str or Dex. Bonus Action to extra attack (d4) with polearm end. Reaction to attack a creature entering your weapon reach.",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:polearm-master" }
+    },
+    {
+      "id": "resilient",
+      "name": "Resilient",
+      "description": "+1 to one ability score lacking save proficiency. Gain Saving Throw Proficiency with that chosen ability.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:resilient" }
+    },
+    {
+      "id": "ritual-caster",
+      "name": "Ritual Caster",
+      "description": "+1 Int, Wis, or Cha. Level 1 Ritual spells (PB amount) prepared. Cast one prepared Ritual quickly for free 1/Long Rest.",
+      "requirements": { "text": "Intelligence, Wisdom, or Charisma 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:ritual-caster" }
+    },
+    {
+      "id": "sentinel",
+      "name": "Sentinel",
+      "description": "+1 Str or Dex. OA vs creature that Disengages/hits ally. OA hit reduces target's Speed to 0 for the rest of the turn.",
+      "requirements": { "text": "Strength or Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:sentinel" }
+    },
+    {
+      "id": "shadow-touched",
+      "name": "Shadow-Touched",
+      "description": "+1 Int, Wis, or Cha. Invisibility and one 1st-level Illusion/Necromancy spell prepared. Cast each for free 1/Long Rest.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:shadow-touched" }
+    },
+    {
+      "id": "sharpshooter",
+      "name": "Sharpshooter",
+      "description": "+1 Dex. Ranged attacks ignore Half/Three-Quarters Cover. No Disadvantage in melee or when attacking at long range.",
+      "requirements": { "text": "Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:sharpshooter" }
+    },
+    {
+      "id": "shield-master",
+      "name": "Shield Master",
+      "description": "+1 Str. Shield Bash to push 5 ft or Prone (1/turn). Reaction to take no damage on successful Dexterity save.",
+      "requirements": { "text": "Shield Training" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:shield-master" }
+    },
+    {
+      "id": "skill-expert",
+      "name": "Skill Expert",
+      "description": "+1 one Ability. Gain proficiency in one skill. Gain Expertise in one skill you are already proficient in.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:skill-expert" }
+    },
+    {
+      "id": "skulker",
+      "name": "Skulker",
+      "description": "+1 Dex. Blindsight 10 ft. Advantage on Stealth in combat. Missing an attack while Hidden doesn't reveal location.",
+      "requirements": { "text": "Dexterity 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:skulker" }
+    },
+    {
+      "id": "slasher",
+      "name": "Slasher",
+      "description": "+1 Str or Dex. Slashing hit reduces Speed by 10 ft (1/turn). Critical Slashing hit imposes Disadvantage on target's attack.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:slasher" }
+    },
+    {
+      "id": "speedy",
+      "name": "Speedy",
+      "description": "+1 Dex or Con. Speed +10 ft. Dash ignores Difficult Terrain. Opportunity Attacks against you have Disadvantage.",
+      "requirements": { "text": "Dexterity or Constitution 13+" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:speedy" }
+    },
+    {
+      "id": "spell-sniper",
+      "name": "Spell Sniper",
+      "description": "+1 Int, Wis, or Cha. Spell attacks ignore Cover. No Disadvantage in melee. Increase attack spell range (10+ ft) by 60 ft.",
+      "requirements": { "text": "Spellcasting or Pact Magic Feature" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:spell-sniper" }
+    },
+    {
+      "id": "telekinetic",
+      "name": "Telekinetic",
+      "description": "+1 Int, Wis, or Cha. Learn Mage Hand (invisible, +30 ft range). Bonus Action to shove target 5 ft (Strength save).",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:telekinetic" }
+    },
+    {
+      "id": "telepathic",
+      "name": "Telepathic",
+      "description": "+1 Int, Wis, or Cha. Telepathic speech within 60 ft. Detect Thoughts prepared. Cast for free 1/Long Rest.",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:telepathic" }
+    },
+    {
+      "id": "war-caster",
+      "name": "War Caster",
+      "description": "+1 Int, Wis, or Cha. Advantage on Concentration saves. Reaction to cast spell instead of OA. Somatic with hands busy.",
+      "requirements": { "text": "Spellcasting or Pact Magic Feature" },
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:war-caster" }
+    },
+    {
+      "id": "weapon-master",
+      "name": "Weapon Master",
+      "description": "+1 Str or Dex. Use the Mastery property of one proficient Simple or Martial weapon (changeable after Long Rest).",
+      "linkChip": { "label": "Feat Source", "url": "http://dnd2024.wikidot.com/feat:weapon-master" }
     }
   ]
 };

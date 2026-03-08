@@ -380,6 +380,7 @@
       selectedBackgroundId: "character_forge_selected_background_id",
       selectedWeaponId: "character_forge_selected_weapon_id",
       selectedWeaponIds: "character_forge_selected_weapon_ids",
+      selectedFeatIds: "character_forge_selected_feat_ids",
       activeStep: "character_forge_active_step",
       storyAnswersById: "character_forge_story_answers_by_id",
       characterName: "character_forge_character_name"
@@ -697,6 +698,7 @@
           : [];
         const startingMoney = typeof raw?.startingMoney === "string" ? raw.startingMoney.trim() : "";
         const storyQuestion = typeof raw?.storyQuestion === "string" ? raw.storyQuestion.trim() : "";
+        const featId = typeof raw?.featId === "string" ? raw.featId.trim() : "";
         const isAdditional = raw?.isAdditional === true;
         const linkChipRaw = raw?.linkChip;
         const linkChip =
@@ -724,7 +726,53 @@
           equipment,
           startingMoney,
           storyQuestion,
+          featId,
           isAdditional,
+          linkChip: linkChip?.url ? linkChip : null,
+        };
+      });
+    };
+
+    const validateFeatItems = (rawItems) => {
+      if (rawItems === undefined) return [];
+      if (!Array.isArray(rawItems)) {
+        throw new Error("Invalid feats JSON: expected an array.");
+      }
+
+      const idSet = new Set();
+      return rawItems.map((raw) => {
+        const id = typeof raw?.id === "string" ? raw.id.trim() : "";
+        const name = typeof raw?.name === "string" ? raw.name.trim() : "";
+        const description = typeof raw?.description === "string" ? raw.description.trim() : "";
+        const linkChipRaw = raw?.linkChip;
+        const requirementsRaw = raw?.requirements;
+        const linkChip =
+          linkChipRaw && typeof linkChipRaw === "object" && !Array.isArray(linkChipRaw)
+            ? {
+                label: typeof linkChipRaw.label === "string" ? linkChipRaw.label.trim() : "",
+                url: typeof linkChipRaw.url === "string" ? linkChipRaw.url.trim() : "",
+              }
+            : null;
+        const requirements =
+          requirementsRaw && typeof requirementsRaw === "object" && !Array.isArray(requirementsRaw)
+            ? {
+                text: typeof requirementsRaw.text === "string" ? requirementsRaw.text.trim() : "",
+              }
+            : null;
+
+        if (!id || !name || !description) {
+          throw new Error("Invalid feat item: required fields are id, name, description.");
+        }
+        if (idSet.has(id)) {
+          throw new Error(`Duplicate feat id "${id}" in dataset.`);
+        }
+        idSet.add(id);
+
+        return {
+          id,
+          name,
+          description,
+          requirements: requirements?.text ? requirements : null,
           linkChip: linkChip?.url ? linkChip : null,
         };
       });
@@ -1052,7 +1100,7 @@
       );
     };
 
-    const HoverInfoChip = ({ label, tooltipContent, className = "" }) => {
+    const HoverInfoChip = ({ label, tooltipContent, className = "", compactTooltip = false }) => {
       const [tooltipState, setTooltipState] = useState(null);
       const triggerRef = useRef(null);
       const [isTouchLike, setIsTouchLike] = useState(false);
@@ -1150,7 +1198,11 @@
           </div>
           {tooltipState && ReactDOM.createPortal(
             <div
-              className="pointer-events-none fixed z-[60] w-[280px] -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 px-3 py-3 text-xs leading-relaxed text-white/75 shadow-2xl"
+              className={`pointer-events-none fixed z-[90] -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 text-xs leading-relaxed text-white/75 shadow-2xl ${
+                compactTooltip
+                  ? "w-max max-w-[min(360px,calc(100vw-24px))] px-2.5 py-2 whitespace-normal"
+                  : "w-[280px] px-3 py-3"
+              }`}
               style={{
                 top: tooltipState.top,
                 left: tooltipState.left
@@ -1283,7 +1335,7 @@
           </div>
           {tooltipState && ReactDOM.createPortal(
             <div
-              className="pointer-events-none fixed z-[60] w-max max-w-[calc(100vw-24px)] -translate-x-1/2 -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 px-3 py-2 text-xs leading-relaxed text-white/75 shadow-2xl"
+              className="pointer-events-none fixed z-[90] w-max max-w-[calc(100vw-24px)] -translate-x-1/2 -translate-y-full rounded-2xl border border-white/10 bg-[#0f0f16]/95 px-3 py-2 text-xs leading-relaxed text-white/75 shadow-2xl"
               style={{
                 top: tooltipState.top,
                 left: tooltipState.left
@@ -2532,7 +2584,7 @@
       );
     };
 
-    const BackgroundSelectionSection = ({ backgrounds, selectedBackgroundId, onSelect }) => {
+    const BackgroundSelectionSection = ({ backgrounds, featsById, selectedBackgroundId, onSelect }) => {
       const [randomHighlightId, setRandomHighlightId] = useState(null);
       const [isRandomLocked, setIsRandomLocked] = useState(false);
       const randomHighlightStartTimeoutRef = useRef(null);
@@ -2628,6 +2680,7 @@
         const languageChips = background.languages > 0 ? [`+${background.languages} Languages`] : [];
         const gearChips = background.equipment.map(capitalizeChipStart);
         const fundsChips = background.startingMoney ? [background.startingMoney] : [];
+        const backgroundFeat = background.featId ? (featsById?.[background.featId] || null) : null;
         return (
           <button
             key={background.id}
@@ -2692,6 +2745,18 @@
                     }
                   />
                 )}
+                {backgroundFeat && (
+                  <HoverInfoChip
+                    label="Feat"
+                    className="border-slate-200/25 bg-slate-200/10 text-slate-100"
+                    tooltipContent={
+                      <div className="flex flex-col gap-1">
+                        <div className="text-sm font-semibold text-white/95">{backgroundFeat.name}</div>
+                        <div>{backgroundFeat.description}</div>
+                      </div>
+                    }
+                  />
+                )}
               </div>
             </div>
             <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-white/65">{background.description}</p>
@@ -2744,6 +2809,128 @@
               </div>
             </>
           )}
+        </div>
+      );
+    };
+
+    const FeatSelectionModal = ({ feats, selectedFeatIds, onToggleFeat, onClose }) => {
+      useEffect(() => {
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+      }, [onClose]);
+
+      const sortedFeats = useMemo(
+        () => [...(Array.isArray(feats) ? feats : [])].sort((a, b) => a.name.localeCompare(b.name)),
+        [feats]
+      );
+
+      const getCardTone = (index) => {
+        const maxIndex = Math.max(1, sortedFeats.length - 1);
+        const ratio = index / maxIndex;
+        const hue = 200 + ((330 - 200) * ratio);
+        return {
+          border: `hsla(${hue}, 78%, 72%, 0.38)`,
+          background: `hsla(${hue}, 82%, 60%, 0.12)`,
+          text: `hsla(${hue}, 100%, 92%, 0.92)`,
+          hoverBorder: `hsla(${hue}, 84%, 78%, 0.58)`,
+          hoverBackground: `hsla(${hue}, 82%, 64%, 0.18)`,
+          selectedBorder: `hsla(${hue}, 88%, 80%, 0.92)`,
+          selectedBackground: `hsla(${hue}, 88%, 62%, 0.28)`,
+          shadow: `0 8px 24px hsla(${hue}, 90%, 55%, 0.24)`
+        };
+      };
+
+      return (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in-up"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) onClose();
+          }}
+        >
+          <div className="w-full max-w-6xl max-h-[88vh] overflow-y-auto rounded-3xl border border-white/10 bg-[#13131a]/95 p-5 md:p-6 shadow-2xl flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-sm uppercase tracking-[0.3em] text-white/50">Feats</div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl border border-pink-300/70 bg-pink-500/90 text-xs uppercase tracking-[0.22em] text-white shadow-[0_8px_24px_rgba(236,72,153,0.35)] hover:bg-pink-400 transition"
+              >
+                Done
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {sortedFeats.map((feat, index) => {
+                const selected = selectedFeatIds.includes(feat.id);
+                const tone = getCardTone(index);
+                return (
+                  <button
+                    key={feat.id}
+                    type="button"
+                    onClick={() => onToggleFeat(feat.id)}
+                    className="rounded-2xl md:rounded-3xl border p-3 md:p-5 text-left transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{
+                      borderColor: selected ? tone.selectedBorder : tone.border,
+                      backgroundColor: selected ? tone.selectedBackground : tone.background,
+                      boxShadow: selected ? tone.shadow : "none"
+                    }}
+                    onMouseOver={(event) => {
+                      event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.hoverBorder;
+                      event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.hoverBackground;
+                    }}
+                    onMouseOut={(event) => {
+                      event.currentTarget.style.borderColor = selected ? tone.selectedBorder : tone.border;
+                      event.currentTarget.style.backgroundColor = selected ? tone.selectedBackground : tone.background;
+                    }}
+                  >
+                    <div className="flex items-start justify-between gap-3 md:gap-4">
+                      <div className="text-lg md:text-2xl font-semibold leading-tight" style={{ color: tone.text }}>{feat.name}</div>
+                      <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
+                        {feat.requirements?.text && (
+                          <HoverInfoChip
+                            label="Req"
+                            className="border-slate-200/25 bg-slate-200/10 text-slate-100"
+                            compactTooltip={true}
+                            tooltipContent={feat.requirements.text}
+                          />
+                        )}
+                        {feat.linkChip?.url && (
+                          <a
+                            href={feat.linkChip.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(event) => event.stopPropagation()}
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-200/35 bg-emerald-300/15 text-emerald-50 shadow-[0_8px_24px_rgba(0,0,0,0.35)] transition hover:bg-emerald-300/22 hover:border-emerald-100/45"
+                            title={feat.linkChip.label || "Open source"}
+                            aria-label={feat.linkChip.label || "Open source"}
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-white/65">{feat.description}</p>
+                  </button>
+                );
+              })}
+              <a
+                href="https://www.dandwiki.com/wiki/5e_Feats"
+                target="_blank"
+                rel="noreferrer"
+                className="xl:col-span-3 md:col-span-2 rounded-2xl md:rounded-3xl border border-white/15 bg-white/[0.04] p-3 md:p-5 text-left transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-white/30 hover:bg-white/[0.07]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-lg md:text-2xl font-semibold leading-tight text-white/95">Additional feats list</div>
+                  <ExternalLink className="h-5 w-5 text-emerald-200/90" />
+                </div>
+                <p className="mt-1.5 md:mt-2 text-xs md:text-sm leading-relaxed text-white/65">
+                  Open full external feat list.
+                </p>
+              </a>
+            </div>
+          </div>
         </div>
       );
     };
@@ -2997,10 +3184,12 @@
         const legacyId = localStorage.getItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId) || "";
         return legacyId ? [legacyId] : [];
       });
+      const [selectedFeatIds, setSelectedFeatIds] = useState(() => parseStoredIdList(CHARACTER_FORGE_STORAGE_KEYS.selectedFeatIds));
       const [races, setRaces] = useState([]);
       const [classes, setClasses] = useState([]);
       const [backgrounds, setBackgrounds] = useState([]);
       const [weapons, setWeapons] = useState([]);
+      const [feats, setFeats] = useState([]);
       const [isLoading, setIsLoading] = useState(true);
       const [loadError, setLoadError] = useState("");
       const [modalState, setModalState] = useState(null);
@@ -3015,12 +3204,21 @@
       const [isFinalizeExpanded, setIsFinalizeExpanded] = useState(false);
       const [isPersonaInlineOpen, setIsPersonaInlineOpen] = useState(false);
       const [isFinalizeStatsVisible, setIsFinalizeStatsVisible] = useState(false);
+      const [isFeatModalOpen, setIsFeatModalOpen] = useState(false);
       const [isExportingFinalImage, setIsExportingFinalImage] = useState(false);
       const previousStepRef = useRef(activeStep);
+      const lastAutoBackgroundFeatRef = useRef("");
       const dataFileInputRef = useRef(null);
       const finalResultsExportRef = useRef(null);
       const visibleRaces = useMemo(() => races.filter((item) => item.hidden !== true), [races]);
       const visibleClasses = useMemo(() => classes.filter((item) => item.hidden !== true), [classes]);
+      const featsById = useMemo(
+        () => feats.reduce((acc, feat) => {
+          acc[feat.id] = feat;
+          return acc;
+        }, {}),
+        [feats]
+      );
 
       const applyCharacterData = (data) => {
         if (!data || !Array.isArray(data.races) || !Array.isArray(data.classes)) {
@@ -3030,6 +3228,7 @@
         setClasses(validateCharacterItems(data.classes, "classes"));
         setBackgrounds(validateBackgroundItems(data.backgrounds));
         setWeapons(validateWeaponItems(data.weapons));
+        setFeats(validateFeatItems(data.feats));
       };
 
       const loadData = async () => {
@@ -3107,6 +3306,10 @@
       }, [selectedWeaponIds]);
 
       useEffect(() => {
+        localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.selectedFeatIds, JSON.stringify(selectedFeatIds));
+      }, [selectedFeatIds]);
+
+      useEffect(() => {
         localStorage.setItem(CHARACTER_FORGE_STORAGE_KEYS.storyAnswersById, JSON.stringify(storyAnswersById));
       }, [storyAnswersById]);
 
@@ -3174,6 +3377,22 @@
         }
       }, [weapons, selectedWeaponIds, isLoading, loadError]);
 
+      useEffect(() => {
+        if (isLoading || loadError) return;
+        if (!feats.length) {
+          setSelectedFeatIds([]);
+          return;
+        }
+        const validIdSet = new Set(feats.map((item) => item.id));
+        const sanitized = [];
+        for (const id of selectedFeatIds) {
+          if (validIdSet.has(id) && !sanitized.includes(id)) sanitized.push(id);
+        }
+        if (sanitized.length !== selectedFeatIds.length || sanitized.some((id, index) => id !== selectedFeatIds[index])) {
+          setSelectedFeatIds(sanitized);
+        }
+      }, [feats, selectedFeatIds, isLoading, loadError]);
+
       const selectedRaces = useMemo(() => {
         const validIds = getSelectableCharacterIds(visibleRaces);
         return visibleRaces.filter((item) => validIds.has(item.id) && selectedRaceIds.includes(item.id));
@@ -3189,7 +3408,8 @@
         selectedRaceIds.length > 0 ||
         selectedClassIds.length > 0 ||
         Boolean(selectedBackgroundId) ||
-        selectedWeaponIds.length > 0;
+        selectedWeaponIds.length > 0 ||
+        selectedFeatIds.length > 0;
       const triggerTopRandom = () => {
         if (activeStep === "compare") return;
         const randomBtn = document.querySelector(`[data-global-random="${activeStep}"]`);
@@ -3206,12 +3426,40 @@
       const selectedWeapons = selectedWeaponIds
         .map((id) => weapons.find((item) => item.id === id) || null)
         .filter(Boolean);
+      const selectedFeats = selectedFeatIds
+        .map((id) => featsById[id] || null)
+        .filter(Boolean);
       const raceStoryPrompt = getRaceStoryPrompt(compareRace, racesById);
-      const classStoryPrompt = getClassStoryPrompt(compareClass, classesById);
-      const backgroundStoryPrompt = getBackgroundStoryPrompt(selectedBackground);
-      const raceStoryAnswer = compareRace ? (storyAnswersById.race?.[compareRace.id] || "") : "";
-      const classStoryAnswer = compareClass ? (storyAnswersById.class?.[compareClass.id] || "") : "";
-      const backgroundStoryAnswer = selectedBackground ? (storyAnswersById.background?.[selectedBackground.id] || "") : "";
+        const classStoryPrompt = getClassStoryPrompt(compareClass, classesById);
+        const backgroundStoryPrompt = getBackgroundStoryPrompt(selectedBackground);
+        const raceStoryAnswer = compareRace ? (storyAnswersById.race?.[compareRace.id] || "") : "";
+        const classStoryAnswer = compareClass ? (storyAnswersById.class?.[compareClass.id] || "") : "";
+        const backgroundStoryAnswer = selectedBackground ? (storyAnswersById.background?.[selectedBackground.id] || "") : "";
+        const randomizeCharacterName = () => {
+          const pickOne = (items = []) => {
+            if (!Array.isArray(items) || items.length === 0) return "";
+            return items[Math.floor(Math.random() * items.length)] || "";
+          };
+
+          const raceNames = compareRace?.names || {};
+          const maleNames = Array.isArray(raceNames.male) ? raceNames.male.filter(Boolean) : [];
+          const femaleNames = Array.isArray(raceNames.female) ? raceNames.female.filter(Boolean) : [];
+          const anyNames = Array.isArray(raceNames.any) ? raceNames.any.filter(Boolean) : [];
+          const familyNames = Array.isArray(raceNames.groupNames) ? raceNames.groupNames.filter(Boolean) : [];
+          const firstNamePoolOptions = [maleNames, femaleNames, anyNames].filter((group) => group.length > 0);
+          const chosenFirstPool = firstNamePoolOptions.length
+            ? firstNamePoolOptions[Math.floor(Math.random() * firstNamePoolOptions.length)]
+            : [];
+          const firstName = pickOne(chosenFirstPool);
+          const familyName = pickOne(familyNames);
+          const generated = [firstName, familyName].filter(Boolean).join(" ").trim();
+          if (generated) {
+            setCharacterName(generated);
+            return;
+          }
+          const fallback = (comboName || "Character").trim();
+          setCharacterName(fallback);
+        };
 
       const toggleWeaponSelection = (weaponId) => {
         setSelectedWeaponIds((prev) => {
@@ -3221,11 +3469,20 @@
         });
       };
 
+      const toggleFeatSelection = (featId) => {
+        setSelectedFeatIds((prev) => (
+          prev.includes(featId)
+            ? prev.filter((id) => id !== featId)
+            : [...prev, featId]
+        ));
+      };
+
       const clearAllSelections = () => {
         setSelectedRaceIds([]);
         setSelectedClassIds([]);
         setSelectedBackgroundId("");
         setSelectedWeaponIds([]);
+        setSelectedFeatIds([]);
         setStoryAnswersById({});
         setCharacterName("");
         setIsStoryModalOpen(false);
@@ -3238,11 +3495,24 @@
         setIsFinalizeExpanded(false);
         setIsPersonaInlineOpen(false);
         setIsFinalizeStatsVisible(false);
+        setIsFeatModalOpen(false);
         setActiveStep("races");
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.selectedWeaponId);
+        localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.selectedFeatIds);
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.storyAnswersById);
         localStorage.removeItem(CHARACTER_FORGE_STORAGE_KEYS.characterName);
       };
+
+      useEffect(() => {
+        const backgroundFeatId = selectedBackground?.featId || "";
+        if (!backgroundFeatId) {
+          lastAutoBackgroundFeatRef.current = "";
+          return;
+        }
+        if (lastAutoBackgroundFeatRef.current === backgroundFeatId) return;
+        setSelectedFeatIds((prev) => (prev.includes(backgroundFeatId) ? prev : [...prev, backgroundFeatId]));
+        lastAutoBackgroundFeatRef.current = backgroundFeatId;
+      }, [selectedBackground?.featId]);
 
       useEffect(() => {
         if (previewRaceId && !selectedRaces.some((item) => item.id === previewRaceId)) {
@@ -3272,6 +3542,7 @@
         if (activeStep !== "compare") {
           setPreviewRaceId(null);
           setPreviewClassId(null);
+          setIsFeatModalOpen(false);
         }
       }, [activeStep]);
 
@@ -3409,6 +3680,9 @@
         const backgroundFundsChips = selectedBackground && selectedBackground.startingMoney
           ? [selectedBackground.startingMoney]
           : [];
+        const selectedBackgroundFeat = selectedBackground?.featId
+          ? (featsById[selectedBackground.featId] || null)
+          : null;
         const compareProfile = compareClass?.profile || {};
         const compareDifficultyValues = [Number(compareClass?.difficulty), Number(compareRace?.difficulty)]
           .filter((value) => Number.isFinite(value));
@@ -3564,47 +3838,69 @@
                 )}
                 <div className={`rounded-2xl bg-black/35 backdrop-blur-xl p-3 md:p-4 flex flex-col gap-2.5 ${isFinalizeExpanded ? "h-full overflow-y-auto no-scrollbar" : ""}`}>
                   <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/15"></div>
+                    <div className="h-px flex-1 bg-[#7affd0]/25"></div>
                     <button
                       type="button"
                       onClick={() => setIsFinalizeExpanded((prev) => !prev)}
-                      className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-white/70 hover:text-white transition"
+                      className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-[#7affd0]/80 hover:text-white transition"
                     >
-                      {isFinalizeExpanded ? "Collapse Final Results" : "Expand Final Results"}
+                      {isFinalizeExpanded ? "Collapse" : "Expand"}
                     </button>
-                    <div className="h-px flex-1 bg-white/15"></div>
+                    <div className="h-px flex-1 bg-[#7affd0]/25"></div>
                   </div>
                   {isFinalizeExpanded && (
                     <div className="md:hidden flex justify-center">
-                      <input
-                        type="text"
-                        value={characterName}
-                        onChange={(event) => setCharacterName(event.target.value)}
-                        placeholder="Name"
-                        className="w-full max-w-[360px] rounded-xl border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 placeholder:text-white/35 text-center focus:outline-none focus:border-pink-300/80"
-                      />
-                    </div>
-                  )}
-                  <div className="relative flex items-center justify-center gap-3">
-                    <div className="text-lg md:text-2xl font-semibold text-white/95 text-center">{comboName}</div>
-                    {isFinalizeExpanded && (
-                      <div className="hidden md:block md:absolute md:right-0 w-[320px]">
+                      <div className="relative w-full max-w-[360px]">
                         <input
                           type="text"
                           value={characterName}
                           onChange={(event) => setCharacterName(event.target.value)}
                           placeholder="Name"
-                          className="w-full rounded-xl border border-white/15 bg-black/35 px-3 py-2 text-sm text-white/90 placeholder:text-white/35 focus:outline-none focus:border-pink-300/80"
+                          className="w-full rounded-xl border border-white/15 bg-black/35 px-11 py-2 text-sm text-white/90 placeholder:text-white/35 text-center focus:outline-none focus:border-pink-300/80"
                         />
+                        <button
+                          type="button"
+                          onClick={randomizeCharacterName}
+                          className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center text-white/70 hover:text-white transition"
+                          aria-label="Randomize character name"
+                          title="Randomize name"
+                        >
+                          <Dice className="w-4 h-4" />
+                        </button>
                       </div>
-                    )}
+                    </div>
+                  )}
+                  {isFinalizeExpanded && (
+                    <div className="hidden md:flex justify-center">
+                      <div className="relative w-full max-w-[520px]">
+                        <input
+                          type="text"
+                          value={characterName}
+                          onChange={(event) => setCharacterName(event.target.value)}
+                          placeholder="Name"
+                          className="w-full rounded-xl border border-white/15 bg-black/35 px-11 py-2 text-sm text-white/90 placeholder:text-white/35 text-center focus:outline-none focus:border-pink-300/80"
+                        />
+                        <button
+                          type="button"
+                          onClick={randomizeCharacterName}
+                          className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center text-white/70 hover:text-white transition"
+                          aria-label="Randomize character name"
+                          title="Randomize name"
+                        >
+                          <Dice className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className="relative flex items-center justify-center gap-3">
+                    <div className="text-lg md:text-2xl font-semibold text-white/95 text-center">{comboName}</div>
                   </div>
                   <div className="relative">
                     {!isFinalizeExpanded && hasCompareProfile && (
                       <button
                         type="button"
                         onClick={() => setIsFinalizeStatsVisible((prev) => !prev)}
-                        className={`absolute right-0 top-1/2 -translate-y-1/2 text-[11px] uppercase tracking-[0.18em] transition ${
+                        className={`absolute right-0 top-1/2 -translate-y-1/2 md:top-[-40px] md:translate-y-0 text-[11px] uppercase tracking-[0.18em] transition ${
                           isFinalizeStatsVisible
                             ? "text-white/90"
                             : "text-white/65 hover:text-white"
@@ -3622,14 +3918,20 @@
                       )}
                     </div>
                   </div>
-                  {!isFinalizeExpanded && comboTraits.length > 0 && (
+                  {!isFinalizeExpanded && (raceDetailChips.length > 0 || classDetailChips.length > 0) && (
                     <div className="pt-1">
-                      <TraitChips traits={comboTraits} />
-                    </div>
-                  )}
-                  {!isFinalizeExpanded && comboChips.length > 0 && (
-                    <div className="pt-1">
-                      <TraitChips traits={comboChips} />
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-center gap-2 md:gap-6">
+                        {raceDetailChips.length > 0 && (
+                          <div className="flex justify-center">
+                            <TraitChips traits={raceDetailChips} />
+                          </div>
+                        )}
+                        {classDetailChips.length > 0 && (
+                          <div className="flex justify-center">
+                            <TraitChips traits={classDetailChips} />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                   {isFinalizeExpanded && (
@@ -3732,6 +4034,18 @@
                                 </div>
                               }
                             />
+                            {selectedBackgroundFeat && (
+                              <HoverInfoChip
+                                label="Feat"
+                                className="border-slate-200/25 bg-slate-200/10 text-slate-100"
+                                tooltipContent={
+                                  <div className="flex flex-col gap-1">
+                                    <div className="text-sm font-semibold text-white/95">{selectedBackgroundFeat.name}</div>
+                                    <div>{selectedBackgroundFeat.description}</div>
+                                  </div>
+                                }
+                              />
+                            )}
                           </div>
                         )}
                       </div>
@@ -3791,6 +4105,36 @@
                       })}
                     </div>
                   </div>
+                  {isFinalizeExpanded && (
+                    <button
+                      type="button"
+                      onClick={() => setIsFeatModalOpen(true)}
+                      className="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left hover:border-white/20 hover:bg-white/[0.05] transition"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="text-sm font-semibold text-white/95">Feats</div>
+                        <div className="text-xs uppercase tracking-[0.14em] text-white/55">
+                          {selectedFeats.length} selected
+                        </div>
+                      </div>
+                      {selectedFeats.length > 0 ? (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {selectedFeats.map((feat) => (
+                            <HoverInfoChip
+                              key={`finalize-feat-chip-${feat.id}`}
+                              label={feat.name}
+                              className="border-violet-200/30 bg-violet-300/10 text-violet-50"
+                              tooltipContent={feat.description}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="mt-2 text-sm text-white/45 leading-relaxed">
+                          Tap to choose feats.
+                        </div>
+                      )}
+                    </button>
+                  )}
                   {isFinalizeExpanded && (
                     <div className="mt-2 rounded-2xl border border-white/10 bg-white/[0.03] p-3 md:p-4 flex flex-col gap-3">
                       <div className="flex flex-col gap-3">
@@ -4111,6 +4455,7 @@
             {!isLoading && !loadError && races.length > 0 && classes.length > 0 && activeStep === "background" && (
               <BackgroundSelectionSection
                 backgrounds={backgrounds}
+                featsById={featsById}
                 selectedBackgroundId={selectedBackgroundId}
                 onSelect={setSelectedBackgroundId}
               />
@@ -4151,6 +4496,15 @@
                 toggleSelection(removeConfirmState.kind, removeConfirmState.item.id);
                 setRemoveConfirmState(null);
               }}
+            />
+          )}
+
+          {isFeatModalOpen && (
+            <FeatSelectionModal
+              feats={feats}
+              selectedFeatIds={selectedFeatIds}
+              onToggleFeat={toggleFeatSelection}
+              onClose={() => setIsFeatModalOpen(false)}
             />
           )}
 
