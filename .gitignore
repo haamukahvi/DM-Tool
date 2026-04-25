@@ -11,6 +11,16 @@ Thumbs.db
 *.tmp
 *.swp
 
+# Local secrets
+.env
+.env.*
+secrets/
+*.secret
+
+# Build artifacts
+dist/
+*.exe
+
 # Browser profile/cache artifacts accidentally created in repo root
 Default/
 Crashpad/

@@ -1,12 +1,76 @@
 {
   "name": "dm-tool",
   "version": "1.0.0",
+  "description": "Desktop dashboard for DM session tools, ambience, generators, and rollers.",
+  "author": "Henri",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
-    "dev": "serve . -l 5500",
-    "start": "serve . -l 5500"
+    "start": "node scripts/start-electron.cjs",
+    "desktop": "node scripts/start-electron.cjs",
+    "preweb:dev": "node scripts/generate-audio-manifest.cjs",
+    "web:dev": "serve . -l 5500",
+    "preweb:start": "node scripts/generate-audio-manifest.cjs",
+    "web:start": "serve . -l 5500",
+    "audio:manifest": "node scripts/generate-audio-manifest.cjs",
+    "predist:win": "node scripts/generate-audio-manifest.cjs",
+    "dist:win": "cmd /C \"set ELECTRON_RUN_AS_NODE= && electron-builder --win nsis\"",
+    "predist:portable": "node scripts/generate-audio-manifest.cjs",
+    "dist:portable": "node scripts/build-portable.cjs"
   },
   "devDependencies": {
+    "chokidar": "^5.0.0",
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1",
     "serve": "^14.2.4"
+  },
+    "build": {
+      "appId": "com.henri.dmtool",
+      "productName": "DM Tool",
+      "asar": true,
+      "afterPack": "scripts/apply-windows-icon.cjs",
+      "protocols": [
+        {
+          "name": "DM Tool",
+          "schemes": [
+            "dmtool"
+          ]
+        }
+      ],
+      "directories": {
+        "output": "dist"
+      },
+    "files": [
+      "electron/**/*",
+      "Index.html",
+      "Ambience.html",
+      "ArcaneSurge.html",
+      "Roller.html",
+      "backgrounds/**/*",
+      "data/**/*",
+      "dnd music/**/*",
+      "exports/**/*",
+      "img/**/*",
+      "scripts/**/*",
+      "sfx/**/*",
+      "tracks/**/*",
+      "icon.png",
+      "package.json"
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
