@@ -9555,17 +9555,6 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": "Everlook"
     },
     {
-      "title": "Winterspring Long",
-      "file": "dnd%20music/Everlook/Winterspring_Long.mp3",
-      "fileName": "Winterspring_Long.mp3",
-      "modifiedAt": 1650868184000,
-      "tags": [
-        "Location",
-        "Town"
-      ],
-      "folderPath": "Everlook"
-    },
-    {
       "title": "Woods",
       "file": "dnd%20music/Inn_Woods.mp3",
       "fileName": "Inn_Woods.mp3",
@@ -10047,6 +10036,12 @@ window.DM_AUDIO_MANIFEST = {
       "file": "sfx/Sweaty_Speedrun.wav",
       "fileName": "Sweaty_Speedrun.wav",
       "modifiedAt": 1734518081128
+    },
+    {
+      "title": "The crash",
+      "file": "sfx/_The%20crash.wav",
+      "fileName": "_The crash.wav",
+      "modifiedAt": 1777127486649.8223
     }
   ]
 };

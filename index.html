@@ -778,6 +778,27 @@
       return interval;
     };
 
+    const copyTextToClipboard = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        return document.execCommand("copy");
+      } finally {
+        document.body.removeChild(textarea);
+      }
+    };
+
     const parseCSV = (text) => {
       const rows = []; let r = []; let c = ""; let q = false;
       for (let i = 0; i < text.length; i++) {
@@ -1540,10 +1561,13 @@
       const categories = AUDIO_MANIFEST.musicCategories || [];
       const activeAudioRef = useRef(null);
       const incomingAudioRef = useRef(null);
+      const musicAudiosRef = useRef(new Set());
       const timeoutsRef = useRef([]);
       const controlResetTimersRef = useRef({});
       const loopCrossfadeRef = useRef(false);
+      const transitionIdRef = useRef(0);
       const searchInputRef = useRef(null);
+      const linkCopyResetRef = useRef(null);
       const [query, setQuery] = useState("");
       const [activeCategory, setActiveCategory] = useState("All");
       const [sortMode, setSortMode] = useState("name");
@@ -1554,6 +1578,7 @@
       const [volume, setVolume] = useState(0.75);
       const [tune, setTune] = useState(1);
       const [musicProgress, setMusicProgress] = useState({ currentTime: 0, duration: 0 });
+      const [copiedTrackFile, setCopiedTrackFile] = useState("");
       const [musicTagOverrides, setMusicTagOverrides] = useState(() => {
         try {
           const saved = JSON.parse(localStorage.getItem("dm_music_tag_overrides_v1"));
@@ -1609,9 +1634,30 @@
 
       const stopAudio = (audio) => {
         if (!audio) return;
+        audio._dmStopped = true;
+        if (audio._dmFadeInterval) {
+          clearInterval(audio._dmFadeInterval);
+          audio._dmFadeInterval = null;
+        }
+        if (audio._dmLoopTimer) {
+          clearTimeout(audio._dmLoopTimer);
+          audio._dmLoopTimer = null;
+        }
         if (audio._dmLoopHandler) {
           audio.removeEventListener("timeupdate", audio._dmLoopHandler);
           audio._dmLoopHandler = null;
+        }
+        if (audio._dmLoadedMetadataHandler) {
+          audio.removeEventListener("loadedmetadata", audio._dmLoadedMetadataHandler);
+          audio._dmLoadedMetadataHandler = null;
+        }
+        if (audio._dmPlayHandler) {
+          audio.removeEventListener("play", audio._dmPlayHandler);
+          audio._dmPlayHandler = null;
+        }
+        if (audio._dmSeekedHandler) {
+          audio.removeEventListener("seeked", audio._dmSeekedHandler);
+          audio._dmSeekedHandler = null;
         }
         if (audio._dmEndedHandler) {
           audio.removeEventListener("ended", audio._dmEndedHandler);
@@ -1619,6 +1665,9 @@
         }
         audio.pause();
         audio.src = "";
+        musicAudiosRef.current.delete(audio);
+        if (activeAudioRef.current === audio) activeAudioRef.current = null;
+        if (incomingAudioRef.current === audio) incomingAudioRef.current = null;
       };
 
       const applyTune = (audio, nextTune) => {
@@ -1631,10 +1680,11 @@
 
       useEffect(() => {
         return () => {
+          transitionIdRef.current += 1;
           clearTransitionTimers();
           clearControlResetTimers();
-          stopAudio(activeAudioRef.current);
-          stopAudio(incomingAudioRef.current);
+          clearTimeout(linkCopyResetRef.current);
+          [...musicAudiosRef.current].forEach(stopAudio);
         };
       }, []);
 
@@ -1679,18 +1729,26 @@
       }, [currentTrack, isPlaying, isTransitioning]);
 
       const fadeVolume = (audio, from, to, durationMs, onDone) => {
+        if (!audio || audio._dmStopped) return;
+        clearInterval(audio._dmFadeInterval);
         const start = Date.now();
         audio.volume = from;
 
         const interval = setInterval(() => {
+          if (audio._dmStopped) {
+            clearInterval(interval);
+            if (audio._dmFadeInterval === interval) audio._dmFadeInterval = null;
+            return;
+          }
           const progress = Math.min(1, (Date.now() - start) / durationMs);
           audio.volume = from + (to - from) * progress;
           if (progress >= 1) {
             clearInterval(interval);
+            if (audio._dmFadeInterval === interval) audio._dmFadeInterval = null;
             if (onDone) onDone();
           }
         }, 50);
-        timeoutsRef.current.push(interval);
+        audio._dmFadeInterval = interval;
       };
 
       const createMusicAudio = (track) => {
@@ -1699,23 +1757,48 @@
         audio.volume = 0;
         applyTune(audio, tune);
         audio._dmTrack = track;
+        audio._dmStopped = false;
+        musicAudiosRef.current.add(audio);
+        const loopFadeDuration = 2000;
+        const scheduleLoopCrossfade = () => {
+          clearTimeout(audio._dmLoopTimer);
+          if (audio._dmStopped || activeAudioRef.current !== audio) return;
+          if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+          const msUntilFade = Math.max(0, ((audio.duration - audio.currentTime) * 1000) - loopFadeDuration);
+          audio._dmLoopTimer = setTimeout(() => startLoopCrossfade(false), msUntilFade);
+        };
+        audio._dmScheduleLoopCrossfade = scheduleLoopCrossfade;
         const startLoopCrossfade = (fallback = false) => {
           if (loopCrossfadeRef.current || activeAudioRef.current !== audio) return;
-          if (audio.duration - audio.currentTime > 2) return;
+          if (!fallback && Number.isFinite(audio.duration) && ((audio.duration - audio.currentTime) * 1000) > loopFadeDuration + 120) return;
 
+          const transitionId = transitionIdRef.current;
           loopCrossfadeRef.current = true;
           const nextAudio = createMusicAudio(track);
           incomingAudioRef.current = nextAudio;
 
           nextAudio.play().then(() => {
-            const fadeDuration = fallback ? 500 : 2000;
+            if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== nextAudio) {
+              stopAudio(nextAudio);
+              return;
+            }
+            const fadeDuration = loopFadeDuration;
             fadeVolume(audio, audio.volume, 0, fadeDuration, () => stopAudio(audio));
             fadeVolume(nextAudio, 0, volume, fadeDuration, () => {
+              if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== nextAudio) {
+                stopAudio(nextAudio);
+                return;
+              }
               activeAudioRef.current = nextAudio;
               incomingAudioRef.current = null;
               loopCrossfadeRef.current = false;
+              nextAudio._dmScheduleLoopCrossfade?.();
             });
           }).catch(() => {
+            if (transitionId !== transitionIdRef.current) {
+              stopAudio(nextAudio);
+              return;
+            }
             incomingAudioRef.current = null;
             loopCrossfadeRef.current = false;
             audio.currentTime = 0;
@@ -1724,19 +1807,27 @@
           });
         };
         audio._dmLoopHandler = () => {
-          if (!audio.duration) return;
-          startLoopCrossfade(false);
+          scheduleLoopCrossfade();
         };
+        audio._dmLoadedMetadataHandler = scheduleLoopCrossfade;
+        audio._dmPlayHandler = scheduleLoopCrossfade;
+        audio._dmSeekedHandler = scheduleLoopCrossfade;
         audio._dmEndedHandler = () => {
           startLoopCrossfade(true);
         };
+        audio.addEventListener("loadedmetadata", audio._dmLoadedMetadataHandler);
+        audio.addEventListener("play", audio._dmPlayHandler);
+        audio.addEventListener("seeked", audio._dmSeekedHandler);
         audio.addEventListener("timeupdate", audio._dmLoopHandler);
         audio.addEventListener("ended", audio._dmEndedHandler);
         return audio;
       };
 
       const playTrack = (track) => {
+        const transitionId = transitionIdRef.current + 1;
+        transitionIdRef.current = transitionId;
         clearTransitionTimers();
+        loopCrossfadeRef.current = false;
         setIsTransitioning(true);
         setCurrentTrack(track);
 
@@ -1745,29 +1836,41 @@
           incomingAudioRef.current = null;
         }
 
-        const outgoing = activeAudioRef.current;
-        if (outgoing) {
-          fadeVolume(outgoing, outgoing.volume, 0, 4000, () => stopAudio(outgoing));
-        }
-
         const incoming = createMusicAudio(track);
         incomingAudioRef.current = incoming;
+        const outgoingAudios = [...musicAudiosRef.current].filter((audio) => audio !== incoming);
+        outgoingAudios.forEach((audio) => {
+          fadeVolume(audio, audio.volume, 0, 4000, () => stopAudio(audio));
+        });
 
         const startIncomingTimer = setTimeout(async () => {
+          if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== incoming) {
+            stopAudio(incoming);
+            return;
+          }
           try {
             await incoming.play();
+            if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== incoming) {
+              stopAudio(incoming);
+              return;
+            }
             fadeVolume(incoming, 0, volume, 4000, () => {
+              if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== incoming) {
+                stopAudio(incoming);
+                return;
+              }
               activeAudioRef.current = incoming;
               incomingAudioRef.current = null;
+              incoming._dmScheduleLoopCrossfade?.();
               setCurrentTrack(track);
               setIsPlaying(true);
               setIsTransitioning(false);
             });
           } catch (err) {
-            incomingAudioRef.current = null;
+            stopAudio(incoming);
             setIsTransitioning(false);
           }
-        }, outgoing ? 2000 : 0);
+        }, outgoingAudios.length > 0 ? 2000 : 0);
         timeoutsRef.current.push(startIncomingTimer);
       };
 
@@ -1776,15 +1879,21 @@
         const incoming = incomingAudioRef.current;
 
         if (isPlaying || isTransitioning) {
+          transitionIdRef.current += 1;
           clearTransitionTimers();
           loopCrossfadeRef.current = false;
-          if (incoming) {
-            fadeVolume(incoming, incoming.volume, 0, 2000, () => stopAudio(incoming));
-            incomingAudioRef.current = null;
-          }
-          if (audio) {
-            fadeVolume(audio, audio.volume, 0, 4000, () => audio.pause());
-          }
+          const preferredAudio = incoming && currentTrack && incoming._dmTrack?.file === currentTrack.file ? incoming : audio;
+          [...musicAudiosRef.current].forEach((item) => {
+            fadeVolume(item, item.volume, 0, 4000, () => {
+              if (item === preferredAudio) {
+                item.pause();
+                return;
+              }
+              stopAudio(item);
+            });
+          });
+          activeAudioRef.current = preferredAudio || null;
+          incomingAudioRef.current = null;
           setIsPlaying(false);
           setIsTransitioning(false);
           return;
@@ -1800,6 +1909,7 @@
         if (!audio) return;
 
         try {
+          transitionIdRef.current += 1;
           clearTransitionTimers();
           loopCrossfadeRef.current = false;
           const resumeVolume = audio.volume;
@@ -1821,18 +1931,16 @@
       }, [isActive, isPlaying, isTransitioning, currentTrack, volume]);
 
       const stopMusic = () => {
+        transitionIdRef.current += 1;
         clearTransitionTimers();
         loopCrossfadeRef.current = false;
-        const audio = activeAudioRef.current;
-        const incoming = incomingAudioRef.current;
-        if (incoming) stopAudio(incoming);
-        incomingAudioRef.current = null;
-
-        if (audio) {
+        const audios = [...musicAudiosRef.current];
+        audios.forEach((audio) => {
           fadeVolume(audio, audio.volume, 0, 4000, () => stopAudio(audio));
-        }
+        });
 
         activeAudioRef.current = null;
+        incomingAudioRef.current = null;
         setIsPlaying(false);
         setIsTransitioning(false);
         setCurrentTrack(null);
@@ -1855,6 +1963,30 @@
         return [track.file, relativeFile, track.fileName]
           .map(normalizeMusicReference)
           .some((candidate) => candidate === normalizedReference || candidate.endsWith(`/${normalizedReference}`));
+      };
+
+      const escapeMarkdownLinkText = (value) => String(value || "").replace(/([\\[\]])/g, "\\$1");
+
+      const buildMusicObsidianLink = (track) => {
+        let decodedFile = track.file;
+        try {
+          decodedFile = decodeURIComponent(track.file);
+        } catch (err) {}
+        return `[Play: ${escapeMarkdownLinkText(track.title)}](dmtool://music/play?file=${encodeURIComponent(decodedFile)})`;
+      };
+
+      const copyMusicObsidianLink = async (event, track) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const link = buildMusicObsidianLink(track);
+        try {
+          await copyTextToClipboard(link);
+          setCopiedTrackFile(track.file);
+          clearTimeout(linkCopyResetRef.current);
+          linkCopyResetRef.current = setTimeout(() => setCopiedTrackFile(""), 1400);
+        } catch (err) {
+          console.warn("Unable to copy music link.", err);
+        }
       };
 
       useEffect(() => {
@@ -2025,13 +2157,22 @@
                 <button
                   key={track.file}
                   onClick={() => playTrack(track)}
+                  onContextMenu={(event) => copyMusicObsidianLink(event, track)}
+                  title="Right-click to copy Obsidian play link"
                   className={`text-left rounded-xl border p-2.5 transition ${
                     selected
                       ? "bg-pink-500/20 border-pink-400/40 text-white"
                       : "bg-[#13131a]/90 border-white/5 text-white/80 hover:bg-white/10"
                   }`}
                 >
-                  <div className="text-sm font-semibold leading-tight break-words">{track.title}</div>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 text-sm font-semibold leading-tight break-words">{track.title}</div>
+                    {copiedTrackFile === track.file && (
+                      <span className="shrink-0 rounded bg-emerald-400/15 px-1.5 py-0.5 text-[10px] text-emerald-200">
+                        Copied
+                      </span>
+                    )}
+                  </div>
                   {getTrackTags(track).length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {getTrackTags(track).map((tag) => (
