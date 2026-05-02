@@ -4,11 +4,12 @@ const path = require("path");
 
 const projectRoot = path.resolve(__dirname, "..");
 const builderCli = path.join(projectRoot, "node_modules", "electron-builder", "cli.js");
+const portableBuilderConfig = path.join(projectRoot, "scripts", "electron-builder-portable.cjs");
 const env = { ...process.env };
 
 delete env.ELECTRON_RUN_AS_NODE;
 
-const child = spawn(process.execPath, [builderCli, "--win", "portable"], {
+const child = spawn(process.execPath, [builderCli, "--win", "portable", "--config", portableBuilderConfig], {
   cwd: projectRoot,
   env,
   stdio: "inherit",

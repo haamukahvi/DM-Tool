@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain, safeStorage, shell } = require("electron");
 const fs = require("fs");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { generateAudioManifest } = require("../scripts/generate-audio-manifest.cjs");
 
 let mainWindow = null;
@@ -8,6 +9,7 @@ let focusRefreshTimer = null;
 let pendingMusicCommand = null;
 const PROTOCOL = "dmtool";
 const GEMINI_API_KEY_FILE = "gemini-api-key.bin";
+const ASSET_BASE_URL_ENV = "DMTOOL_ASSET_BASE_URL";
 
 function getAppIconPath() {
   return path.join(app.getAppPath(), "icon.png");
@@ -15,6 +17,10 @@ function getAppIconPath() {
 
 function getAudioManifestPath() {
   return path.join(app.getAppPath(), "data", "audio-manifest.js");
+}
+
+function getLootTablesPath() {
+  return path.join(app.getAppPath(), "data", "loot-tables.json");
 }
 
 function getSecretsDirPath() {
@@ -25,12 +31,36 @@ function getGeminiApiKeyPath() {
   return path.join(getSecretsDirPath(), GEMINI_API_KEY_FILE);
 }
 
+function getPortableAssetBaseUrl() {
+  if (!app.isPackaged || !process.env.PORTABLE_EXECUTABLE_DIR) {
+    return "";
+  }
+
+  const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
+  const portableRoot = portableDir.endsWith(path.sep) ? portableDir : `${portableDir}${path.sep}`;
+  return pathToFileURL(portableRoot).href;
+}
+
+function configureAssetBaseUrl() {
+  const assetBaseUrl = getPortableAssetBaseUrl();
+  if (assetBaseUrl) {
+    process.env[ASSET_BASE_URL_ENV] = assetBaseUrl;
+  } else {
+    delete process.env[ASSET_BASE_URL_ENV];
+  }
+}
+
 function readAudioManifest() {
   try {
     return fs.readFileSync(getAudioManifestPath(), "utf8");
   } catch (err) {
     return "";
   }
+}
+
+async function readLootTables() {
+  const text = await fs.promises.readFile(getLootTablesPath(), "utf8");
+  return JSON.parse(text);
 }
 
 async function readGeminiApiKey() {
@@ -232,6 +262,10 @@ function registerSecretHandlers() {
   ipcMain.handle("dmtool:gemini-api-key:clear", () => clearGeminiApiKey());
 }
 
+function registerLootTableHandlers() {
+  ipcMain.handle("dmtool:loot-tables:get", () => readLootTables());
+}
+
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1520,
@@ -353,8 +387,10 @@ if (!gotSingleInstanceLock) {
   });
 
   app.whenReady().then(() => {
+    configureAssetBaseUrl();
     registerProtocolClient();
     registerSecretHandlers();
+    registerLootTableHandlers();
     pendingMusicCommand = getProtocolCommandFromArgv(process.argv) || pendingMusicCommand;
     createMenu();
     createMainWindow();

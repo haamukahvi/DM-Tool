@@ -19,10 +19,14 @@ ipcRenderer.on("dmtool:music-command", (_event, command) => {
 contextBridge.exposeInMainWorld("dmDesktop", {
   isDesktop: true,
   platform: process.platform,
+  assetBaseUrl: process.env.DMTOOL_ASSET_BASE_URL || "",
   geminiApiKey: {
     get: () => ipcRenderer.invoke("dmtool:gemini-api-key:get"),
     set: (value) => ipcRenderer.invoke("dmtool:gemini-api-key:set", value),
     clear: () => ipcRenderer.invoke("dmtool:gemini-api-key:clear")
+  },
+  lootTables: {
+    get: () => ipcRenderer.invoke("dmtool:loot-tables:get")
   },
   onMusicCommand: (callback) => {
     if (typeof callback !== "function") {
