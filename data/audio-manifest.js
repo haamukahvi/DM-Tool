@@ -37,321 +37,30 @@ window.DM_AUDIO_MANIFEST = {
   ],
   "ambience": [
     {
-      "title": "☁️ Sky",
-      "file": "dnd%20music/Ambience/%E2%98%81%EF%B8%8F%20Sky.mp3",
-      "fileName": "☁️ Sky.mp3",
-      "modifiedAt": 1777237839485.0076,
-      "tags": []
-    },
-    {
-      "title": "☔ Rain",
-      "file": "dnd%20music/Ambience/%E2%98%94%20Rain.mp3",
-      "fileName": "☔ Rain.mp3",
-      "modifiedAt": 1777237839485.0076,
-      "tags": [
-        "Weather"
-      ]
-    },
-    {
-      "title": "⛈️ Thunderstorm",
-      "file": "dnd%20music/Ambience/%E2%9B%88%EF%B8%8F%20Thunderstorm.mp3",
-      "fileName": "⛈️ Thunderstorm.mp3",
-      "modifiedAt": 1777237839485.0076,
-      "tags": [
-        "Weather",
-        "Wind",
-        "Storm"
-      ]
-    },
-    {
-      "title": "⛱️ Beach",
-      "file": "dnd%20music/Ambience/%E2%9B%B1%EF%B8%8F%20Beach.mp3",
-      "fileName": "⛱️ Beach.mp3",
-      "modifiedAt": 1777237839485.538,
-      "tags": [
-        "Water"
-      ]
-    },
-    {
-      "title": "✨ Arcane",
-      "file": "dnd%20music/Ambience/%E2%9C%A8%20Arcane.mp3",
-      "fileName": "✨ Arcane.mp3",
+      "title": "Arcane Magic",
+      "file": "dnd%20music/Ambience/Arcane%20Magic.mp3",
+      "fileName": "Arcane Magic.mp3",
       "modifiedAt": 1777237839485.538,
       "tags": [
         "Magic"
       ]
     },
     {
-      "title": "❄️ Arctic",
-      "file": "dnd%20music/Ambience/%E2%9D%84%EF%B8%8F%20Arctic.mp3",
-      "fileName": "❄️ Arctic.mp3",
+      "title": "Arctic Ice Cold",
+      "file": "dnd%20music/Ambience/Arctic%20Ice%20Cold.mp3",
+      "fileName": "Arctic Ice Cold.mp3",
       "modifiedAt": 1777237839486.0552,
       "tags": [
         "Weather"
       ]
     },
     {
-      "title": "🌀 Hum",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%80%20Hum.mp3",
-      "fileName": "🌀 Hum.mp3",
-      "modifiedAt": 1777237839486.0552,
-      "tags": []
-    },
-    {
-      "title": "🌑 Void",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%91%20Void.mp3",
-      "fileName": "🌑 Void.mp3",
-      "modifiedAt": 1777237839486.0552,
-      "tags": [
-        "Magic",
-        "Dark"
-      ]
-    },
-    {
-      "title": "🌧️ Heavy Rain",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%A7%EF%B8%8F%20Heavy%20Rain.mp3",
-      "fileName": "🌧️ Heavy Rain.mp3",
-      "modifiedAt": 1777237839486.5737,
-      "tags": [
-        "Weather"
-      ]
-    },
-    {
-      "title": "🌧️ Rain",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%A7%EF%B8%8F%20Rain.mp3",
-      "fileName": "🌧️ Rain.mp3",
-      "modifiedAt": 1777237839486.5737,
-      "tags": [
-        "Weather"
-      ]
-    },
-    {
-      "title": "🌩️ Thunderstorm",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%A9%EF%B8%8F%20Thunderstorm.mp3",
-      "fileName": "🌩️ Thunderstorm.mp3",
-      "modifiedAt": 1777237839486.5737,
-      "tags": [
-        "Weather",
-        "Wind",
-        "Storm"
-      ]
-    },
-    {
-      "title": "🌪️ Rainstorm",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%AA%EF%B8%8F%20Rainstorm.mp3",
-      "fileName": "🌪️ Rainstorm.mp3",
-      "modifiedAt": 1777237839487.151,
-      "tags": [
-        "Weather",
-        "Wind",
-        "Storm"
-      ]
-    },
-    {
-      "title": "🌲 Big Forest",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%B2%20Big%20Forest.mp3",
-      "fileName": "🌲 Big Forest.mp3",
-      "modifiedAt": 1777237839487.151,
-      "tags": [
-        "Nature",
-        "Forest"
-      ]
-    },
-    {
-      "title": "🌴 Jungle",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%B4%20Jungle.mp3",
-      "fileName": "🌴 Jungle.mp3",
-      "modifiedAt": 1777237839487.6846,
-      "tags": [
-        "Nature"
-      ]
-    },
-    {
-      "title": "🌵 Desert Night",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%B5%20Desert%20Night.mp3",
-      "fileName": "🌵 Desert Night.mp3",
-      "modifiedAt": 1777237839487.6846,
-      "tags": []
-    },
-    {
-      "title": "🌿 Field",
-      "file": "dnd%20music/Ambience/%F0%9F%8C%BF%20Field.mp3",
-      "fileName": "🌿 Field.mp3",
-      "modifiedAt": 1777237839488.2104,
-      "tags": [
-        "Nature"
-      ]
-    },
-    {
-      "title": "🍴 Tavern",
-      "file": "dnd%20music/Ambience/%F0%9F%8D%B4%20Tavern.mp3",
-      "fileName": "🍴 Tavern.mp3",
-      "modifiedAt": 1777237839488.2104,
-      "tags": [
-        "Inn"
-      ]
-    },
-    {
-      "title": "🍴 Tavern Calm",
-      "file": "dnd%20music/Ambience/%F0%9F%8D%B4%20Tavern%20Calm.mp3",
-      "fileName": "🍴 Tavern Calm.mp3",
-      "modifiedAt": 1777237839488.2104,
-      "tags": [
-        "Inn"
-      ]
-    },
-    {
-      "title": "🏔️ Snow Mountain",
-      "file": "dnd%20music/Ambience/%F0%9F%8F%94%EF%B8%8F%20Snow%20Mountain.mp3",
-      "fileName": "🏔️ Snow Mountain.mp3",
-      "modifiedAt": 1777237839488.7268,
-      "tags": [
-        "Weather",
-        "Mountain"
-      ]
-    },
-    {
-      "title": "🏔️ Underwater Cave",
-      "file": "dnd%20music/Ambience/%F0%9F%8F%94%EF%B8%8F%20Underwater%20Cave.mp3",
-      "fileName": "🏔️ Underwater Cave.mp3",
-      "modifiedAt": 1777237839488.7268,
-      "tags": [
-        "Cave",
-        "Water"
-      ]
-    },
-    {
-      "title": "🏛️ Hall",
-      "file": "dnd%20music/Ambience/%F0%9F%8F%9B%EF%B8%8F%20Hall.mp3",
-      "fileName": "🏛️ Hall.mp3",
-      "modifiedAt": 1777237839488.7268,
-      "tags": [
-        "Interior"
-      ]
-    },
-    {
-      "title": "🐦 Forest",
-      "file": "dnd%20music/Ambience/%F0%9F%90%A6%20Forest.mp3",
-      "fileName": "🐦 Forest.mp3",
-      "modifiedAt": 1777237839489.254,
-      "tags": [
-        "Nature",
-        "Forest"
-      ]
-    },
-    {
-      "title": "🐴 Carriage",
-      "file": "dnd%20music/Ambience/%F0%9F%90%B4%20Carriage.mp3",
-      "fileName": "🐴 Carriage.mp3",
-      "modifiedAt": 1777237839489.254,
-      "tags": [
-        "Travel"
-      ]
-    },
-    {
-      "title": "🐸 Swamp",
-      "file": "dnd%20music/Ambience/%F0%9F%90%B8%20Swamp.mp3",
-      "fileName": "🐸 Swamp.mp3",
-      "modifiedAt": 1777237839489.254,
-      "tags": [
-        "Nature"
-      ]
-    },
-    {
-      "title": "👯 Crowd",
-      "file": "dnd%20music/Ambience/%F0%9F%91%AF%20Crowd.mp3",
-      "fileName": "👯 Crowd.mp3",
-      "modifiedAt": 1777237839489.7754,
-      "tags": []
-    },
-    {
-      "title": "💧 Lake",
-      "file": "dnd%20music/Ambience/%F0%9F%92%A7%20Lake.mp3",
-      "fileName": "💧 Lake.mp3",
-      "modifiedAt": 1777237839489.7754,
+      "title": "Beach",
+      "file": "dnd%20music/Ambience/Beach.mp3",
+      "fileName": "Beach.mp3",
+      "modifiedAt": 1777745262762.9685,
       "tags": [
         "Water"
-      ]
-    },
-    {
-      "title": "💨 Heavy Wind",
-      "file": "dnd%20music/Ambience/%F0%9F%92%A8%20Heavy%20Wind.mp3",
-      "fileName": "💨 Heavy Wind.mp3",
-      "modifiedAt": 1777237839490.3274,
-      "tags": [
-        "Wind"
-      ]
-    },
-    {
-      "title": "💨 Wind",
-      "file": "dnd%20music/Ambience/%F0%9F%92%A8%20Wind.mp3",
-      "fileName": "💨 Wind.mp3",
-      "modifiedAt": 1777237839490.3274,
-      "tags": [
-        "Wind"
-      ]
-    },
-    {
-      "title": "🔥 Burning",
-      "file": "dnd%20music/Ambience/%F0%9F%94%A5%20Burning.mp3",
-      "fileName": "🔥 Burning.mp3",
-      "modifiedAt": 1777237839490.3274,
-      "tags": [
-        "Fire"
-      ]
-    },
-    {
-      "title": "🔥 Campfire",
-      "file": "dnd%20music/Ambience/%F0%9F%94%A5%20Campfire.mp3",
-      "fileName": "🔥 Campfire.mp3",
-      "modifiedAt": 1777237839490.8499,
-      "tags": [
-        "Fire"
-      ]
-    },
-    {
-      "title": "🗻 Mountain",
-      "file": "dnd%20music/Ambience/%F0%9F%97%BB%20Mountain.mp3",
-      "fileName": "🗻 Mountain.mp3",
-      "modifiedAt": 1777237839490.8499,
-      "tags": [
-        "Mountain"
-      ]
-    },
-    {
-      "title": "🦒 Savannah",
-      "file": "dnd%20music/Ambience/%F0%9F%A6%92%20Savannah.mp3",
-      "fileName": "🦒 Savannah.mp3",
-      "modifiedAt": 1777237839491.3704,
-      "tags": [
-        "Nature"
-      ]
-    },
-    {
-      "title": "🪄 Magic",
-      "file": "dnd%20music/Ambience/%F0%9F%AA%84%20Magic.mp3",
-      "fileName": "🪄 Magic.mp3",
-      "modifiedAt": 1777237839491.3704,
-      "tags": [
-        "Magic"
-      ]
-    },
-    {
-      "title": "🪨 Cave",
-      "file": "dnd%20music/Ambience/%F0%9F%AA%A8%20Cave.mp3",
-      "fileName": "🪨 Cave.mp3",
-      "modifiedAt": 1777237839491.3704,
-      "tags": [
-        "Cave"
-      ]
-    },
-    {
-      "title": "🛖 Orgrimmar",
-      "file": "dnd%20music/Ambience/%F0%9F%9B%96%20Orgrimmar.mp3",
-      "fileName": "🛖 Orgrimmar.mp3",
-      "modifiedAt": 1777237839490.8499,
-      "tags": [
-        "Town"
       ]
     },
     {
@@ -374,6 +83,15 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
+      "title": "Burning",
+      "file": "dnd%20music/Ambience/Burning.mp3",
+      "fileName": "Burning.mp3",
+      "modifiedAt": 1777237839490.3274,
+      "tags": [
+        "Fire"
+      ]
+    },
+    {
       "title": "Burning Forest",
       "file": "dnd%20music/Ambience/Ambience_BurningForest.mp3",
       "fileName": "Ambience_BurningForest.mp3",
@@ -385,10 +103,47 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
+      "title": "Campfire",
+      "file": "dnd%20music/Ambience/Campfire.mp3",
+      "fileName": "Campfire.mp3",
+      "modifiedAt": 1777237839490.8499,
+      "tags": [
+        "Fire"
+      ]
+    },
+    {
+      "title": "Canyon Mountain Wind Day",
+      "file": "dnd%20music/Ambience/Canyon%20Mountain%20Wind%20Day.mp3",
+      "fileName": "Canyon Mountain Wind Day.mp3",
+      "modifiedAt": 1777745123381.5908,
+      "tags": [
+        "Wind",
+        "Mountain"
+      ]
+    },
+    {
+      "title": "Carriage",
+      "file": "dnd%20music/Ambience/Carriage.mp3",
+      "fileName": "Carriage.mp3",
+      "modifiedAt": 1777237839489.254,
+      "tags": [
+        "Travel"
+      ]
+    },
+    {
       "title": "Cave",
       "file": "dnd%20music/Ambience/Ambience_Cave.mp3",
       "fileName": "Ambience_Cave.mp3",
       "modifiedAt": 1777237839477.0544,
+      "tags": [
+        "Cave"
+      ]
+    },
+    {
+      "title": "Cave",
+      "file": "dnd%20music/Ambience/Cave.mp3",
+      "fileName": "Cave.mp3",
+      "modifiedAt": 1777237839491.3704,
       "tags": [
         "Cave"
       ]
@@ -402,6 +157,13 @@ window.DM_AUDIO_MANIFEST = {
         "Cave",
         "Water"
       ]
+    },
+    {
+      "title": "Crowd",
+      "file": "dnd%20music/Ambience/Crowd.mp3",
+      "fileName": "Crowd.mp3",
+      "modifiedAt": 1777237839489.7754,
+      "tags": []
     },
     {
       "title": "Cultism",
@@ -432,10 +194,49 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
+      "title": "Desert Day",
+      "file": "dnd%20music/Ambience/Desert%20Day.mp3",
+      "fileName": "Desert Day.mp3",
+      "modifiedAt": 1777745096525.7256,
+      "tags": []
+    },
+    {
+      "title": "Desert Night",
+      "file": "dnd%20music/Ambience/Desert%20Night%20(2).mp3",
+      "fileName": "Desert Night (2).mp3",
+      "modifiedAt": 1777237839487.6846,
+      "tags": []
+    },
+    {
+      "title": "Desert Night",
+      "file": "dnd%20music/Ambience/Desert%20Night.mp3",
+      "fileName": "Desert Night.mp3",
+      "modifiedAt": 1777745086985.771,
+      "tags": []
+    },
+    {
       "title": "Desert Wind",
-      "file": "dnd%20music/Ambience/Ambience_DesertWind.mp3",
-      "fileName": "Ambience_DesertWind.mp3",
+      "file": "dnd%20music/Ambience/DesertWind.mp3",
+      "fileName": "DesertWind.mp3",
       "modifiedAt": 1777237839479.2263,
+      "tags": [
+        "Wind"
+      ]
+    },
+    {
+      "title": "Desert Wind Day",
+      "file": "dnd%20music/Ambience/Desert%20Wind%20Day.mp3",
+      "fileName": "Desert Wind Day.mp3",
+      "modifiedAt": 1777745108117.9673,
+      "tags": [
+        "Wind"
+      ]
+    },
+    {
+      "title": "Desert Wind Night",
+      "file": "dnd%20music/Ambience/Desert%20Wind%20Night.mp3",
+      "fileName": "Desert Wind Night.mp3",
+      "modifiedAt": 1777745135456.269,
       "tags": [
         "Wind"
       ]
@@ -460,48 +261,89 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
-      "title": "Everlook Ambience",
-      "file": "dnd%20music/Ambience/Everlook_Ambience.mp3",
-      "fileName": "Everlook_Ambience.mp3",
-      "modifiedAt": 1777237839483.4292,
+      "title": "Dwarf Town Forge",
+      "file": "dnd%20music/Ambience/Dwarf%20Town%20Forge.mp3",
+      "fileName": "Dwarf Town Forge.mp3",
+      "modifiedAt": 1777745175976.5842,
       "tags": [
         "Town"
       ]
     },
     {
-      "title": "Everlook Ambience Machinery",
-      "file": "dnd%20music/Ambience/Everlook_Ambience_Machinery.mp3",
-      "fileName": "Everlook_Ambience_Machinery.mp3",
-      "modifiedAt": 1777237839483.9446,
+      "title": "Field",
+      "file": "dnd%20music/Ambience/Field.mp3",
+      "fileName": "Field.mp3",
+      "modifiedAt": 1777237839488.2104,
       "tags": [
-        "Town"
+        "Nature"
       ]
     },
     {
-      "title": "Forest",
-      "file": "dnd%20music/Ambience/Ambience_Forest_01.mp3",
-      "fileName": "Ambience_Forest_01.mp3",
+      "title": "Forest Big",
+      "file": "dnd%20music/Ambience/Forest%20Big.mp3",
+      "fileName": "Forest Big.mp3",
+      "modifiedAt": 1777237839487.151,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
+      "title": "Forest Day",
+      "file": "dnd%20music/Ambience/Forest%20Day.mp3",
+      "fileName": "Forest Day.mp3",
+      "modifiedAt": 1777745785307.557,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
+      "title": "Forest Dry Night",
+      "file": "dnd%20music/Ambience/Forest%20Dry%20Night.mp3",
+      "fileName": "Forest Dry Night.mp3",
+      "modifiedAt": 1777744996826.2275,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
+      "title": "Forest Eerie Magical Mystic",
+      "file": "dnd%20music/Ambience/Forest%20Eerie%20Magical%20Mystic.mp3",
+      "fileName": "Forest Eerie Magical Mystic.mp3",
+      "modifiedAt": 1777744914209.6504,
+      "tags": [
+        "Nature",
+        "Forest",
+        "Magic"
+      ]
+    },
+    {
+      "title": "Forest Jungle Clean Exotic",
+      "file": "dnd%20music/Ambience/Forest%20Jungle%20Clean%20Exotic.mp3",
+      "fileName": "Forest Jungle Clean Exotic.mp3",
+      "modifiedAt": 1777744976959.837,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
+      "title": "Forest Jungle Day",
+      "file": "dnd%20music/Ambience/Forest%20Jungle%20Day.mp3",
+      "fileName": "Forest Jungle Day.mp3",
+      "modifiedAt": 1777745718699.5916,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
+      "title": "Forest Jungle Swamp Strange",
+      "file": "dnd%20music/Ambience/Forest%20Jungle%20Swamp%20Strange.mp3",
+      "fileName": "Forest Jungle Swamp Strange.mp3",
       "modifiedAt": 1777237839479.7642,
-      "tags": [
-        "Nature",
-        "Forest"
-      ]
-    },
-    {
-      "title": "Forest",
-      "file": "dnd%20music/Ambience/Ambience_Forest_02.mp3",
-      "fileName": "Ambience_Forest_02.mp3",
-      "modifiedAt": 1777237839480.2927,
-      "tags": [
-        "Nature",
-        "Forest"
-      ]
-    },
-    {
-      "title": "Forest",
-      "file": "dnd%20music/Ambience/Ambience_Forest_03.mp3",
-      "fileName": "Ambience_Forest_03.mp3",
-      "modifiedAt": 1777237839480.2927,
       "tags": [
         "Nature",
         "Forest"
@@ -519,6 +361,40 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
+      "title": "Forest Plagued Eerie Dark Scary",
+      "file": "dnd%20music/Ambience/Forest%20Plagued%20Eerie%20Dark%20Scary.mp3",
+      "fileName": "Forest Plagued Eerie Dark Scary.mp3",
+      "modifiedAt": 1777744927388.2607,
+      "tags": [
+        "Nature",
+        "Forest",
+        "Dark"
+      ]
+    },
+    {
+      "title": "Forest Stormy Eerie Scary",
+      "file": "dnd%20music/Ambience/Forest%20Stormy%20Eerie%20Scary.mp3",
+      "fileName": "Forest Stormy Eerie Scary.mp3",
+      "modifiedAt": 1777744939362.5994,
+      "tags": [
+        "Weather",
+        "Nature",
+        "Forest",
+        "Wind",
+        "Storm"
+      ]
+    },
+    {
+      "title": "Forest Temperate Night",
+      "file": "dnd%20music/Ambience/Forest%20Temperate%20Night.mp3",
+      "fileName": "Forest Temperate Night.mp3",
+      "modifiedAt": 1777744887447.0884,
+      "tags": [
+        "Nature",
+        "Forest"
+      ]
+    },
+    {
       "title": "Forest Twilight",
       "file": "dnd%20music/Ambience/Ambience_Forest_Twilight.mp3",
       "fileName": "Ambience_Forest_Twilight.mp3",
@@ -526,6 +402,29 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Nature",
         "Forest"
+      ]
+    },
+    {
+      "title": "Forest Wind Lake",
+      "file": "dnd%20music/Ambience/Forest%20Wind%20Lake.mp3",
+      "fileName": "Forest Wind Lake.mp3",
+      "modifiedAt": 1777237839480.2927,
+      "tags": [
+        "Nature",
+        "Forest",
+        "Water",
+        "Wind"
+      ]
+    },
+    {
+      "title": "Forest Wind Night",
+      "file": "dnd%20music/Ambience/Forest%20Wind%20Night.mp3",
+      "fileName": "Forest Wind Night.mp3",
+      "modifiedAt": 1777744957478.4395,
+      "tags": [
+        "Nature",
+        "Forest",
+        "Wind"
       ]
     },
     {
@@ -549,13 +448,12 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
-      "title": "Grass Wind",
-      "file": "dnd%20music/Ambience/Ambience_Grass_Wind.mp3",
-      "fileName": "Ambience_Grass_Wind.mp3",
-      "modifiedAt": 1777237839481.3455,
+      "title": "Hall",
+      "file": "dnd%20music/Ambience/Hall.mp3",
+      "fileName": "Hall.mp3",
+      "modifiedAt": 1777237839488.7268,
       "tags": [
-        "Nature",
-        "Wind"
+        "Interior"
       ]
     },
     {
@@ -566,6 +464,13 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Travel"
       ]
+    },
+    {
+      "title": "Hum",
+      "file": "dnd%20music/Ambience/Hum.mp3",
+      "fileName": "Hum.mp3",
+      "modifiedAt": 1777237839486.0552,
+      "tags": []
     },
     {
       "title": "Inn Crowded",
@@ -626,6 +531,68 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
+      "title": "Jungle",
+      "file": "dnd%20music/Ambience/Jungle.mp3",
+      "fileName": "Jungle.mp3",
+      "modifiedAt": 1777237839487.6846,
+      "tags": [
+        "Nature"
+      ]
+    },
+    {
+      "title": "Jungle Oasis Night",
+      "file": "dnd%20music/Ambience/Jungle%20Oasis%20Night.mp3",
+      "fileName": "Jungle Oasis Night.mp3",
+      "modifiedAt": 1777744834085.9355,
+      "tags": [
+        "Nature"
+      ]
+    },
+    {
+      "title": "Lake",
+      "file": "dnd%20music/Ambience/Lake.mp3",
+      "fileName": "Lake.mp3",
+      "modifiedAt": 1777237839489.7754,
+      "tags": [
+        "Water"
+      ]
+    },
+    {
+      "title": "Machinery Gear Dwarf Goblin",
+      "file": "dnd%20music/Ambience/Machinery%20Gear%20Dwarf%20Goblin.mp3",
+      "fileName": "Machinery Gear Dwarf Goblin.mp3",
+      "modifiedAt": 1777237839483.9446,
+      "tags": []
+    },
+    {
+      "title": "Magic",
+      "file": "dnd%20music/Ambience/Magic.mp3",
+      "fileName": "Magic.mp3",
+      "modifiedAt": 1777237839491.3704,
+      "tags": [
+        "Magic"
+      ]
+    },
+    {
+      "title": "Mountain",
+      "file": "dnd%20music/Ambience/Mountain.mp3",
+      "fileName": "Mountain.mp3",
+      "modifiedAt": 1777237839490.8499,
+      "tags": [
+        "Mountain"
+      ]
+    },
+    {
+      "title": "Mountain Wind",
+      "file": "dnd%20music/Ambience/Mountain%20Wind.mp3",
+      "fileName": "Mountain Wind.mp3",
+      "modifiedAt": 1777744855189.802,
+      "tags": [
+        "Wind",
+        "Mountain"
+      ]
+    },
+    {
       "title": "Mountains",
       "file": "dnd%20music/Ambience/Ambience_Mountains_01.mp3",
       "fileName": "Ambience_Mountains_01.mp3",
@@ -635,39 +602,139 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
-      "title": "MUS 82 From The Depths 1 B",
-      "file": "dnd%20music/Ambience/MUS_82_FromTheDepths_1_B.mp3",
-      "fileName": "MUS_82_FromTheDepths_1_B.mp3",
-      "modifiedAt": 1777237839483.9446,
+      "title": "Orgrimmar Horde City Town Wind",
+      "file": "dnd%20music/Ambience/Orgrimmar%20Horde%20City%20Town%20Wind.mp3",
+      "fileName": "Orgrimmar Horde City Town Wind.mp3",
+      "modifiedAt": 1777237839490.8499,
       "tags": [
-        "Cave"
+        "Town",
+        "Wind"
       ]
     },
     {
-      "title": "MUS 82 From The Depths 1 C",
-      "file": "dnd%20music/Ambience/MUS_82_FromTheDepths_1_C.mp3",
-      "fileName": "MUS_82_FromTheDepths_1_C.mp3",
-      "modifiedAt": 1777237839484.4802,
+      "title": "Plains Desert Day Wind",
+      "file": "dnd%20music/Ambience/Plains%20Desert%20Day%20Wind.mp3",
+      "fileName": "Plains Desert Day Wind.mp3",
+      "modifiedAt": 1777745065184.0715,
       "tags": [
-        "Cave"
+        "Wind"
       ]
     },
     {
-      "title": "MUS 82 Nazjatar Rise 1 A",
-      "file": "dnd%20music/Ambience/MUS_82_NazjatarRise_1_A.mp3",
-      "fileName": "MUS_82_NazjatarRise_1_A.mp3",
-      "modifiedAt": 1777237839484.4802,
+      "title": "Plains Desert Wind Night",
+      "file": "dnd%20music/Ambience/Plains%20Desert%20Wind%20Night.mp3",
+      "fileName": "Plains Desert Wind Night.mp3",
+      "modifiedAt": 1777745050848.302,
       "tags": [
-        "Water"
+        "Wind"
       ]
     },
     {
-      "title": "Ship Ambience",
-      "file": "dnd%20music/Ambience/Ship_Ambience.mp3",
-      "fileName": "Ship_Ambience.mp3",
-      "modifiedAt": 1777237839484.4802,
+      "title": "Plains Grass Wind",
+      "file": "dnd%20music/Ambience/Plains%20Grass%20Wind.mp3",
+      "fileName": "Plains Grass Wind.mp3",
+      "modifiedAt": 1777237839481.3455,
+      "tags": [
+        "Nature",
+        "Wind"
+      ]
+    },
+    {
+      "title": "Rain Heavy",
+      "file": "dnd%20music/Ambience/Rain%20Heavy.mp3",
+      "fileName": "Rain Heavy.mp3",
+      "modifiedAt": 1777745480561.414,
+      "tags": [
+        "Weather"
+      ]
+    },
+    {
+      "title": "Rain Light",
+      "file": "dnd%20music/Ambience/Rain%20Light.mp3",
+      "fileName": "Rain Light.mp3",
+      "modifiedAt": 1777237839486.5737,
+      "tags": [
+        "Weather"
+      ]
+    },
+    {
+      "title": "Rain Medium",
+      "file": "dnd%20music/Ambience/Rain%20Medium.mp3",
+      "fileName": "Rain Medium.mp3",
+      "modifiedAt": 1777745408646.4863,
+      "tags": [
+        "Weather"
+      ]
+    },
+    {
+      "title": "Rain Storm Night",
+      "file": "dnd%20music/Ambience/Rain%20Storm_Night.mp3",
+      "fileName": "Rain Storm_Night.mp3",
+      "modifiedAt": 1777237839483.4292,
+      "tags": [
+        "Weather",
+        "Wind",
+        "Storm"
+      ]
+    },
+    {
+      "title": "Rain Thunderstorm",
+      "file": "dnd%20music/Ambience/Rain%20Thunderstorm.mp3",
+      "fileName": "Rain Thunderstorm.mp3",
+      "modifiedAt": 1777745402450.9204,
+      "tags": [
+        "Weather",
+        "Wind",
+        "Storm"
+      ]
+    },
+    {
+      "title": "Rain Thunderstorm Inside",
+      "file": "dnd%20music/Ambience/Rain%20Thunderstorm%20Inside.mp3",
+      "fileName": "Rain Thunderstorm Inside.mp3",
+      "modifiedAt": 1777745395153.762,
+      "tags": [
+        "Weather",
+        "Wind",
+        "Storm"
+      ]
+    },
+    {
+      "title": "Savannah",
+      "file": "dnd%20music/Ambience/Savannah.mp3",
+      "fileName": "Savannah.mp3",
+      "modifiedAt": 1777237839491.3704,
+      "tags": [
+        "Nature"
+      ]
+    },
+    {
+      "title": "Ship Boat",
+      "file": "dnd%20music/Ambience/Ship%20Boat.mp3",
+      "fileName": "Ship Boat.mp3",
+      "modifiedAt": 1777745295397.4453,
       "tags": [
         "Travel"
+      ]
+    },
+    {
+      "title": "Sky Wind Mountain",
+      "file": "dnd%20music/Ambience/Sky%20Wind%20Mountain.mp3",
+      "fileName": "Sky Wind Mountain.mp3",
+      "modifiedAt": 1777237839485.0076,
+      "tags": [
+        "Wind",
+        "Mountain"
+      ]
+    },
+    {
+      "title": "Snow Mountain",
+      "file": "dnd%20music/Ambience/Snow%20Mountain.mp3",
+      "fileName": "Snow Mountain.mp3",
+      "modifiedAt": 1777237839488.7268,
+      "tags": [
+        "Weather",
+        "Mountain"
       ]
     },
     {
@@ -689,14 +756,30 @@ window.DM_AUDIO_MANIFEST = {
       ]
     },
     {
-      "title": "Storm Night",
-      "file": "dnd%20music/Ambience/Ambience_Storm_Night.mp3",
-      "fileName": "Ambience_Storm_Night.mp3",
-      "modifiedAt": 1777237839483.4292,
+      "title": "Swamp",
+      "file": "dnd%20music/Ambience/Swamp.mp3",
+      "fileName": "Swamp.mp3",
+      "modifiedAt": 1777237839489.254,
       "tags": [
-        "Weather",
-        "Wind",
-        "Storm"
+        "Nature"
+      ]
+    },
+    {
+      "title": "Tavern",
+      "file": "dnd%20music/Ambience/Tavern.mp3",
+      "fileName": "Tavern.mp3",
+      "modifiedAt": 1777237839488.2104,
+      "tags": [
+        "Inn"
+      ]
+    },
+    {
+      "title": "Tavern Calm",
+      "file": "dnd%20music/Ambience/Tavern%20Calm.mp3",
+      "fileName": "Tavern Calm.mp3",
+      "modifiedAt": 1777237839488.2104,
+      "tags": [
+        "Inn"
       ]
     },
     {
@@ -713,6 +796,35 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839483.4292,
       "tags": [
         "Dark"
+      ]
+    },
+    {
+      "title": "Underwater Cave",
+      "file": "dnd%20music/Ambience/Underwater%20Cave.mp3",
+      "fileName": "Underwater Cave.mp3",
+      "modifiedAt": 1777237839488.7268,
+      "tags": [
+        "Cave",
+        "Water"
+      ]
+    },
+    {
+      "title": "Void",
+      "file": "dnd%20music/Ambience/Void.mp3",
+      "fileName": "Void.mp3",
+      "modifiedAt": 1777237839486.0552,
+      "tags": [
+        "Magic",
+        "Dark"
+      ]
+    },
+    {
+      "title": "Wind",
+      "file": "dnd%20music/Ambience/Wind.mp3",
+      "fileName": "Wind.mp3",
+      "modifiedAt": 1777237839490.3274,
+      "tags": [
+        "Wind"
       ]
     }
   ],
@@ -2742,12 +2854,35 @@ window.DM_AUDIO_MANIFEST = {
     },
     {
       "title": "Booty Bay Inn",
+      "file": "dnd%20music/Booty%20Bay%20Inn.mp3",
+      "fileName": "Booty Bay Inn.mp3",
+      "modifiedAt": 1784330555749.0942,
+      "tags": [
+        "Location",
+        "Inn",
+        "Town"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Booty Bay Inn",
       "file": "dnd%20music/BootyBay_Inn.mp3",
       "fileName": "BootyBay_Inn.mp3",
       "modifiedAt": 1777237839530.5122,
       "tags": [
         "Location",
         "Inn",
+        "Town"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Booty Bay Kargul",
+      "file": "dnd%20music/Booty%20Bay%20Kargul.mp3",
+      "fileName": "Booty Bay Kargul.mp3",
+      "modifiedAt": 1784329891227.0398,
+      "tags": [
+        "Location",
         "Town"
       ],
       "folderPath": ""
@@ -3123,6 +3258,26 @@ window.DM_AUDIO_MANIFEST = {
         "Atmos",
         "Location",
         "Calm"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Celestial Wonder Slow",
+      "file": "dnd%20music/Calm_Celestial%20Wonder%20Slow.mp3",
+      "fileName": "Calm_Celestial Wonder Slow.mp3",
+      "modifiedAt": 1783496746668.393,
+      "tags": [
+        "Calm"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Charmed Sleep",
+      "file": "dnd%20music/Moment_Charmed%20Sleep.mp3",
+      "fileName": "Moment_Charmed Sleep.mp3",
+      "modifiedAt": 1783497170702.448,
+      "tags": [
+        "Moment"
       ],
       "folderPath": ""
     },
@@ -3747,6 +3902,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Dark Wilderness",
+      "file": "dnd%20music/Suspense_Dark%20Wilderness.mp3",
+      "fileName": "Suspense_Dark Wilderness.mp3",
+      "modifiedAt": 1777237839622.9116,
+      "tags": [
+        "Suspense"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Darkmoon Faire Music [2d1wn Dl PYQw]",
       "file": "dnd%20music/DarkmoonFaire/Darkmoon%20Faire%20Music%20%5B2d1wnDlPYQw%5D.mp3",
       "fileName": "Darkmoon Faire Music [2d1wnDlPYQw].mp3",
@@ -3962,6 +4127,17 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Druid Nightmare",
+      "file": "dnd%20music/Battle_DruidNightmare.mp3",
+      "fileName": "Battle_DruidNightmare.mp3",
+      "modifiedAt": 1777237839613.0317,
+      "tags": [
+        "Battle",
+        "Suspense"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Drumming",
       "file": "dnd%20music/Suspense_BattleDrumming.mp3",
       "fileName": "Suspense_BattleDrumming.mp3",
@@ -4093,6 +4269,16 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839512.8833,
       "tags": [
         "Battle"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Echoing Alley",
+      "file": "dnd%20music/Atmos_Echoing%20Alley.mp3",
+      "fileName": "Atmos_Echoing Alley.mp3",
+      "modifiedAt": 1777237839622.9116,
+      "tags": [
+        "Atmos"
       ],
       "folderPath": ""
     },
@@ -4618,6 +4804,14 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": "Moonglade"
     },
     {
+      "title": "Forest Stargazing",
+      "file": "dnd%20music/Forest%20Stargazing.mp3",
+      "fileName": "Forest Stargazing.mp3",
+      "modifiedAt": 1777237839617.2217,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
       "title": "Fun",
       "file": "dnd%20music/Adventure_Fun_01.mp3",
       "fileName": "Adventure_Fun_01.mp3",
@@ -4880,6 +5074,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Goblin Shady",
+      "file": "dnd%20music/Atmos%20Goblin%20Shady.mp3",
+      "fileName": "Atmos Goblin Shady.mp3",
+      "modifiedAt": 1784330583984.287,
+      "tags": [
+        "Atmos"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Goblins",
       "file": "dnd%20music/Battle_Goblins.mp3",
       "fileName": "Battle_Goblins.mp3",
@@ -5037,6 +5241,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Haunting",
+      "file": "dnd%20music/Atmos_Haunting.mp3",
+      "fileName": "Atmos_Haunting.mp3",
+      "modifiedAt": 1777237839612.4758,
+      "tags": [
+        "Atmos"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Heartfelt",
       "file": "dnd%20music/Adventure_Heartfelt.mp3",
       "fileName": "Adventure_Heartfelt.mp3",
@@ -5074,6 +5288,40 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Atmos"
       ],
+      "folderPath": ""
+    },
+    {
+      "title": "Heist Active",
+      "file": "dnd%20music/Heist_Active.mp3",
+      "fileName": "Heist_Active.mp3",
+      "modifiedAt": 1777237839618.7732,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
+      "title": "Heist Battle",
+      "file": "dnd%20music/Heist_Battle.mp3",
+      "fileName": "Heist_Battle.mp3",
+      "modifiedAt": 1777237839618.7732,
+      "tags": [
+        "Battle"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Heist End",
+      "file": "dnd%20music/Heist_End.mp3",
+      "fileName": "Heist_End.mp3",
+      "modifiedAt": 1777237839618.7732,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
+      "title": "Heist Plan",
+      "file": "dnd%20music/Heist_Plan.mp3",
+      "fileName": "Heist_Plan.mp3",
+      "modifiedAt": 1777237839619.2854,
+      "tags": [],
       "folderPath": ""
     },
     {
@@ -5123,6 +5371,16 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839599.5,
       "tags": [
         "Neutral"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Hold Up",
+      "file": "dnd%20music/Battle_HoldUp.mp3",
+      "fileName": "Battle_HoldUp.mp3",
+      "modifiedAt": 1777237839613.5713,
+      "tags": [
+        "Battle"
       ],
       "folderPath": ""
     },
@@ -5300,6 +5558,14 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Infirmary",
+      "file": "dnd%20music/Infirmary.mp3",
+      "fileName": "Infirmary.mp3",
+      "modifiedAt": 1777237839619.2854,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
       "title": "Insanity",
       "file": "dnd%20music/Battle_Insanity.mp3",
       "fileName": "Battle_Insanity.mp3",
@@ -5326,6 +5592,16 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839543.8257,
       "tags": [
         "Action"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Into the Unknown",
+      "file": "dnd%20music/Atmos_Into%20the%20Unknown.mp3",
+      "fileName": "Atmos_Into the Unknown.mp3",
+      "modifiedAt": 1783496773430.037,
+      "tags": [
+        "Atmos"
       ],
       "folderPath": ""
     },
@@ -5445,6 +5721,17 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839509.276,
       "tags": [
         "Atmos",
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Jungle",
+      "file": "dnd%20music/Battle_Jungle.mp3",
+      "fileName": "Battle_Jungle.mp3",
+      "modifiedAt": 1777237839613.5713,
+      "tags": [
+        "Battle",
         "Location"
       ],
       "folderPath": ""
@@ -5615,6 +5902,17 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Jungle Heights",
+      "file": "dnd%20music/Suspense_Jungle%20Heights.mp3",
+      "fileName": "Suspense_Jungle Heights.mp3",
+      "modifiedAt": 1777237839622.9116,
+      "tags": [
+        "Location",
+        "Suspense"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Jungle Mystery",
       "file": "dnd%20music/Atmos_JungleMystery.mp3",
       "fileName": "Atmos_JungleMystery.mp3",
@@ -5648,6 +5946,18 @@ window.DM_AUDIO_MANIFEST = {
         "Calm"
       ],
       "folderPath": "Island"
+    },
+    {
+      "title": "Jungle Temple",
+      "file": "dnd%20music/Suspense_JungleTemple.mp3",
+      "fileName": "Suspense_JungleTemple.mp3",
+      "modifiedAt": 1777237839622.9116,
+      "tags": [
+        "Location",
+        "Mystic",
+        "Suspense"
+      ],
+      "folderPath": ""
     },
     {
       "title": "Just Keeps Going",
@@ -5739,6 +6049,16 @@ window.DM_AUDIO_MANIFEST = {
       "file": "dnd%20music/Atmos_Loa_02.mp3",
       "fileName": "Atmos_Loa_02.mp3",
       "modifiedAt": 1777237839498.7852,
+      "tags": [
+        "Atmos"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Loa Reverse",
+      "file": "dnd%20music/Atmos_Loa_Reverse.ogg",
+      "fileName": "Atmos_Loa_Reverse.ogg",
+      "modifiedAt": 1781635155933.6106,
       "tags": [
         "Atmos"
       ],
@@ -6308,6 +6628,17 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Military Moment",
+      "file": "dnd%20music/Tension_MilitaryMoment.mp3",
+      "fileName": "Tension_MilitaryMoment.mp3",
+      "modifiedAt": 1777237839624.605,
+      "tags": [
+        "Moment",
+        "Tension"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Military Sneak",
       "file": "dnd%20music/Military_Sneak.mp3",
       "fileName": "Military_Sneak.mp3",
@@ -6423,6 +6754,17 @@ window.DM_AUDIO_MANIFEST = {
         "Location"
       ],
       "folderPath": "Moonglade"
+    },
+    {
+      "title": "Moonglade Mystic Chill",
+      "file": "dnd%20music/Moonglade_MysticChill.mp3",
+      "fileName": "Moonglade_MysticChill.mp3",
+      "modifiedAt": 1777237839620.8374,
+      "tags": [
+        "Location",
+        "Mystic"
+      ],
+      "folderPath": ""
     },
     {
       "title": "Moonglade Nighthaven",
@@ -6938,6 +7280,14 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Inn"
       ],
+      "folderPath": ""
+    },
+    {
+      "title": "Nordrassil",
+      "file": "dnd%20music/Nordrassil.mp3",
+      "fileName": "Nordrassil.mp3",
+      "modifiedAt": 1777237839621.3518,
+      "tags": [],
       "folderPath": ""
     },
     {
@@ -7613,6 +7963,17 @@ window.DM_AUDIO_MANIFEST = {
     },
     {
       "title": "Rest",
+      "file": "dnd%20music/Atmos_Calm%20Rest.mp3",
+      "fileName": "Atmos_Calm Rest.mp3",
+      "modifiedAt": 1783496816228.569,
+      "tags": [
+        "Atmos",
+        "Calm"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Rest",
       "file": "dnd%20music/Atmos_Rest.mp3",
       "fileName": "Atmos_Rest.mp3",
       "modifiedAt": 1777237839501.949,
@@ -7929,6 +8290,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Servant Room",
+      "file": "dnd%20music/Servant%20Room.mp3",
+      "fileName": "Servant Room.mp3",
+      "modifiedAt": 1777237839621.8855,
+      "tags": [
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Shadow",
       "file": "dnd%20music/Atmos_Shadow_01.mp3",
       "fileName": "Atmos_Shadow_01.mp3",
@@ -7954,6 +8325,16 @@ window.DM_AUDIO_MANIFEST = {
       "fileName": "Shady_01.mp3",
       "modifiedAt": 1777237839579.5647,
       "tags": [],
+      "folderPath": ""
+    },
+    {
+      "title": "Shady Dealings",
+      "file": "dnd%20music/Suspense_Shady%20Dealings.mp3",
+      "fileName": "Suspense_Shady Dealings.mp3",
+      "modifiedAt": 1783496833047.4492,
+      "tags": [
+        "Suspense"
+      ],
       "folderPath": ""
     },
     {
@@ -8034,6 +8415,16 @@ window.DM_AUDIO_MANIFEST = {
       "file": "dnd%20music/Moment_SlowMemories.mp3",
       "fileName": "Moment_SlowMemories.mp3",
       "modifiedAt": 1777237839559.0017,
+      "tags": [
+        "Moment"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Slow Pain",
+      "file": "dnd%20music/Moment%20Slow%20Pain.mp3",
+      "fileName": "Moment Slow Pain.mp3",
+      "modifiedAt": 1784330214272.5073,
       "tags": [
         "Moment"
       ],
@@ -8152,6 +8543,16 @@ window.DM_AUDIO_MANIFEST = {
         "Town"
       ],
       "folderPath": "Ratchet"
+    },
+    {
+      "title": "Soul Journey",
+      "file": "dnd%20music/Mystic_Soul%20Journey.mp3",
+      "fileName": "Mystic_Soul Journey.mp3",
+      "modifiedAt": 1783496876515.489,
+      "tags": [
+        "Mystic"
+      ],
+      "folderPath": ""
     },
     {
       "title": "Spirit Tense",
@@ -8498,6 +8899,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Tense Wilderness",
+      "file": "dnd%20music/Suspense_Tense%20Wilderness.mp3",
+      "fileName": "Suspense_Tense Wilderness.mp3",
+      "modifiedAt": 1777237839622.9116,
+      "tags": [
+        "Suspense"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Tension",
       "file": "dnd%20music/WitchHunt/Tension.mp3",
       "fileName": "Tension.mp3",
@@ -8536,6 +8947,14 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Pre-Battle"
       ],
+      "folderPath": ""
+    },
+    {
+      "title": "Thalen",
+      "file": "dnd%20music/Thalen.mp3",
+      "fileName": "Thalen.mp3",
+      "modifiedAt": 1777237839624.605,
+      "tags": [],
       "folderPath": ""
     },
     {
@@ -9016,6 +9435,17 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Under the Jungle Leaves",
+      "file": "dnd%20music/Atmos_Under%20the%20Jungle%20Leaves.mp3",
+      "fileName": "Atmos_Under the Jungle Leaves.mp3",
+      "modifiedAt": 1783496863893.0725,
+      "tags": [
+        "Atmos",
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Underdark",
       "file": "dnd%20music/Tension_Underdark.mp3",
       "fileName": "Tension_Underdark.mp3",
@@ -9139,6 +9569,40 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": "WitchHunt"
     },
     {
+      "title": "Venture Co Battlefield",
+      "file": "dnd%20music/Venture%20Co%20Battlefield.mp3",
+      "fileName": "Venture Co Battlefield.mp3",
+      "modifiedAt": 1783811398996.927,
+      "tags": [
+        "Battle"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Venture Co Pre Rig",
+      "file": "dnd%20music/Venture%20Co%20Pre-Rig.mp3",
+      "fileName": "Venture Co Pre-Rig.mp3",
+      "modifiedAt": 1783807234328.773,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
+      "title": "Venture Co Rig",
+      "file": "dnd%20music/Venture%20Co%20Rig.mp3",
+      "fileName": "Venture Co Rig.mp3",
+      "modifiedAt": 1783811029688.933,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
+      "title": "Venture Co Still",
+      "file": "dnd%20music/Venture%20Co%20Still.mp3",
+      "fileName": "Venture Co Still.mp3",
+      "modifiedAt": 1783811453417.4077,
+      "tags": [],
+      "folderPath": ""
+    },
+    {
       "title": "videoplayback",
       "file": "dnd%20music/Island/videoplayback.mp3",
       "fileName": "videoplayback.mp3",
@@ -9177,6 +9641,16 @@ window.DM_AUDIO_MANIFEST = {
       "tags": [
         "Mystic",
         "Tension"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Void",
+      "file": "dnd%20music/Void.mp3",
+      "fileName": "Void.mp3",
+      "modifiedAt": 1777237839625.6099,
+      "tags": [
+        "Mystic"
       ],
       "folderPath": ""
     },
@@ -9254,6 +9728,16 @@ window.DM_AUDIO_MANIFEST = {
       "modifiedAt": 1777237839531.5808,
       "tags": [
         "Calm"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Wasteland Hope",
+      "file": "dnd%20music/Adventure_Wasteland%20Hope.mp3",
+      "fileName": "Adventure_Wasteland Hope.mp3",
+      "modifiedAt": 1783496802229.8203,
+      "tags": [
+        "Adventure"
       ],
       "folderPath": ""
     },
@@ -9640,6 +10124,16 @@ window.DM_AUDIO_MANIFEST = {
       "folderPath": ""
     },
     {
+      "title": "Zul Challenge",
+      "file": "dnd%20music/Zul%20Challenge.mp3",
+      "fileName": "Zul Challenge.mp3",
+      "modifiedAt": 1777237839628.1123,
+      "tags": [
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
       "title": "Zul Chill",
       "file": "dnd%20music/Zul%20Chill.mp3",
       "fileName": "Zul Chill.mp3",
@@ -9654,6 +10148,16 @@ window.DM_AUDIO_MANIFEST = {
       "file": "dnd%20music/Zul%20Dawn.mp3",
       "fileName": "Zul Dawn.mp3",
       "modifiedAt": 1777237839608.8235,
+      "tags": [
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Zul Downs",
+      "file": "dnd%20music/Zul%20Downs.mp3",
+      "fileName": "Zul Downs.mp3",
+      "modifiedAt": 1777237839628.1123,
       "tags": [
         "Location"
       ],
@@ -9675,6 +10179,16 @@ window.DM_AUDIO_MANIFEST = {
       "file": "dnd%20music/Zul_Feast.mp3",
       "fileName": "Zul_Feast.mp3",
       "modifiedAt": 1777237839609.858,
+      "tags": [
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Zul Festival",
+      "file": "dnd%20music/Zul_Festival.mp3",
+      "fileName": "Zul_Festival.mp3",
+      "modifiedAt": 1777237839628.1123,
       "tags": [
         "Location"
       ],
@@ -9767,6 +10281,16 @@ window.DM_AUDIO_MANIFEST = {
       "file": "dnd%20music/Zul%20Return.mp3",
       "fileName": "Zul Return.mp3",
       "modifiedAt": 1777237839609.341,
+      "tags": [
+        "Location"
+      ],
+      "folderPath": ""
+    },
+    {
+      "title": "Zul Sneaky",
+      "file": "dnd%20music/Zul%20Sneaky.mp3",
+      "fileName": "Zul Sneaky.mp3",
+      "modifiedAt": 1777237839628.1123,
       "tags": [
         "Location"
       ],

@@ -43,9 +43,6 @@
     "files": [
       "electron/**/*",
       "Index.html",
-      "Ambience.html",
-      "ArcaneSurge.html",
-      "Roller.html",
       "backgrounds/**/*",
       "data/**/*",
       "dnd music/**/*",

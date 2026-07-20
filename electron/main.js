@@ -23,6 +23,22 @@ function getLootTablesPath() {
   return path.join(app.getAppPath(), "data", "loot-tables.json");
 }
 
+function getWritableAssetRootPath() {
+  if (process.env.PORTABLE_EXECUTABLE_DIR) {
+    return process.env.PORTABLE_EXECUTABLE_DIR;
+  }
+
+  if (app.isPackaged) {
+    return path.dirname(process.execPath);
+  }
+
+  return app.getAppPath();
+}
+
+function getBackgroundsDirPath() {
+  return path.join(getWritableAssetRootPath(), "backgrounds");
+}
+
 function getSecretsDirPath() {
   return path.join(app.getPath("userData"), "secrets");
 }
@@ -61,6 +77,88 @@ function readAudioManifest() {
 async function readLootTables() {
   const text = await fs.promises.readFile(getLootTablesPath(), "utf8");
   return JSON.parse(text);
+}
+
+function slugifyFilePart(value) {
+  const slug = String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug || "scene";
+}
+
+function getImageExtension(mimeType) {
+  switch (mimeType) {
+    case "image/jpeg":
+      return "jpg";
+    case "image/png":
+      return "png";
+    case "image/webp":
+      return "webp";
+    default:
+      return "";
+  }
+}
+
+async function getUniqueFilePath(dirPath, baseName, extension) {
+  let index = 0;
+
+  while (true) {
+    const suffix = index === 0 ? "" : `-${index + 1}`;
+    const filePath = path.join(dirPath, `${baseName}${suffix}.${extension}`);
+
+    try {
+      const handle = await fs.promises.open(filePath, "wx");
+      return { filePath, handle };
+    } catch (err) {
+      if (err && err.code === "EEXIST") {
+        index += 1;
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
+async function saveGeneratedBackgroundImage(payload) {
+  const mimeType = typeof payload?.mimeType === "string" ? payload.mimeType : "image/png";
+  const extension = getImageExtension(mimeType);
+  const imageData = typeof payload?.data === "string" ? payload.data : "";
+
+  if (!extension) {
+    throw new Error(`Unsupported generated image format: ${mimeType}`);
+  }
+
+  if (!imageData) {
+    throw new Error("Generated image data was empty.");
+  }
+
+  const buffer = Buffer.from(imageData, "base64");
+  if (buffer.length === 0) {
+    throw new Error("Generated image data could not be decoded.");
+  }
+
+  const backgroundsDir = getBackgroundsDirPath();
+  await fs.promises.mkdir(backgroundsDir, { recursive: true });
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const stylePart = slugifyFilePart(payload?.styleId);
+  const baseName = `background-${stylePart}-${timestamp}`;
+  const { filePath, handle } = await getUniqueFilePath(backgroundsDir, baseName, extension);
+
+  try {
+    await handle.writeFile(buffer);
+  } finally {
+    await handle.close();
+  }
+
+  return {
+    fileName: path.basename(filePath),
+    filePath,
+    relativePath: path.join("backgrounds", path.basename(filePath))
+  };
 }
 
 async function readGeminiApiKey() {
@@ -266,6 +364,10 @@ function registerLootTableHandlers() {
   ipcMain.handle("dmtool:loot-tables:get", () => readLootTables());
 }
 
+function registerBackgroundImageHandlers() {
+  ipcMain.handle("dmtool:background-images:save-generated", (_event, payload) => saveGeneratedBackgroundImage(payload));
+}
+
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1520,
@@ -322,9 +424,6 @@ async function watchForDevReload() {
   const watcher = chokidar.watch(
     [
       "Index.html",
-      "Ambience.html",
-      "ArcaneSurge.html",
-      "Roller.html",
       "electron/**/*.js",
       "data/**/*",
       "dnd music/**/*",
@@ -391,6 +490,7 @@ if (!gotSingleInstanceLock) {
     registerProtocolClient();
     registerSecretHandlers();
     registerLootTableHandlers();
+    registerBackgroundImageHandlers();
     pendingMusicCommand = getProtocolCommandFromArgv(process.argv) || pendingMusicCommand;
     createMenu();
     createMainWindow();

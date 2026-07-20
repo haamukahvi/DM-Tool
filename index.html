@@ -742,10 +742,161 @@
         return file;
       }
     };
+    const shouldUseAudioCors = (url) => {
+      try {
+        const parsedUrl = new URL(url, window.location.href);
+        return /^https?:$/.test(parsedUrl.protocol) && parsedUrl.origin !== window.location.origin;
+      } catch (err) {
+        return false;
+      }
+    };
 
     const LOOT_TABLES_PATH = "data/loot-tables.json";
     const SHEET_TABS = ["Weapons", "Armor", "Potions", "Scrolls", "Treasure", "Trade goods", "Wondrous", "Trinkets"];
     const UI_CATEGORIES = ["Random", "Equipment", ...SHEET_TABS];
+    const LOOT_THEME_PROFILES = [
+      { id: "any", label: "Any Source", boost: {} },
+      {
+        id: "magical",
+        label: "Magical Cache",
+        boost: { arcane: 14, magical: 8, staff: 7, wand: 7, scroll: 7, book: 5, potion: 4, ring: 3, amulet: 3, gem: 3, ley: 4, titan: 2, wondrous: 2 },
+        avoid: { food: 0.35, trade: 0.45, mundane: 0.5 }
+      },
+      {
+        id: "arcane",
+        label: "Arcane",
+        boost: { arcane: 16, magical: 10, dalaran: 10, "kirin-tor": 9, ley: 8, staff: 6, wand: 6, scroll: 6, book: 5, potion: 3, ring: 2, amulet: 2, titan: 2 },
+        avoid: { mundane: 0.35, food: 0.35, crude: 0.45, nature: 0.55 }
+      },
+      {
+        id: "horde",
+        label: "Horde",
+        boost: { horde: 16, orgrimmar: 12, orc: 10, troll: 8, zandalari: 6, tauren: 8, forsaken: 8, goblin: 7, bloodelf: 7, military: 3, food: 2 },
+        avoid: { alliance: 0.08, stormwind: 0.05, dwarven: 0.15, gnomish: 0.15, nightelf: 0.15 }
+      },
+      {
+        id: "alliance",
+        label: "Alliance",
+        boost: { alliance: 16, stormwind: 12, dwarven: 8, gnomish: 8, nightelf: 8, worgen: 6, draenei: 7, holy: 4, noble: 3, military: 3 },
+        avoid: { horde: 0.08, orgrimmar: 0.05, orc: 0.15, forsaken: 0.15, tauren: 0.15, troll: 0.18 }
+      },
+      {
+        id: "ruins",
+        label: "Ruins",
+        boost: { ruins: 14, ancient: 10, relic: 9, treasure: 6, titan: 6, highborne: 6, undead: 4, void: 4, dragon: 3, scroll: 3, book: 3, gem: 2 },
+        avoid: { food: 0.3, trade: 0.45, market: 0.35 }
+      },
+      {
+        id: "military",
+        label: "Military",
+        boost: { military: 16, weapon: 8, armor: 8, shield: 6, ammunition: 5, explosive: 5, banner: 5, engineering: 3, supply: 3, potion: 2 },
+        avoid: { noble: 0.35, jewelry: 0.45, food: 0.55 }
+      },
+      {
+        id: "noble",
+        label: "Noble",
+        boost: { noble: 16, jewelry: 10, treasure: 8, gem: 7, cloth: 5, holy: 4, book: 3, scroll: 3, potion: 2, alliance: 2, trade: 2 },
+        avoid: { crude: 0.35, explosive: 0.35, undead: 0.45, fel: 0.4 }
+      },
+      {
+        id: "temple",
+        label: "Temple / Holy",
+        boost: { holy: 16, temple: 12, argent: 9, light: 8, paladin: 6, cleric: 5, undead: 3, scroll: 3, potion: 3, water: 3, noble: 2 },
+        avoid: { fel: 0.08, demonic: 0.08, void: 0.12, undead: 0.45 }
+      },
+      {
+        id: "nature",
+        label: "Nature / Wilds",
+        boost: { nature: 16, druidic: 10, beast: 8, plant: 8, elune: 5, cenarion: 8, nightelf: 5, tauren: 5, food: 2, potion: 2 },
+        avoid: { engineering: 0.25, fel: 0.08, demonic: 0.1, undead: 0.2 }
+      },
+      {
+        id: "druidic",
+        label: "Druidic / Cenarion",
+        boost: { druidic: 16, cenarion: 12, elune: 9, moonwell: 8, nature: 8, plant: 7, beast: 5, staff: 5, potion: 4, nightelf: 4, tauren: 3 },
+        avoid: { engineering: 0.18, explosive: 0.25, fel: 0.06, demonic: 0.08, undead: 0.18 }
+      },
+      {
+        id: "undead",
+        label: "Undead / Scourge",
+        boost: { undead: 16, scourge: 12, necrotic: 9, shadow: 6, forsaken: 5, ebonblade: 5, bone: 4, cursed: 4, plague: 4 },
+        avoid: { holy: 0.15, light: 0.15, nature: 0.35 }
+      },
+      {
+        id: "engineering",
+        label: "Engineering",
+        boost: { engineering: 16, gnomish: 10, goblin: 10, mechagnome: 10, explosive: 7, firearm: 6, clockwork: 6, gadget: 5, titan: 3 },
+        avoid: { nature: 0.35, holy: 0.45 }
+      },
+      {
+        id: "goblin",
+        label: "Goblin",
+        boost: { goblin: 16, engineering: 10, explosive: 8, gadget: 7, firearm: 6, trade: 5, market: 5, crude: 4, poison: 3, pirate: 3, horde: 2 },
+        avoid: { holy: 0.35, noble: 0.4, nightelf: 0.2, druidic: 0.2 }
+      },
+      {
+        id: "fel",
+        label: "Fel / Demonic",
+        boost: { fel: 16, demonic: 12, warlock: 8, demonhunter: 7, fire: 3, shadow: 3, cursed: 4, legion: 8 },
+        avoid: { holy: 0.08, light: 0.08, nature: 0.2 }
+      },
+      {
+        id: "void",
+        label: "Void / Old God",
+        boost: { void: 16, oldgod: 12, shadow: 8, psychic: 7, aberration: 6, faceless: 8, tentacle: 5, cursed: 4 },
+        avoid: { holy: 0.12, light: 0.12 }
+      },
+      {
+        id: "troll",
+        label: "Troll / Zandalari",
+        boost: { troll: 16, zandalari: 14, loa: 10, voodoo: 8, jungle: 5, horde: 4, beast: 3, ancient: 3 },
+        avoid: { alliance: 0.18, gnomish: 0.35 }
+      },
+      {
+        id: "dragon",
+        label: "Dragon",
+        boost: { dragon: 16, dragonflight: 12, wyrmrest: 10, scale: 7, fire: 3, frost: 3, lightning: 3, acid: 3, treasure: 3 },
+        avoid: { mundane: 0.45 }
+      },
+      {
+        id: "maritime",
+        label: "Maritime / Coastal",
+        boost: { maritime: 16, water: 10, naga: 8, nazjatar: 8, "kul-tiras": 7, pirate: 7, ship: 6, fish: 4, coastal: 5, trade: 2 },
+        avoid: { fire: 0.3, desert: 0.25 }
+      },
+      {
+        id: "market",
+        label: "Trade / Market",
+        boost: { market: 16, trade: 12, treasure: 7, food: 6, cloth: 5, gem: 5, potion: 4, scroll: 3, tool: 3, jewelry: 3 },
+        avoid: { cursed: 0.35, artifact: 0.15 }
+      },
+      {
+        id: "auction",
+        label: "Auction House",
+        boost: { market: 16, trade: 12, treasure: 10, jewelry: 8, gem: 8, wondrous: 6, magical: 5, potion: 5, scroll: 5, cloth: 4, tool: 3, noble: 3 },
+        avoid: { cursed: 0.25, undead: 0.35, fel: 0.28, void: 0.28, artifact: 0.25, mundane: 0.55 }
+      },
+      {
+        id: "black-market",
+        label: "Black Market",
+        boost: { "black-market": 18, contraband: 14, cursed: 10, artifact: 8, poison: 8, explosive: 7, pirate: 7, criminal: 7, goblin: 5, fel: 4, void: 4, undead: 4, shadow: 4, warlock: 4 },
+        avoid: { holy: 0.18, light: 0.18, temple: 0.2, commoner: 0.35, mundane: 0.55 }
+      },
+      {
+        id: "commoner",
+        label: "Commoner / Household",
+        boost: { commoner: 16, household: 12, mundane: 10, food: 8, supply: 7, tool: 6, cloth: 5, trinket: 4, market: 3, trade: 2 },
+        avoid: { artifact: 0.04, legendary: 0.08, magical: 0.22, wondrous: 0.25, noble: 0.35, fel: 0.08, void: 0.08, undead: 0.12 }
+      },
+      {
+        id: "criminal",
+        label: "Criminal / Bandit",
+        boost: { criminal: 16, bandit: 12, rogue: 10, contraband: 9, pirate: 6, poison: 6, weapon: 5, ammunition: 4, tool: 4, market: 3, cursed: 2 },
+        avoid: { holy: 0.3, temple: 0.25, noble: 0.45, artifact: 0.25 }
+      }
+    ];
+    const LOOT_THEME_BY_ID = Object.fromEntries(LOOT_THEME_PROFILES.map((theme) => [theme.id, theme]));
+    const LOOT_THEME_OPTIONS = LOOT_THEME_PROFILES.map((theme) => ({ value: theme.id, label: theme.label }));
 
     const FALLBACK_ITEMS = [
       { name: "Demo Longsword", rarity: "Common", description: "A basic sword. Check the internal loot table file if real items do not load.", value: 1500, category: "Weapons" },
@@ -797,6 +948,141 @@
       }
     };
     const RARITY_BG_DOT = { "Common": "bg-slate-500", "Uncommon": "bg-emerald-500", "Rare": "bg-cyan-500", "Very Rare": "bg-purple-500", "Epic": "bg-purple-500", "Legendary": "bg-amber-500", "Artifact": "bg-rose-600" };
+
+    const normalizeLootTag = (tag) => (tag || "").toString().trim().toLowerCase().replace(/['']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+    const addLootTag = (tags, tag) => {
+      const normalized = normalizeLootTag(tag);
+      if (normalized) tags.add(normalized);
+    };
+
+    const addLootTags = (tags, tagList) => {
+      tagList.forEach((tag) => addLootTag(tags, tag));
+    };
+
+    const textMatches = (text, pattern) => pattern.test(text);
+
+    const inferLootTags = (rawItem, category) => {
+      const tags = new Set();
+      const explicitTags = rawItem.tags || rawItem.Tags || rawItem.tag || rawItem.Tag;
+      if (Array.isArray(explicitTags)) {
+        explicitTags.forEach((tag) => addLootTag(tags, tag));
+      } else if (explicitTags) {
+        explicitTags.toString().split(/[,|]/).forEach((tag) => addLootTag(tags, tag));
+      }
+
+      const name = rawItem.name || rawItem.Name || "";
+      const description = rawItem.description || rawItem.Description || rawItem.desc || "";
+      const text = `${name} ${description}`.toLowerCase();
+      const normalizedCategory = normalizeLootTag(category);
+      addLootTag(tags, normalizedCategory);
+
+      if (category === "Weapons") addLootTags(tags, ["equipment", "weapon", "military"]);
+      if (category === "Armor") addLootTags(tags, ["equipment", "armor", "military"]);
+      if (category === "Potions") addLootTags(tags, ["potion", "consumable", "alchemy", "magical"]);
+      if (category === "Scrolls") addLootTags(tags, ["scroll", "consumable", "magical", "arcane"]);
+      if (category === "Treasure") addLootTags(tags, ["treasure", "noble", "market"]);
+      if (category === "Trade goods") addLootTags(tags, ["trade", "market"]);
+      if (category === "Wondrous") addLootTags(tags, ["wondrous", "magical"]);
+      if (category === "Trinkets") addLootTags(tags, ["trinket", "market"]);
+
+      if (textMatches(text, /\b(staff|quarterstaff)\b/)) addLootTags(tags, ["staff", "weapon", "magical"]);
+      if (textMatches(text, /\bwand\b/)) addLootTags(tags, ["wand", "magical", "arcane"]);
+      if (textMatches(text, /\bscroll\b/)) addLootTags(tags, ["scroll", "arcane"]);
+      if (textMatches(text, /\b(book|tome|codicil|grimoire|manual|primer|spellbook)\b/)) addLootTags(tags, ["book", "arcane", "noble"]);
+      if (textMatches(text, /\b(ring|band)\b/)) addLootTags(tags, ["ring", "jewelry", "noble"]);
+      if (textMatches(text, /\b(amulet|necklace|pendant|talisman|choker|brooch|medallion)\b/)) addLootTags(tags, ["amulet", "jewelry", "noble"]);
+      if (textMatches(text, /\b(gem|ruby|sapphire|emerald|diamond|opal|pearl|topaz|jacinth|onyx|moonstone|quartz|jade|garnet|spinel|tourmaline|zircon|agate)\b/)) addLootTags(tags, ["gem", "jewelry", "treasure", "noble"]);
+      if (textMatches(text, /\b(cloth|silk|robe|vestment|mantle|cloak|linen|wool|weave|embroidery|doublet)\b/)) addLootTags(tags, ["cloth", "noble", "trade"]);
+      if (textMatches(text, /\b(ore|bar|ingot|iron|silver|gold|platinum|copper|steel|mithral|adamantite|obsidium|thorium|elementium)\b/)) addLootTags(tags, ["metal", "trade", "market"]);
+      if (textMatches(text, /\b(food|ration|sausage|bread|meat|fish|ale|beer|wine|spice|pepper|saffron|salt|wheat|flour|honey|tea|oil|water|drink|feast)\b/)) addLootTags(tags, ["food", "supply", "market"]);
+      if (textMatches(text, /\b(tool|kit|supplies|hammer|pick|shovel|rope|chain|lock|lantern|torch|tent|pack|pouch|satchel)\b/)) addLootTags(tags, ["tool", "supply", "market"]);
+
+      if (textMatches(text, /\b(arcane|mana|mage|wizard|spell|spellcaster|kirin tor|dalaran|ley|enchant|illusion|chronomancy|dunamancy|teleport|portal|magic missile|fireball|counterspell)\b/)) addLootTags(tags, ["arcane", "magical"]);
+      if (textMatches(text, /\bdalaran\b/)) addLootTag(tags, "dalaran");
+      if (textMatches(text, /\bkirin tor\b/)) addLootTag(tags, "kirin-tor");
+      if (textMatches(text, /\bley\b/)) addLootTag(tags, "ley");
+      if (textMatches(text, /\b(holy|argent|paladin|cleric|prayer|blessing|radiant|sunwalker|naaru|lightforged|sacred|saint|temple|censer|the light|holy light)\b/)) addLootTags(tags, ["holy", "light", "temple"]);
+      if (textMatches(text, /\bpaladin\b/)) addLootTag(tags, "paladin");
+      if (textMatches(text, /\bcleric\b/)) addLootTag(tags, "cleric");
+      if (textMatches(text, /\b(fel|demon|demonic|dreadlord|eredar|warlock|hellfire|illidari|legion|infernal)\b/)) addLootTags(tags, ["fel", "demonic"]);
+      if (textMatches(text, /\bwarlock\b/)) addLootTag(tags, "warlock");
+      if (textMatches(text, /\b(demon hunter|demonhunter|illidari)\b/)) addLootTag(tags, "demonhunter");
+      if (textMatches(text, /\blegion\b/)) addLootTag(tags, "legion");
+      if (textMatches(text, /\b(void|old god|old gods|faceless|tentacle|psychic|madness|aberration|shadow|nightmare|xalatath|whisper)\b/)) addLootTags(tags, ["void", "oldgod", "shadow", "aberration"]);
+      if (textMatches(text, /\bpsychic\b/)) addLootTag(tags, "psychic");
+      if (textMatches(text, /\bfaceless\b/)) addLootTag(tags, "faceless");
+      if (textMatches(text, /\btentacle\b/)) addLootTag(tags, "tentacle");
+      if (textMatches(text, /\b(undead|scourge|lich|necrotic|death knight|ebon blade|forsaken|plague|bone|skull|corpse|grave|wraith|ghost|vampire)\b/)) addLootTags(tags, ["undead", "necrotic"]);
+      if (textMatches(text, /\bscourge\b/)) addLootTag(tags, "scourge");
+      if (textMatches(text, /\b(ebon blade|ebonblade)\b/)) addLootTag(tags, "ebonblade");
+      if (textMatches(text, /\bplague\b/)) addLootTag(tags, "plague");
+      if (textMatches(text, /\bbone\b/)) addLootTag(tags, "bone");
+      if (textMatches(text, /\b(nature|druid|cenarion|elune|emerald dream|wild|woodland|beast|plant|flower|root|thorn|vine|moonwell|treant|animal|serpent|spider)\b/)) addLootTags(tags, ["nature", "druidic", "beast"]);
+      if (textMatches(text, /\b(plant|flower|root|thorn|vine|treant)\b/)) addLootTag(tags, "plant");
+      if (textMatches(text, /\bcenarion\b/)) addLootTag(tags, "cenarion");
+      if (textMatches(text, /\belune\b/)) addLootTag(tags, "elune");
+      if (textMatches(text, /\bmoonwell\b/)) addLootTag(tags, "moonwell");
+      if (textMatches(text, /\b(engineer|engineering|gnomish|gnome|mechagnome|goblin|clockwork|mechanical|gadget|gear|cannon|grenade|bomb|gun|rifle|pistol|firearm|propulsion|rotor|ornithopter|gyrocopter)\b/)) addLootTags(tags, ["engineering", "gadget"]);
+      if (textMatches(text, /\bclockwork\b/)) addLootTag(tags, "clockwork");
+      if (textMatches(text, /\b(gun|rifle|pistol|firearm)\b/)) addLootTag(tags, "firearm");
+      if (textMatches(text, /\b(titan|titan-forged|uld|keeper|ley core|earthen|runic|rune|reorigination)\b/)) addLootTags(tags, ["titan", "ancient", "relic"]);
+      if (textMatches(text, /\b(ancient|ruin|ruins|relic|artifact|idol|statuette|sarcophagus|crypt|tomb|lost|forgotten|buried|excavated)\b/)) addLootTags(tags, ["ruins", "ancient", "relic"]);
+      if (textMatches(text, /\bhighborne\b/)) addLootTag(tags, "highborne");
+
+      if (textMatches(text, /\b(horde|orgrimmar|orc|warsong|frostwolf|darkspear|tauren|forsaken|blood elf|sindorei|bilgewater|goblin)\b/)) addLootTag(tags, "horde");
+      if (textMatches(text, /\borgrimmar\b/)) addLootTag(tags, "orgrimmar");
+      if (textMatches(text, /\b(orc|warsong|frostwolf|dragonmaw)\b/)) addLootTag(tags, "orc");
+      if (textMatches(text, /\b(troll|zandalari|gurubashi|darkspear|drakkari|loa|voodoo|jungle)\b/)) addLootTags(tags, ["troll", "zandalari"]);
+      if (textMatches(text, /\bloa\b/)) addLootTag(tags, "loa");
+      if (textMatches(text, /\bvoodoo\b/)) addLootTag(tags, "voodoo");
+      if (textMatches(text, /\bjungle\b/)) addLootTag(tags, "jungle");
+      if (textMatches(text, /\b(tauren|highmountain|anshe)\b/)) addLootTag(tags, "tauren");
+      if (textMatches(text, /\b(forsaken|undercity)\b/)) addLootTag(tags, "forsaken");
+      if (textMatches(text, /\b(goblin|bilgewater|steamwheedle|venture co)\b/)) addLootTag(tags, "goblin");
+      if (textMatches(text, /\b(blood elf|sindorei|quelthalas|sunreaver)\b/)) addLootTag(tags, "bloodelf");
+
+      if (textMatches(text, /\b(alliance|stormwind|dwarven|dwarf|ironforge|gnomish|gnome|mechagnome|night elf|kaldorei|draenei|lightforged|worgen|gilnean|si:7|silver hand)\b/)) addLootTag(tags, "alliance");
+      if (textMatches(text, /\bstormwind\b/)) addLootTag(tags, "stormwind");
+      if (textMatches(text, /\b(dwarven|dwarf|ironforge|dark iron|wildhammer|bronzebeard)\b/)) addLootTag(tags, "dwarven");
+      if (textMatches(text, /\b(gnomish|gnome|mechagnome|gnomeregan)\b/)) addLootTag(tags, "gnomish");
+      if (textMatches(text, /\bmechagnome\b/)) addLootTag(tags, "mechagnome");
+      if (textMatches(text, /\b(night elf|kaldorei|elune|darnassus)\b/)) addLootTag(tags, "nightelf");
+      if (textMatches(text, /\b(draenei|lightforged|naaru|exodar)\b/)) addLootTag(tags, "draenei");
+      if (textMatches(text, /\b(worgen|gilnean|gilneas)\b/)) addLootTag(tags, "worgen");
+      if (textMatches(text, /\b(argents?|silver hand|scarlet crusade)\b/)) addLootTag(tags, "argent");
+
+      if (textMatches(text, /\b(dragon|dragonflight|wyrm|wyrmrest|drake|draconic|scale|neltharion|kalecgos|chromatic|red dragon|blue dragon|green dragon|black dragon|white dragon)\b/)) addLootTags(tags, ["dragon", "dragonflight"]);
+      if (textMatches(text, /\b(scale|scales)\b/)) addLootTag(tags, "scale");
+      if (textMatches(text, /\b(naga|nazjatar|sea|ocean|water|ship|boat|sail|sailing|pirate|coast|coastal|maritime|trident|fish|pearl|shell|barnacle|kul tiras|tide|wave)\b/)) addLootTags(tags, ["maritime", "water"]);
+      if (textMatches(text, /\bnaga\b/)) addLootTag(tags, "naga");
+      if (textMatches(text, /\bnazjatar\b/)) addLootTag(tags, "nazjatar");
+      if (textMatches(text, /\bkul tiras\b/)) addLootTag(tags, "kul-tiras");
+      if (textMatches(text, /\b(pirate|buccaneer)\b/)) addLootTag(tags, "pirate");
+      if (textMatches(text, /\b(ship|boat|sail|sailing)\b/)) addLootTag(tags, "ship");
+      if (textMatches(text, /\b(coast|coastal)\b/)) addLootTag(tags, "coastal");
+      if (textMatches(text, /\bfish\b/)) addLootTag(tags, "fish");
+      if (textMatches(text, /\b(fire|flame|burning|magma|molten|firelands|ragnaros)\b/)) addLootTag(tags, "fire");
+      if (textMatches(text, /\b(frost|ice|cold|winter|snow|winterspring|northrend)\b/)) addLootTag(tags, "frost");
+      if (textMatches(text, /\b(lightning|storm|thunder|tempest|skywall)\b/)) addLootTags(tags, ["lightning", "storm"]);
+      if (textMatches(text, /\b(acid|poison|venom|toxin)\b/)) addLootTags(tags, ["acid", "poison"]);
+      if (textMatches(text, /\b(banner|standard|uniform|barracks|battlefield|watch|guard|soldier|war|army|military|shield|armor|plate|mail|sword|axe|mace|spear|bow|crossbow|arrow|javelin|ammunition)\b/)) addLootTag(tags, "military");
+      if (textMatches(text, /\bshield\b/)) addLootTag(tags, "shield");
+      if (textMatches(text, /\b(banner|standard)\b/)) addLootTag(tags, "banner");
+      if (textMatches(text, /\b(noble|royal|lord|lady|crown|circlet|ceremonial|estate|fine|jeweled|bejeweled|velvet|ivory|filigree)\b/)) addLootTag(tags, "noble");
+      if (textMatches(text, /\bcrude\b/)) addLootTag(tags, "crude");
+      if (textMatches(text, /\b(cursed|curse|corrupt|corruption|dark|black|shadow|void|fel|necrotic)\b/)) addLootTag(tags, "cursed");
+      if (textMatches(text, /\b(black market|contraband|stolen|illegal|smuggled|forbidden|fence|fenced goods)\b/)) addLootTags(tags, ["black-market", "contraband"]);
+      if (textMatches(text, /\b(rogue|thief|thieves|bandit|brigand|smuggler|smuggled|pickpocket|assassin|lockpick|lockpicks|trap|poisoner)\b/)) addLootTags(tags, ["criminal", "rogue"]);
+      if (textMatches(text, /\b(bandit|brigand)\b/)) addLootTag(tags, "bandit");
+      if (textMatches(text, /\b(bomb|grenade|gunpowder|explosive|blasting|smokepowder)\b/)) addLootTag(tags, "explosive");
+      if (textMatches(text, /\b(bow|crossbow|gun|rifle|pistol|sling|dart|javelin|arrow|ammunition)\b/)) addLootTag(tags, "ammunition");
+      if (textMatches(text, /\b(common clothes|blanket|bedroll|bucket|chalk|soap|string|whetstone|basket|barrel|flask|jug|pitcher)\b/)) addLootTag(tags, "mundane");
+      if (textMatches(text, /\b(commoner|peasant|farmer|farmhand|villager|household|kitchen|pantry|broom|mop|blanket|bedroll|bucket|soap|basket|barrel|jug|pitcher|tavern|inn|ale|beer|bread|ration)\b/)) addLootTags(tags, ["commoner", "household", "mundane"]);
+      if (textMatches(text, /\bdesert\b/)) addLootTag(tags, "desert");
+
+      return Array.from(tags).sort();
+    };
 
     const normalizeRarity = (r) => {
       if (!r) return "Common";
@@ -972,7 +1258,8 @@
       styleId: "dm_background_style_id",
       prompt: "dm_background_prompt",
       context: "dm_background_context",
-      styleOverrides: "dm_background_style_overrides"
+      styleOverrides: "dm_background_style_overrides",
+      temperature: "dm_background_temperature"
     };
 
     const PORTRAIT_STYLES = [
@@ -1273,7 +1560,7 @@
               <div className={activeView === "loot" ? "flex h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] min-h-0" : "hidden"}>
                 <LootRollerPanel onOpenSidebar={toggleSidebar} />
               </div>
-              <div className={activeView === "surge" ? "block" : "hidden"}>
+              <div className={activeView === "surge" ? "flex h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] min-h-0" : "hidden"}>
                 <ArcaneSurgePanel onOpenSidebar={toggleSidebar} />
               </div>
               <div className={activeView === "notes" ? "block" : "hidden"}>
@@ -1340,8 +1627,12 @@
         if (audioContextRef.current.state === "suspended") await audioContextRef.current.resume();
 
         setPendingUrl(track.file);
-        const audio = new Audio(resolveAssetUrl(track.file));
-        audio.crossOrigin = "anonymous";
+        const audioUrl = resolveAssetUrl(track.file);
+        const audio = new Audio();
+        if (shouldUseAudioCors(audioUrl)) {
+          audio.crossOrigin = "anonymous";
+        }
+        audio.src = audioUrl;
         audio.loop = true;
 
         const source = audioContextRef.current.createMediaElementSource(audio);
@@ -1587,6 +1878,8 @@
       const [isTransitioning, setIsTransitioning] = useState(false);
       const [volume, setVolume] = useState(0.75);
       const [tune, setTune] = useState(1);
+      const volumeRef = useRef(volume);
+      const tuneRef = useRef(tune);
       const [musicProgress, setMusicProgress] = useState({ currentTime: 0, duration: 0 });
       const [copiedTrackFile, setCopiedTrackFile] = useState("");
       const [musicTagOverrides, setMusicTagOverrides] = useState(() => {
@@ -1705,14 +1998,18 @@
       };
 
       useEffect(() => {
-        if (activeAudioRef.current && isPlaying && !isTransitioning) {
-          activeAudioRef.current.volume = volume;
+        volumeRef.current = volume;
+        const activeAudio = activeAudioRef.current;
+        if (activeAudio && isPlaying && !isTransitioning && !activeAudio._dmFadeInterval) {
+          activeAudio.volume = volume;
         }
       }, [volume, isPlaying, isTransitioning]);
 
       useEffect(() => {
+        tuneRef.current = tune;
         applyTune(activeAudioRef.current, tune);
         applyTune(incomingAudioRef.current, tune);
+        activeAudioRef.current?._dmScheduleLoopCrossfade?.();
       }, [tune]);
 
       useEffect(() => {
@@ -1765,22 +2062,26 @@
         const audio = new Audio(resolveAssetUrl(track.file));
         audio.loop = false;
         audio.volume = 0;
-        applyTune(audio, tune);
+        applyTune(audio, tuneRef.current);
         audio._dmTrack = track;
         audio._dmStopped = false;
         musicAudiosRef.current.add(audio);
         const loopFadeDuration = 2000;
+        const getWallMsUntilEnd = () => {
+          const playbackRate = Number.isFinite(audio.playbackRate) && audio.playbackRate > 0 ? audio.playbackRate : 1;
+          return ((audio.duration - audio.currentTime) * 1000) / playbackRate;
+        };
         const scheduleLoopCrossfade = () => {
           clearTimeout(audio._dmLoopTimer);
           if (audio._dmStopped || activeAudioRef.current !== audio) return;
           if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-          const msUntilFade = Math.max(0, ((audio.duration - audio.currentTime) * 1000) - loopFadeDuration);
+          const msUntilFade = Math.max(0, getWallMsUntilEnd() - loopFadeDuration);
           audio._dmLoopTimer = setTimeout(() => startLoopCrossfade(false), msUntilFade);
         };
         audio._dmScheduleLoopCrossfade = scheduleLoopCrossfade;
         const startLoopCrossfade = (fallback = false) => {
           if (loopCrossfadeRef.current || activeAudioRef.current !== audio) return;
-          if (!fallback && Number.isFinite(audio.duration) && ((audio.duration - audio.currentTime) * 1000) > loopFadeDuration + 120) return;
+          if (!fallback && Number.isFinite(audio.duration) && getWallMsUntilEnd() > loopFadeDuration + 120) return;
 
           const transitionId = transitionIdRef.current;
           loopCrossfadeRef.current = true;
@@ -1793,16 +2094,16 @@
               return;
             }
             const fadeDuration = loopFadeDuration;
+            activeAudioRef.current = nextAudio;
+            nextAudio._dmScheduleLoopCrossfade?.();
             fadeVolume(audio, audio.volume, 0, fadeDuration, () => stopAudio(audio));
-            fadeVolume(nextAudio, 0, volume, fadeDuration, () => {
+            fadeVolume(nextAudio, 0, volumeRef.current, fadeDuration, () => {
               if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== nextAudio) {
                 stopAudio(nextAudio);
                 return;
               }
-              activeAudioRef.current = nextAudio;
               incomingAudioRef.current = null;
               loopCrossfadeRef.current = false;
-              nextAudio._dmScheduleLoopCrossfade?.();
             });
           }).catch(() => {
             if (transitionId !== transitionIdRef.current) {
@@ -1812,7 +2113,7 @@
             incomingAudioRef.current = null;
             loopCrossfadeRef.current = false;
             audio.currentTime = 0;
-            audio.volume = volume;
+            audio.volume = volumeRef.current;
             audio.play().catch(() => {});
           });
         };
@@ -1846,6 +2147,7 @@
           incomingAudioRef.current = null;
         }
 
+        activeAudioRef.current = null;
         const incoming = createMusicAudio(track);
         incomingAudioRef.current = incoming;
         const outgoingAudios = [...musicAudiosRef.current].filter((audio) => audio !== incoming);
@@ -1864,14 +2166,14 @@
               stopAudio(incoming);
               return;
             }
-            fadeVolume(incoming, 0, volume, 4000, () => {
+            activeAudioRef.current = incoming;
+            incoming._dmScheduleLoopCrossfade?.();
+            fadeVolume(incoming, 0, volumeRef.current, 4000, () => {
               if (transitionId !== transitionIdRef.current || incomingAudioRef.current !== incoming) {
                 stopAudio(incoming);
                 return;
               }
-              activeAudioRef.current = incoming;
               incomingAudioRef.current = null;
-              incoming._dmScheduleLoopCrossfade?.();
               setCurrentTrack(track);
               setIsPlaying(true);
               setIsTransitioning(false);
@@ -1919,14 +2221,23 @@
         if (!audio) return;
 
         try {
-          transitionIdRef.current += 1;
+          const transitionId = transitionIdRef.current + 1;
+          transitionIdRef.current = transitionId;
           clearTransitionTimers();
           loopCrossfadeRef.current = false;
           const resumeVolume = audio.volume;
+          audio.volume = resumeVolume;
+          setIsTransitioning(true);
           await audio.play();
-          fadeVolume(audio, resumeVolume, volume, 4000);
+          if (transitionId !== transitionIdRef.current || activeAudioRef.current !== audio) return;
+          fadeVolume(audio, resumeVolume, volumeRef.current, 4000, () => {
+            if (transitionId !== transitionIdRef.current || activeAudioRef.current !== audio) return;
+            setIsTransitioning(false);
+          });
           setIsPlaying(true);
-        } catch (err) {}
+        } catch (err) {
+          setIsTransitioning(false);
+        }
       };
 
       useEffect(() => {
@@ -2422,6 +2733,10 @@
       const [showSettings, setShowSettings] = useState(false);
       const [activeTab, setActiveTab] = useState("Random");
       const [activeRarity, setActiveRarity] = useState("Any");
+      const [activeTheme, setActiveTheme] = useState(() => {
+        const savedTheme = localStorage.getItem("loot_roller_theme") || "any";
+        return LOOT_THEME_BY_ID[savedTheme] ? savedTheme : "any";
+      });
       const [rollAmount, setRollAmount] = useState(1);
       const [luckAmount, setLuckAmount] = useState(() => Math.max(1, Math.min(10, parseInt(localStorage.getItem("loot_roller_luck") || "1", 10) || 1)));
       const [history, setHistory] = useState([]);
@@ -2442,14 +2757,21 @@
       const flashClearTimeoutRef = useRef(null);
       useEffect(() => { loadData(false); }, []);
 
-      const normalizeItem = (rawItem, category) => ({
-        name: rawItem.name || rawItem.Name || "Unknown",
-        rarity: normalizeRarity(rawItem.rarity || rawItem.Rarity),
-        description: rawItem.description || rawItem.Description || rawItem.desc || "",
-        value: parseInt((rawItem.value || rawItem.Value || "0").toString().replace(/\D/g, "")) || 0,
-        category,
-        id: Math.random().toString(36).substr(2, 9)
-      });
+      const normalizeItem = (rawItem, category) => {
+        const rarity = normalizeRarity(rawItem.rarity || rawItem.Rarity);
+        const tags = new Set(inferLootTags(rawItem, category));
+        addLootTag(tags, rarity);
+
+        return {
+          name: rawItem.name || rawItem.Name || "Unknown",
+          rarity,
+          description: rawItem.description || rawItem.Description || rawItem.desc || "",
+          value: parseInt((rawItem.value || rawItem.Value || "0").toString().replace(/\D/g, "")) || 0,
+          category,
+          tags: Array.from(tags).sort(),
+          id: Math.random().toString(36).substr(2, 9)
+        };
+      };
 
       const loadData = async (forceRefresh = false) => {
         setIsLoaded(false); setLoadProgress(0); setError(null); setFailedTabs([]);
@@ -2507,6 +2829,11 @@
         setShowSettings(false);
       };
 
+      const handleThemeChange = (nextTheme) => {
+        localStorage.setItem("loot_roller_theme", nextTheme);
+        setActiveTheme(nextTheme);
+      };
+
       const getPool = () => {
         let pool = allItems;
         if (activeTab !== "Random") {
@@ -2523,14 +2850,49 @@
         return pool;
       };
 
+      const getThemeProfile = () => LOOT_THEME_BY_ID[activeTheme] || LOOT_THEME_BY_ID.any;
+
+      const getThemeWeight = (item, profile = getThemeProfile()) => {
+        if (!profile || profile.id === "any") return 1;
+        const tags = new Set(item.tags || []);
+        let weight = 1;
+
+        Object.entries(profile.boost || {}).forEach(([tag, boost]) => {
+          if (tags.has(normalizeLootTag(tag))) weight += boost;
+        });
+
+        Object.entries(profile.avoid || {}).forEach(([tag, multiplier]) => {
+          if (tags.has(normalizeLootTag(tag))) weight *= multiplier;
+        });
+
+        return Math.max(0.05, weight);
+      };
+
+      const pickWeightedItem = (items) => {
+        if (!items || items.length === 0) return null;
+        const profile = getThemeProfile();
+        if (profile.id === "any") return items[Math.floor(Math.random() * items.length)];
+
+        const weightedItems = items.map((item) => ({ item, weight: getThemeWeight(item, profile) }));
+        const totalWeight = weightedItems.reduce((sum, entry) => sum + entry.weight, 0);
+        if (totalWeight <= 0) return items[Math.floor(Math.random() * items.length)];
+
+        let roll = Math.random() * totalWeight;
+        for (const entry of weightedItems) {
+          roll -= entry.weight;
+          if (roll <= 0) return entry.item;
+        }
+        return weightedItems[weightedItems.length - 1].item;
+      };
+
       const pickItemFromPool = (pool) => {
         const groups = { "Artifact": [], "Legendary": [], "Very Rare": [], "Rare": [], "Uncommon": [], "Common": [] };
         pool.forEach((item) => groups[normalizeRarity(item.rarity)].push(item));
-        if (activeRarity !== "Any") return pool[Math.floor(Math.random() * pool.length)];
+        if (activeRarity !== "Any") return pickWeightedItem(pool);
 
         const selectedRarity = pickRarityForLuck();
         const selectedItem = pickFromRarityWithFallback(groups, selectedRarity);
-        return selectedItem || pool[Math.floor(Math.random() * pool.length)];
+        return selectedItem || pickWeightedItem(pool);
       };
 
       const pickRarityForLuck = () => {
@@ -2558,7 +2920,7 @@
         for (const fallbackRarity of fallbackOrder) {
           const rarityItems = groups[fallbackRarity] || [];
           if (rarityItems.length > 0) {
-            return rarityItems[Math.floor(Math.random() * rarityItems.length)];
+            return pickWeightedItem(rarityItems);
           }
         }
         return null;
@@ -2635,7 +2997,7 @@
           if (tick >= totalTicks - 2) {
             setRollingItem({ ...finalItem, temp: true, isFinalTick: true });
           } else {
-            const randomVisual = pool[Math.floor(Math.random() * pool.length)];
+            const randomVisual = pickWeightedItem(pool) || pool[Math.floor(Math.random() * pool.length)];
             setRollingItem({ ...randomVisual, temp: true, isFinalTick: false });
           }
           tick++;
@@ -2749,25 +3111,39 @@
               </button>
 
               <div className="relative z-40 flex flex-col md:flex-row justify-between items-center gap-3">
-                <div className="relative z-40 flex-1 bg-black/40 rounded-xl border border-white/5 group transition-colors hover:border-white/10">
-                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Filter className="w-3.5 h-3.5 text-white/30" /></div>
-                  <CustomSelect
-                    value={activeRarity}
-                    onChange={setActiveRarity}
-                    disabled={isRolling}
-                    className="w-full"
-                    buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
-                    optionClassName="uppercase tracking-wide text-xs font-bold"
-                    options={[
-                      { value: "Any", label: "Any Rarity" },
-                      { value: "Common", label: "Common" },
-                      { value: "Uncommon", label: "Uncommon" },
-                      { value: "Rare", label: "Rare" },
-                      { value: "Epic", label: "Epic" },
-                      { value: "Legendary", label: "Legendary" },
-                      { value: "Artifact", label: "Artifact" }
-                    ]}
-                  />
+                <div className="grid w-full flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
+                  <div className="relative z-40 bg-black/40 rounded-xl border border-white/5 group transition-colors hover:border-white/10">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Sparkles className="w-3.5 h-3.5 text-white/30" /></div>
+                    <CustomSelect
+                      value={activeTheme}
+                      onChange={handleThemeChange}
+                      disabled={isRolling}
+                      className="w-full"
+                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
+                      optionClassName="uppercase tracking-wide text-xs font-bold"
+                      options={LOOT_THEME_OPTIONS}
+                    />
+                  </div>
+                  <div className="relative z-40 bg-black/40 rounded-xl border border-white/5 group transition-colors hover:border-white/10">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Filter className="w-3.5 h-3.5 text-white/30" /></div>
+                    <CustomSelect
+                      value={activeRarity}
+                      onChange={setActiveRarity}
+                      disabled={isRolling}
+                      className="w-full"
+                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
+                      optionClassName="uppercase tracking-wide text-xs font-bold"
+                      options={[
+                        { value: "Any", label: "Any Rarity" },
+                        { value: "Common", label: "Common" },
+                        { value: "Uncommon", label: "Uncommon" },
+                        { value: "Rare", label: "Rare" },
+                        { value: "Epic", label: "Epic" },
+                        { value: "Legendary", label: "Legendary" },
+                        { value: "Artifact", label: "Artifact" }
+                      ]}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-2 bg-black/40 p-1 rounded-xl border border-white/5">
@@ -3352,70 +3728,93 @@
     };
 
     const ArcaneSurgePanel = ({ onOpenSidebar }) => {
-      const [result, setResult] = useState("Ready to unleash a surge.");
-      const [critical, setCritical] = useState(false);
       const [forceCritical, setForceCritical] = useState(false);
       const [isRolling, setIsRolling] = useState(false);
+      const [result, setResult] = useState("");
+      const [overlayOpacity, setOverlayOpacity] = useState(0);
+      const [overlayTransition, setOverlayTransition] = useState("none");
+      const revealTimersRef = useRef([]);
+      const revealFrameRef = useRef(null);
+
+      const clearRevealTimers = () => {
+        revealTimersRef.current.forEach((timerId) => clearTimeout(timerId));
+        revealTimersRef.current = [];
+        if (revealFrameRef.current !== null) {
+          cancelAnimationFrame(revealFrameRef.current);
+          revealFrameRef.current = null;
+        }
+      };
+
+      useEffect(() => clearRevealTimers, []);
 
       const rollSurge = () => {
         if (isRolling) return;
+        clearRevealTimers();
+
+        const isCritical = forceCritical || Math.random() < 0.1;
+        const nextResult = isCritical
+          ? CRITICAL_EFFECTS[Math.floor(Math.random() * CRITICAL_EFFECTS.length)]
+          : SURGE_EFFECTS[Math.floor(Math.random() * SURGE_EFFECTS.length)];
+
         setIsRolling(true);
-        setResult("Gathering arcane energy...");
-        setCritical(false);
+        setResult("");
+        setOverlayTransition("none");
+        setOverlayOpacity(0);
 
-        setTimeout(() => {
-          const isCritical = forceCritical || Math.random() < 0.1;
-          if (isCritical) {
-            const text = CRITICAL_EFFECTS[Math.floor(Math.random() * CRITICAL_EFFECTS.length)];
-            setResult(text);
-            setCritical(true);
-          } else {
-            const text = SURGE_EFFECTS[Math.floor(Math.random() * SURGE_EFFECTS.length)];
-            setResult(text);
-            setCritical(false);
-          }
-        }, 400);
+        revealFrameRef.current = requestAnimationFrame(() => {
+          setOverlayTransition("opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1)");
+          setOverlayOpacity(1);
+          revealFrameRef.current = null;
+        });
 
-        setTimeout(() => setIsRolling(false), 5000);
+        revealTimersRef.current = [
+          setTimeout(() => {
+            setResult(nextResult);
+          }, 2000),
+          setTimeout(() => {
+            setOverlayTransition("opacity 2000ms cubic-bezier(0.05, 0.9, 0.05, 1)");
+            setOverlayOpacity(0);
+          }, 2350),
+          setTimeout(() => {
+            setIsRolling(false);
+          }, 4350)
+        ];
       };
 
       return (
-        <div className="flex flex-col gap-3 sm:gap-4">
-          <PageTopBar onOpenSidebar={onOpenSidebar} />
-          <div className="grid grid-cols-1 xl:grid-cols-[minmax(14rem,0.7fr)_minmax(0,1.3fr)] gap-3 sm:gap-4">
-            <div className="bg-[#13131a]/90 border border-white/5 rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-4">
-              <button
-                onClick={rollSurge}
-                disabled={isRolling}
-                className={`relative overflow-hidden rounded-lg px-4 py-4 text-base sm:text-lg font-bold transition-all ${
-                  isRolling ? "opacity-50 cursor-wait" : "hover:scale-[1.02] hover:shadow-pink-500/20"
-                } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white shadow-lg`}
-              >
-                {isRolling ? "Charging..." : "Arcane Surge"}
-              </button>
+        <div className="flex min-h-0 w-full flex-col gap-3 sm:gap-4">
+          <PageTopBar onOpenSidebar={onOpenSidebar} className="w-full justify-between">
+            <label className="ml-auto inline-flex h-10 items-center gap-3 rounded-lg border border-white/10 bg-[#13131a]/90 px-3 text-sm text-white/70 transition hover:border-white/20 hover:text-white">
+              <input
+                type="checkbox"
+                checked={forceCritical}
+                onChange={(e) => setForceCritical(e.target.checked)}
+                className="h-4 w-4 accent-pink-500"
+              />
+              Desperate
+            </label>
+          </PageTopBar>
 
-              <label className="flex items-center gap-3 text-sm text-white/70">
-                <input
-                  type="checkbox"
-                  checked={forceCritical}
-                  onChange={(e) => setForceCritical(e.target.checked)}
-                  className="w-4 h-4 accent-pink-500"
-                />
-                Desperate
-              </label>
-            </div>
-
-            <div
-              className="bg-[#13131a]/90 border border-white/5 rounded-xl p-4 sm:p-6 panel-glow flex flex-col justify-center items-center"
-              style={{ minHeight: "min(20rem, 60vh)" }}
+          <div className="bg-[#13131a]/90 border border-white/5 rounded-xl p-3 sm:p-4">
+            <button
+              onClick={rollSurge}
+              disabled={isRolling}
+              className={`relative block w-full overflow-hidden rounded-lg px-4 py-5 text-base sm:text-lg font-bold transition-all ${
+                isRolling ? "opacity-50 cursor-wait" : "hover:scale-[1.005] hover:brightness-110"
+              } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white`}
             >
-              <div className={`text-sm font-semibold mb-4 ${critical ? "text-pink-400 critical-label" : "text-white/30"}`}>
-                {critical ? "CRITICAL" : "STABLE"}
-              </div>
-              <div className={`text-2xl md:text-3xl text-center font-semibold leading-relaxed ${critical ? "gradient-text" : "text-white/80"}`}>
-                {result}
-              </div>
+              Arcane Surge
+            </button>
+          </div>
+
+          <div className="relative bg-[#13131a]/90 border border-white/5 rounded-xl p-4 sm:p-6 flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden">
+            <div className="relative z-10 max-w-5xl text-center text-3xl font-semibold leading-relaxed text-[#ffffff] md:text-5xl" aria-live="polite">
+              {result}
             </div>
+            <div
+              className="pointer-events-none absolute inset-0 z-20 bg-[#ffffff]"
+              style={{ opacity: overlayOpacity, transition: overlayTransition }}
+            />
           </div>
         </div>
       );
@@ -3432,19 +3831,27 @@
       });
       const [userPrompt, setUserPrompt] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.prompt) || "");
       const [sceneContext, setSceneContext] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.context) || "any");
-      const [imageUrl, setImageUrl] = useState("");
+      const [temperature, setTemperature] = useState(() => {
+        const storedRaw = localStorage.getItem(BACKGROUND_STORAGE_KEYS.temperature);
+        const stored = Number(storedRaw);
+        return storedRaw !== null && Number.isFinite(stored) ? Math.min(2, Math.max(0, stored)) : 0.9;
+      });
+      const [generatedImages, setGeneratedImages] = useState([]);
       const [isGenerating, setIsGenerating] = useState(false);
+      const [generationTargetCount, setGenerationTargetCount] = useState(1);
+      const [completedGenerationCount, setCompletedGenerationCount] = useState(0);
       const [isExtractingReference, setIsExtractingReference] = useState(false);
       const [isTransformingEnvironment, setIsTransformingEnvironment] = useState(false);
       const [transformEnvironmentTarget, setTransformEnvironmentTarget] = useState("");
       const [error, setError] = useState("");
       const [elapsedSeconds, setElapsedSeconds] = useState(0);
-      const [referenceImage, setReferenceImage] = useState(null);
+      const [referenceImageSlots, setReferenceImageSlots] = useState(() => Array(4).fill(null));
       const [referenceStyleImage, setReferenceStyleImage] = useState(null);
       const [isEditingStyles, setIsEditingStyles] = useState(false);
       const [editDraft, setEditDraft] = useState([]);
       const fileInputRef = useRef(null);
       const fileInputStyleRef = useRef(null);
+      const pendingReferenceSlotIndexRef = useRef(0);
 
       useEffect(() => {
         localStorage.setItem(BACKGROUND_STORAGE_KEYS.styleId, selectedStyleId);
@@ -3457,6 +3864,10 @@
       useEffect(() => {
         localStorage.setItem(BACKGROUND_STORAGE_KEYS.context, sceneContext);
       }, [sceneContext]);
+
+      useEffect(() => {
+        localStorage.setItem(BACKGROUND_STORAGE_KEYS.temperature, String(temperature));
+      }, [temperature]);
 
       const mergedStyles = useMemo(() => {
         if (styleOverrides && Array.isArray(styleOverrides.styles)) {
@@ -3477,7 +3888,7 @@
       const selectedStyle = mergedStyles.find((style) => style.id === selectedStyleId) || mergedStyles[0];
       const availableContexts = selectedStyle.contexts || [];
       const selectedContext = availableContexts.find((ctx) => ctx.id === sceneContext) || null;
-      const activeReferenceImage = referenceImage || referenceStyleImage;
+      const referenceImages = useMemo(() => referenceImageSlots.filter(Boolean), [referenceImageSlots]);
       const canGenerate = apiKey.trim().length > 0 && userPrompt.trim().length > 0 && !isGenerating && !isExtractingReference && !isTransformingEnvironment;
 
       const slugify = (value) =>
@@ -3560,69 +3971,126 @@
         if (sceneContext && sceneContext !== "any" && selectedContext) {
           lines.push(`Scene context: ${selectedContext.label}. ${selectedContext.primer}`);
         }
-        if (referenceImage) {
-          lines.push("From reference image, use only the environment, the feeling, the space and its content and reimagine it to the image generation environment. Do not copy resolution, lighting, or artstyle; keep the fixed artstyle and constraints above.");
+        if (referenceImages.length > 0) {
+          lines.push(`Use the ${referenceImages.length === 1 ? "place reference image" : "place reference images"} only for environment content, spatial layout clues, atmosphere, materials, terrain, landmarks, and props. Reimagine those details into the requested Azeroth scene. Do not copy resolution, camera quirks, lighting, or artstyle from place references.`);
         }
         if (referenceStyleImage) {
-          lines.push("Copy the exact art style from ref style image. Strongly match the ref style image for art style rendering, brushwork, texture treatment, color grading, edge softness/hardness, material painting style, and lighting mood. Use that style as highest-priority visual guidance. CONTENT FIREWALL: Do not transfer composition, objects, characters, poses, layout, or specific scene elements from the ref style image.");
+          lines.push("Copy the exact art style from the ref style image. Strongly match the ref style image for art style rendering, brushwork, texture treatment, color grading, edge softness/hardness, material painting style, and lighting mood. Use that style as highest-priority visual guidance. CONTENT FIREWALL: Do not transfer composition, objects, characters, poses, layout, or specific scene elements from the ref style image.");
+        }
+        if (referenceImages.length > 0 && referenceStyleImage) {
+          lines.push("Separate the inputs strictly: place reference images define what kind of place this is; the ref style image defines only how the final image is painted.");
         }
         return lines.join("\n");
       };
 
-      const handleGenerate = async () => {
+      const buildReferenceParts = () => {
+        const parts = [];
+        referenceImages.forEach((image, index) => {
+          parts.push({
+            text: `Place reference image ${index + 1}${image.name ? ` (${image.name})` : ""}: use for environment content only.`
+          });
+          parts.push({ inlineData: { mimeType: image.mimeType, data: image.data } });
+        });
+        if (referenceStyleImage) {
+          parts.push({
+            text: `Ref style image${referenceStyleImage.name ? ` (${referenceStyleImage.name})` : ""}: use for strict art style only.`
+          });
+          parts.push({ inlineData: { mimeType: referenceStyleImage.mimeType, data: referenceStyleImage.data } });
+        }
+        return parts;
+      };
+
+      const requestGeneratedBackground = async (fullPrompt) => {
+        const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent";
+        const referenceParts = buildReferenceParts();
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey.trim()
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [...referenceParts, { text: fullPrompt }]
+              }
+            ],
+            generationConfig: {
+              temperature,
+              imageConfig: {
+                aspectRatio: "16:9",
+                imageSize: "2K"
+              }
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(text || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const parts = data?.candidates?.[0]?.content?.parts || [];
+        const inlinePart = parts.find((part) => part.inlineData && part.inlineData.data);
+
+        if (!inlinePart) {
+          throw new Error("No image data returned from the model.");
+        }
+
+        const mimeType = inlinePart.inlineData.mimeType || "image/png";
+        const imageData = inlinePart.inlineData.data;
+        const url = `data:${mimeType};base64,${imageData}`;
+
+        if (window.dmDesktop?.backgroundImages?.saveGenerated) {
+          try {
+            await window.dmDesktop.backgroundImages.saveGenerated({
+              mimeType,
+              data: imageData,
+              styleId: selectedStyleId || "scene"
+            });
+          } catch (err) {
+            console.warn("[Background Generator] Failed to save generated image.", err);
+          }
+        }
+
+        return { url, mimeType };
+      };
+
+      const requestGeneratedBackgroundWithRetry = async (fullPrompt, maxAttempts = 2) => {
+        let lastError = null;
+        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+          try {
+            return await requestGeneratedBackground(fullPrompt);
+          } catch (err) {
+            lastError = err;
+          }
+        }
+        throw lastError || new Error("Failed to generate image.");
+      };
+
+      const handleGenerate = async (count = 1) => {
         if (!canGenerate) return;
         setIsGenerating(true);
         setError("");
+        setGenerationTargetCount(count);
+        setCompletedGenerationCount(0);
+        setGeneratedImages([]);
         const fullPrompt = buildPrompt();
         console.log("[Background Generator] Prompt:\n", fullPrompt);
+        const nextImages = [];
 
         try {
-          const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent";
-          const response = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-goog-api-key": apiKey.trim()
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: activeReferenceImage
-                    ? [{ inlineData: { mimeType: activeReferenceImage.mimeType, data: activeReferenceImage.data } }, { text: fullPrompt }]
-                    : [{ text: fullPrompt }]
-                }
-              ]
-            })
-          });
-
-          if (!response.ok) {
-            const text = await response.text();
-            throw new Error(text || `HTTP ${response.status}`);
+          for (let index = 0; index < count; index += 1) {
+            const image = await requestGeneratedBackgroundWithRetry(fullPrompt);
+            nextImages.push(image);
+            setGeneratedImages([...nextImages]);
+            setCompletedGenerationCount(index + 1);
           }
-
-          const data = await response.json();
-          const parts = data?.candidates?.[0]?.content?.parts || [];
-          const inlinePart = parts.find((part) => part.inlineData && part.inlineData.data);
-
-          if (!inlinePart) {
-            throw new Error("No image data returned from the model.");
-          }
-
-          const mimeType = inlinePart.inlineData.mimeType || "image/png";
-          const imageData = inlinePart.inlineData.data;
-          const nextUrl = `data:${mimeType};base64,${imageData}`;
-          setImageUrl(nextUrl);
-          setTimeout(() => {
-            const link = document.createElement("a");
-            link.href = nextUrl;
-            link.download = `background-${selectedStyleId || "scene"}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }, 0);
         } catch (err) {
-          setError(err.message || "Failed to generate image.");
+          const progress = count > 1 ? ` Generated ${nextImages.length}/${count}.` : "";
+          setError(`${err.message || "Failed to generate image."}${progress}`);
         } finally {
           setIsGenerating(false);
         }
@@ -3681,39 +4149,103 @@
         }
       };
 
-      const handleReferenceUpload = (event) => {
-        const file = event.target.files?.[0];
+      const readUploadedImage = (file, readErrorMessage, formatErrorMessage, loadErrorMessage) =>
+        new Promise((resolve, reject) => {
+          if (file.type && !file.type.startsWith("image/")) {
+            reject(new Error(formatErrorMessage));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result;
+            if (typeof result !== "string") {
+              reject(new Error(readErrorMessage));
+              return;
+            }
+            const match = result.match(/^data:(.*);base64,(.*)$/);
+            if (!match) {
+              reject(new Error(formatErrorMessage));
+              return;
+            }
+            resolve({ mimeType: match[1], data: match[2], name: file.name });
+          };
+          reader.onerror = () => {
+            reject(new Error(loadErrorMessage));
+          };
+          reader.readAsDataURL(file);
+        });
+
+      const getReferenceImageSrc = (image) => image ? `data:${image.mimeType};base64,${image.data}` : "";
+
+      const replaceReferenceImageSlot = (slotIndex, image) => {
+        setReferenceImageSlots((prev) => {
+          const next = [...prev];
+          next[slotIndex] = image;
+          return next;
+        });
+      };
+
+      const clearReferenceImageSlot = (slotIndex) => {
+        setReferenceImageSlots((prev) => {
+          const next = [...prev];
+          next[slotIndex] = null;
+          return next;
+        });
+      };
+
+      const openReferenceImageSlot = (slotIndex) => {
+        pendingReferenceSlotIndexRef.current = slotIndex;
+        fileInputRef.current?.click();
+      };
+
+      const handleReferenceUpload = async (event) => {
+        const input = event.target;
+        const file = input.files?.[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result;
-          if (typeof result !== "string") {
-            setError("Failed to read reference image.");
-            return;
-          }
-          const match = result.match(/^data:(.*);base64,(.*)$/);
-          if (!match) {
-            setError("Unsupported reference image format.");
-            return;
-          }
-          setReferenceStyleImage(null);
-          if (fileInputStyleRef.current) {
-            fileInputStyleRef.current.value = "";
-          }
-          setReferenceImage({ mimeType: match[1], data: match[2], name: file.name });
-        };
-        reader.onerror = () => {
-          setError("Failed to load reference image.");
-        };
-        reader.readAsDataURL(file);
+        setError("");
+        try {
+          const image = await readUploadedImage(
+            file,
+            "Failed to read reference image.",
+            "Unsupported reference image format.",
+            "Failed to load reference image."
+          );
+          replaceReferenceImageSlot(pendingReferenceSlotIndexRef.current, image);
+        } catch (err) {
+          setError(err.message || "Failed to load reference image.");
+        } finally {
+          input.value = "";
+        }
+      };
+
+      const handleReferenceDrop = async (event, slotIndex) => {
+        event.preventDefault();
+        const file = event.dataTransfer?.files?.[0];
+        if (!file) return;
+        setError("");
+        try {
+          const image = await readUploadedImage(
+            file,
+            "Failed to read reference image.",
+            "Unsupported reference image format.",
+            "Failed to load reference image."
+          );
+          replaceReferenceImageSlot(slotIndex, image);
+        } catch (err) {
+          setError(err.message || "Failed to load reference image.");
+        }
       };
 
       const handleExtractReferenceDetails = async () => {
-        if (!referenceImage || isExtractingReference) return;
+        if (!referenceImages.length || isExtractingReference) return;
         setError("");
         setIsExtractingReference(true);
         try {
           const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+          const placeReferenceParts = referenceImages.flatMap((image, index) => [
+            { text: `Place reference image ${index + 1}${image.name ? ` (${image.name})` : ""}:` },
+            { inlineData: { mimeType: image.mimeType, data: image.data } }
+          ]);
           const response = await fetch(endpoint, {
             method: "POST",
             headers: {
@@ -3725,8 +4257,8 @@
                 {
                   role: "user",
                   parts: [
-                    { inlineData: { mimeType: referenceImage.mimeType, data: referenceImage.data } },
-                    { text: "From reference image, extract into text only the environment, the feeling, the space and its content." }
+                    ...placeReferenceParts,
+                    { text: "From the place reference image or images, extract into text only the environment, the feeling, the spatial layout, materials, terrain, landmarks, props, and scene content. Do not describe art style." }
                   ]
                 }
               ]
@@ -3760,35 +4292,46 @@
         }
       };
 
-      const handleReferenceStyleUpload = (event) => {
-        const file = event.target.files?.[0];
+      const handleReferenceStyleUpload = async (event) => {
+        const input = event.target;
+        const file = input.files?.[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          const result = reader.result;
-          if (typeof result !== "string") {
-            setError("Failed to read style reference image.");
-            return;
-          }
-          const match = result.match(/^data:(.*);base64,(.*)$/);
-          if (!match) {
-            setError("Unsupported style reference image format.");
-            return;
-          }
-          setReferenceImage(null);
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-          setReferenceStyleImage({ mimeType: match[1], data: match[2], name: file.name });
-        };
-        reader.onerror = () => {
-          setError("Failed to load style reference image.");
-        };
-        reader.readAsDataURL(file);
+        setError("");
+        try {
+          const image = await readUploadedImage(
+            file,
+            "Failed to read style reference image.",
+            "Unsupported style reference image format.",
+            "Failed to load style reference image."
+          );
+          setReferenceStyleImage(image);
+        } catch (err) {
+          setError(err.message || "Failed to load style reference image.");
+        } finally {
+          input.value = "";
+        }
       };
 
-      const clearReferenceImage = () => {
-        setReferenceImage(null);
+      const handleReferenceStyleDrop = async (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer?.files?.[0];
+        if (!file) return;
+        setError("");
+        try {
+          const image = await readUploadedImage(
+            file,
+            "Failed to read style reference image.",
+            "Unsupported style reference image format.",
+            "Failed to load style reference image."
+          );
+          setReferenceStyleImage(image);
+        } catch (err) {
+          setError(err.message || "Failed to load style reference image.");
+        }
+      };
+
+      const clearReferenceImages = () => {
+        setReferenceImageSlots(Array(4).fill(null));
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -3962,154 +4505,274 @@
               </div>
             </div>
           )}
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-6">
-            <div className="grid grid-cols-1 lg:grid-cols-[0.5fr_1.5fr] gap-4">
-              <div className="flex flex-col h-full justify-between gap-4">
-                <CustomSelect
-                  value={selectedStyleId}
-                  onChange={setSelectedStyleId}
-                  className="w-full flex-1"
-                  buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
-                  optionClassName="text-sm"
-                  options={mergedStyles.map((style) => ({ value: style.id, label: style.label }))}
+          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-5 sm:p-6 panel-glow flex flex-col gap-5">
+            <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_21rem] gap-5 items-start">
+              <div className="flex flex-col gap-4 min-w-0">
+                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-3 items-end">
+                  <div className="flex flex-col gap-2 min-w-0">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/35">Style</div>
+                    <CustomSelect
+                      value={selectedStyleId}
+                      onChange={setSelectedStyleId}
+                      className="w-full"
+                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                      optionClassName="text-sm"
+                      options={mergedStyles.map((style) => ({ value: style.id, label: style.label }))}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2 min-w-0">
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/35">Context</div>
+                    <CustomSelect
+                      value={sceneContext}
+                      onChange={setSceneContext}
+                      className="w-full"
+                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                      optionClassName="text-sm"
+                      options={[
+                        { value: "any", label: "Any" },
+                        ...availableContexts.map((ctx) => ({
+                          value: ctx.id,
+                          label: ctx.label
+                        }))
+                      ]}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={openStyleEditor}
+                    className="h-[46px] px-4 rounded-xl border border-white/10 bg-white/5 text-[10px] uppercase tracking-[0.3em] text-white/55 hover:text-white hover:border-white/25 hover:bg-white/10 transition"
+                  >
+                    Edit
+                  </button>
+                </div>
+
+                <textarea
+                  value={userPrompt}
+                  onChange={(e) => setUserPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.ctrlKey && e.key === "Enter") {
+                      e.preventDefault();
+                      handleGenerate(1);
+                    }
+                  }}
+                  placeholder="Describe the location..."
+                  className="min-h-[150px] bg-black/40 border border-white/10 rounded-xl px-3 py-3 text-sm text-white/80 outline-none focus:border-pink-500 transition resize-y"
                 />
 
-                <CustomSelect
-                  value={sceneContext}
-                  onChange={setSceneContext}
-                  className="w-full flex-1"
-                  buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
-                  optionClassName="text-sm"
-                  options={[
-                    { value: "any", label: "Any" },
-                    ...availableContexts.map((ctx) => ({
-                      value: ctx.id,
-                      label: ctx.label
-                    }))
-                  ]}
-                />
-                <button
-                  type="button"
-                  onClick={openStyleEditor}
-                  className="self-start text-[10px] uppercase tracking-[0.4em] text-white/40 hover:text-white/70 transition"
-                >
-                  Edit
-                </button>
+                <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_3.5rem] gap-2">
+                  <input
+                    value={transformEnvironmentTarget}
+                    onChange={(e) => setTransformEnvironmentTarget(e.target.value)}
+                    placeholder="Transform scene to environment..."
+                    className="min-w-0 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 outline-none focus:border-cyan-400 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleTransformEnvironment}
+                    disabled={!userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference}
+                    className={`h-[38px] rounded-xl border text-xs font-semibold transition ${
+                      !userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference
+                        ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                        : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
+                    }`}
+                  >
+                    {isTransformingEnvironment ? "..." : "->"}
+                  </button>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-4">
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      value={userPrompt}
-                      onChange={(e) => setUserPrompt(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.ctrlKey && e.key === "Enter") {
-                          e.preventDefault();
-                          handleGenerate();
-                        }
-                      }}
-                      placeholder="Describe the location..."
-                      className="min-h-[120px] bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-sm text-white/80 outline-none focus:border-pink-500 transition resize-none"
-                    />
-                    <div className="flex items-center gap-2">
-                      <input
-                        value={transformEnvironmentTarget}
-                        onChange={(e) => setTransformEnvironmentTarget(e.target.value)}
-                        placeholder="Transform scene to environment..."
-                        className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 outline-none focus:border-cyan-400 transition"
-                      />
+              <div className="flex flex-col gap-4 min-w-0">
+                <div className="flex flex-col gap-3">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleReferenceUpload}
+                    className="hidden"
+                  />
+                  <input
+                    ref={fileInputStyleRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleReferenceStyleUpload}
+                    className="hidden"
+                  />
+
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">Location refs</div>
+                    {referenceImages.length > 0 && (
                       <button
                         type="button"
-                        onClick={handleTransformEnvironment}
-                        disabled={!userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference}
-                        className={`px-4 py-2 rounded-xl border text-xs font-semibold transition ${
-                          !userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference
-                            ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
-                            : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
-                        }`}
+                        onClick={clearReferenceImages}
+                        className="text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white/70 transition"
                       >
-                        {isTransformingEnvironment ? "..." : "->"}
+                        Clear all
                       </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {referenceImageSlots.map((image, index) => (
+                      <div
+                        key={`place-reference-slot-${index}`}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => openReferenceImageSlot(index)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" || event.key === " ") {
+                            event.preventDefault();
+                            openReferenceImageSlot(index);
+                          }
+                        }}
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={(event) => handleReferenceDrop(event, index)}
+                        className={`group relative aspect-[16/10] overflow-hidden rounded-xl border transition cursor-pointer ${
+                          image
+                            ? "border-white/15 bg-black/30 hover:border-cyan-300/50"
+                            : "border-dashed border-white/15 bg-white/[0.03] hover:border-white/35 hover:bg-white/[0.06]"
+                        }`}
+                        aria-label={`Location reference slot ${index + 1}`}
+                      >
+                        {image ? (
+                          <>
+                            <img
+                              src={getReferenceImageSrc(image)}
+                              alt={`Location reference ${index + 1}`}
+                              className="absolute inset-0 h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                              <div className="truncate text-[10px] text-white/80">{image.name}</div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                clearReferenceImageSlot(index);
+                              }}
+                              className="absolute right-1.5 top-1.5 rounded-lg border border-black/40 bg-black/60 p-1 text-white/70 opacity-0 transition hover:text-white group-hover:opacity-100"
+                              aria-label={`Clear location reference ${index + 1}`}
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        ) : (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white/35">
+                            <ImageIcon className="h-5 w-5" />
+                            <span className="text-[10px] uppercase tracking-[0.2em]">Slot {index + 1}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">Art style</div>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => fileInputStyleRef.current?.click()}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          fileInputStyleRef.current?.click();
+                        }
+                      }}
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={handleReferenceStyleDrop}
+                      className={`group relative aspect-[16/7] overflow-hidden rounded-xl border transition cursor-pointer ${
+                        referenceStyleImage
+                          ? "border-cyan-300/35 bg-black/30 hover:border-cyan-200/70"
+                          : "border-dashed border-cyan-300/20 bg-cyan-400/[0.04] hover:border-cyan-300/45 hover:bg-cyan-400/[0.07]"
+                      }`}
+                      aria-label="Art style reference slot"
+                    >
+                      {referenceStyleImage ? (
+                        <>
+                          <img
+                            src={getReferenceImageSrc(referenceStyleImage)}
+                            alt="Art style reference"
+                            className="absolute inset-0 h-full w-full object-cover"
+                          />
+                          <div className="absolute left-2 top-2 rounded-lg border border-cyan-300/40 bg-black/65 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-cyan-100">
+                            Style lock
+                          </div>
+                          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                            <div className="truncate text-[10px] text-white/80">{referenceStyleImage.name}</div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              clearReferenceStyleImage();
+                            }}
+                            className="absolute right-1.5 top-1.5 rounded-lg border border-black/40 bg-black/60 p-1 text-white/70 opacity-0 transition hover:text-white group-hover:opacity-100"
+                            aria-label="Clear art style reference"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-cyan-100/45">
+                          <ImageIcon className="h-5 w-5" />
+                          <span className="text-[10px] uppercase tracking-[0.2em]">Style slot</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-[0.3em] text-white/70 hover:text-white transition"
-                      >
-                        Reference
-                      </button>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleReferenceUpload}
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fileInputStyleRef.current?.click()}
-                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-[0.3em] text-white/70 hover:text-white transition"
-                      >
-                        Ref style
-                      </button>
-                      <input
-                        ref={fileInputStyleRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleReferenceStyleUpload}
-                        className="hidden"
-                      />
+                  <button
+                    type="button"
+                    onClick={handleExtractReferenceDetails}
+                    disabled={!referenceImages.length || isExtractingReference || isGenerating}
+                    className={`w-full min-h-[42px] px-4 rounded-xl border text-xs uppercase tracking-[0.24em] transition ${
+                      !referenceImages.length || isExtractingReference || isGenerating
+                        ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                        : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
+                    }`}
+                  >
+                    {isExtractingReference ? "Extracting..." : "Extract ref"}
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-xs text-white/60">
+                      <span className="uppercase tracking-[0.24em]">Temperature</span>
+                      <span className="font-mono text-white/80">{temperature.toFixed(2)}</span>
                     </div>
-                    {referenceImage && (
-                      <div className="flex items-center gap-2 text-xs text-white/60">
-                        <span className="truncate max-w-[180px]">{referenceImage.name}</span>
-                        <button
-                          type="button"
-                          onClick={clearReferenceImage}
-                          className="px-2 py-1 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition"
-                        >
-                          Clear
-                        </button>
-                      </div>
-                    )}
-                    {referenceStyleImage && (
-                      <div className="flex items-center gap-2 text-xs text-white/60">
-                        <span className="px-2 py-1 rounded-lg border border-cyan-300/40 bg-cyan-400/10 text-cyan-200 text-[10px] uppercase tracking-[0.2em]">Style lock on</span>
-                        <span className="truncate max-w-[180px]">Ref style: {referenceStyleImage.name}</span>
-                        <button
-                          type="button"
-                          onClick={clearReferenceStyleImage}
-                          className="px-2 py-1 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition"
-                        >
-                          Clear
-                        </button>
-                      </div>
-                    )}
+                    <input
+                      type="range"
+                      min="0"
+                      max="2"
+                      step="0.05"
+                      value={temperature}
+                      onChange={(event) => setTemperature(Number(event.target.value))}
+                      disabled={isGenerating}
+                      className="w-full accent-pink-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
                     <button
-                      type="button"
-                      onClick={handleExtractReferenceDetails}
-                      disabled={!referenceImage || isExtractingReference || isGenerating}
-                      className={`w-full px-4 py-3 rounded-2xl border text-xs uppercase tracking-[0.3em] transition ${
-                        !referenceImage || isExtractingReference || isGenerating
-                          ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
-                          : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
-                      }`}
-                    >
-                      {isExtractingReference ? "Extracting..." : "Extract ref"}
-                    </button>
-                    <button
-                      onClick={handleGenerate}
+                      onClick={() => handleGenerate(1)}
                       disabled={!canGenerate}
-                      className={`relative w-full overflow-hidden rounded-2xl px-6 py-4 text-sm font-black tracking-[0.3em] uppercase transition-all ${
-                        canGenerate ? "hover:scale-[1.02] hover:shadow-pink-500/20" : "opacity-50 cursor-not-allowed"
+                      className={`relative w-full min-h-[52px] overflow-hidden rounded-xl px-5 text-sm font-black tracking-[0.24em] uppercase transition-all ${
+                        canGenerate ? "hover:scale-[1.01] hover:shadow-pink-500/20" : "opacity-50 cursor-not-allowed"
                       } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white shadow-lg`}
                     >
-                      {isGenerating ? "Generating..." : "Generate"}
+                      {isGenerating ? `Generating ${completedGenerationCount}/${generationTargetCount}` : "Generate"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleGenerate(4)}
+                      disabled={!canGenerate}
+                      className={`w-full min-h-[44px] px-5 rounded-xl border text-xs uppercase tracking-[0.24em] transition ${
+                        canGenerate
+                          ? "border-pink-400/30 bg-pink-500/10 text-pink-100 hover:bg-pink-500/20 hover:border-pink-300/40"
+                          : "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                      }`}
+                    >
+                      Generate 4
                     </button>
                   </div>
                 </div>
@@ -4125,15 +4788,24 @@
           </div>
 
           <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-4">
-            <div className="relative w-full aspect-[16/9] rounded-2xl border border-white/10 bg-black/40 overflow-hidden">
-              {imageUrl && (
+            <div className={`relative w-full ${generatedImages.length >= 4 ? "grid grid-cols-2 gap-3" : "aspect-[16/9]"} rounded-2xl border border-white/10 bg-black/40 overflow-hidden p-0`}>
+              {generatedImages.length > 0 && generatedImages.length < 4 && (
                 <img
-                  src={imageUrl}
+                  src={generatedImages[0].url}
                   alt="Generated background"
                   className={`w-full h-full object-cover transition-opacity duration-700 ${isGenerating ? "opacity-0" : "opacity-100"}`}
                 />
               )}
-              {(!imageUrl || isGenerating) && (
+              {generatedImages.length >= 4 && generatedImages.slice(0, 4).map((image, index) => (
+                <div key={`${image.mimeType}-${index}`} className="relative aspect-[16/9] border border-white/10 bg-black/30 overflow-hidden">
+                  <img
+                    src={image.url}
+                    alt={`Generated background ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+              {(!generatedImages.length || isGenerating) && (
                 <div className={`absolute inset-0 flex flex-col items-center justify-center text-white/20 text-sm ${isGenerating ? "animate-breathe" : ""}`}>
                   <ImageIcon className="w-20 h-20 mb-3 opacity-50" />
                 </div>

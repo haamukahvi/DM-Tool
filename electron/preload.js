@@ -28,6 +28,9 @@ contextBridge.exposeInMainWorld("dmDesktop", {
   lootTables: {
     get: () => ipcRenderer.invoke("dmtool:loot-tables:get")
   },
+  backgroundImages: {
+    saveGenerated: (payload) => ipcRenderer.invoke("dmtool:background-images:save-generated", payload)
+  },
   onMusicCommand: (callback) => {
     if (typeof callback !== "function") {
       return () => {};
