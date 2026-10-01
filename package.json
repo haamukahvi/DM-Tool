@@ -8,14 +8,17 @@
   "scripts": {
     "start": "node scripts/start-electron.cjs",
     "desktop": "node scripts/start-electron.cjs",
-    "preweb:dev": "node scripts/generate-audio-manifest.cjs",
+    "preweb:dev": "node scripts/generate-audio-manifest.cjs --waveforms",
     "web:dev": "serve . -l 5500",
-    "preweb:start": "node scripts/generate-audio-manifest.cjs",
+    "preweb:start": "node scripts/generate-audio-manifest.cjs --waveforms",
     "web:start": "serve . -l 5500",
-    "audio:manifest": "node scripts/generate-audio-manifest.cjs",
-    "predist:win": "node scripts/generate-audio-manifest.cjs",
+    "audio:manifest": "node scripts/generate-audio-manifest.cjs --waveforms",
+    "audio:waveforms": "node scripts/generate-audio-manifest.cjs --waveforms",
+    "npc:names": "node scripts/generate-npc-name-pools.cjs",
+    "npc:simulate": "node scripts/simulate-npc-generator.cjs",
+    "predist:win": "node scripts/generate-audio-manifest.cjs --waveforms",
     "dist:win": "cmd /C \"set ELECTRON_RUN_AS_NODE= && electron-builder --win nsis\"",
-    "predist:portable": "node scripts/generate-audio-manifest.cjs",
+    "predist:portable": "node scripts/generate-audio-manifest.cjs --waveforms",
     "dist:portable": "node scripts/build-portable.cjs"
   },
   "devDependencies": {

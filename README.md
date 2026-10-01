@@ -48,6 +48,16 @@ You can also regenerate it manually:
 npm run audio:manifest
 ```
 
+Music waveforms are precomputed and cached so playing a track never needs to decode the full file just for visualization. Starting the Electron or web app automatically generates peaks for new or changed music files. While the development app is open, its audio watcher does the same after a file is added or replaced.
+
+You can also trigger the update manually with:
+
+```bash
+npm run audio:waveforms
+```
+
+This command requires `ffmpeg`. Existing cached waveforms remain usable on machines without it.
+
 ## Obsidian Music Links
 
 The Electron app registers the `dmtool://` URL scheme. Other apps can link to a music file with:

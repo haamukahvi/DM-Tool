@@ -7,5 +7,9 @@ const externalAudioPatterns = new Set([
 
 module.exports = {
   ...packageJson.build,
+  win: {
+    ...packageJson.build.win,
+    target: ["portable"]
+  },
   files: packageJson.build.files.filter((pattern) => !externalAudioPatterns.has(pattern))
 };

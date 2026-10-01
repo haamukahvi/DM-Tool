@@ -5,51 +5,291 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DM Dashboard</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;500;700&display=swap" rel="stylesheet">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin="anonymous"></script>
   <script src="data/audio-manifest.js"></script>
+  <script src="data/wow-character-options.js"></script>
+  <script src="data/npc-name-pools.js"></script>
+  <script src="data/npc-generator-data.js"></script>
+  <script src="data/npc-generator-engine.js"></script>
+  <script src="data/arcane-surges.js"></script>
 
   <style>
     :root {
-      --bg: #0a0a0f;
-      --bg-panel: #13131a;
-      --bg-panel-2: #181823;
-      --text: #e2e8f0;
-      --muted: rgba(226, 232, 240, 0.5);
-      --accent: #ec4899;
-      --accent-2: #8b5cf6;
-      --accent-3: #22d3ee;
+      --bg: #101214;
+      --bg-panel: #1a2022;
+      --bg-panel-2: #252e31;
+      --text: #edf1f2;
+      --muted: #aab8ba;
+      --accent: #9cc9bc;
+      --accent-fill: #315f57;
+      --accent-hover: #3d7168;
+      --accent-soft: #263e39;
       --outline: rgba(255, 255, 255, 0.08);
+      color-scheme: dark;
     }
 
     body {
       margin: 0;
-      font-family: 'Exo 2', sans-serif;
-      background: radial-gradient(circle at 15% 20%, #151525 0%, #0b0b12 40%, #0a0a0f 100%);
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       overflow: hidden;
     }
 
     .title-font {
-      font-family: 'Exo 2', sans-serif;
-      letter-spacing: 0.08em;
+      font-family: inherit;
+      letter-spacing: 0.02em;
     }
 
     .panel-glow {
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      box-shadow: none;
     }
 
-    .ambient-bg {
-      background-image:
-        radial-gradient(circle at 20% 10%, rgba(236, 72, 153, 0.15), transparent 45%),
-        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.12), transparent 50%);
+    /* Controls use surface contrast; an outline appears only for keyboard focus. */
+    .dm-ui button,
+    .dm-ui [role="button"],
+    .dm-ui label,
+    .dm-ui .status-label,
+    .dm-ui .tag-pill {
+      border: 0;
+      box-shadow: none;
+    }
+
+    .dm-ui button {
+      transition-property: background-color, color, opacity;
+      transition-duration: 150ms;
+    }
+
+    .dm-ui button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .dm-ui :is(button, [role="button"], input, textarea, select, a):focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      box-shadow: none;
+    }
+
+    .dm-ui :is(input, textarea, select) {
+      caret-color: var(--accent);
+    }
+
+    .dm-ui ::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    ::selection {
+      background: var(--accent-fill);
+      color: var(--text);
+    }
+
+    .dm-ui .btn-primary {
+      background: var(--accent-fill);
+      color: #f0faf7;
+    }
+
+    .dm-ui .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .dm-ui .category-tab,
+    .dm-ui .nav-item {
+      background: var(--bg-panel);
+      color: var(--muted);
+    }
+
+    .dm-ui :is(.category-tab, .nav-item):hover {
+      background: var(--bg-panel-2);
+      color: var(--text);
+    }
+
+    .dm-ui :is(.category-tab[aria-pressed="true"], .nav-item[aria-current="page"]) {
+      background: var(--accent-soft);
+      color: #c5e7dc;
+    }
+
+    /* Category hues identify content; keep them independent of the neutral chrome. */
+    .dm-ui .audio-category,
+    .dm-ui .tag-pill {
+      background: color-mix(in srgb, var(--tag-color) 18%, var(--bg-panel));
+      color: color-mix(in srgb, var(--tag-color) 45%, white);
+    }
+
+    .dm-ui .audio-category:hover,
+    .dm-ui button.tag-pill:hover {
+      background: color-mix(in srgb, var(--tag-color) 28%, var(--bg-panel));
+    }
+
+    .dm-ui .audio-category[aria-pressed="true"] {
+      background: color-mix(in srgb, var(--tag-color) 38%, var(--bg-panel));
+      color: color-mix(in srgb, var(--tag-color) 20%, white);
+    }
+
+    .dm-ui .npc-field {
+      background: var(--bg-panel);
+    }
+
+    .dm-ui .npc-field[data-locked="true"] {
+      background: color-mix(in srgb, #ec4899 10%, var(--bg-panel));
+    }
+
+    .dm-ui .npc-field[data-flash="true"] {
+      background: color-mix(in srgb, #22d3ee 18%, var(--bg-panel));
+    }
+
+    .surge-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 12px;
+      background: var(--bg-panel);
+    }
+
+    .surge-stage[data-kind="desperate"] { background: #110f16; }
+
+    .surge-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: clamp(24px, 4vw, 64px);
+    }
+
+    .surge-result {
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .surge-result h2 {
+      margin: 0 0 24px;
+      color: #faf5ff;
+      font-size: clamp(30px, 4.5vw, 62px);
+      font-weight: 650;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    .surge-result p {
+      max-width: 70ch;
+      margin: 16px auto 0;
+      color: #e1dce8;
+      font-size: clamp(18px, 1.75vw, 25px);
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    .surge-result .surge-save {
+      margin-top: 24px;
+      color: #b9aeca;
+      font-size: 14px;
+    }
+
+    .surge-normal-text {
+      color: #fff;
+      font-size: clamp(26px, 3.75vw, 48px);
+      font-weight: 600;
+      line-height: 1.4;
+      text-wrap: balance;
+    }
+
+    .dm-ui .surge-trigger {
+      min-height: 64px;
+      transition: background-color 160ms, color 160ms, transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dm-ui .surge-trigger[data-desperate="true"] {
+      background: #553947;
+      color: #fff2f8;
+    }
+
+    .dm-ui .surge-trigger:active { transform: scale(0.99); }
+
+    @media (hover: hover) and (pointer: fine) {
+      .dm-ui .surge-trigger[data-desperate="true"]:hover { background: #6b4558; }
+    }
+
+    .surge-arrival {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .surge-arrival--normal {
+      background: #fff;
+      animation: surge-normal-flash 4350ms both;
+    }
+
+    .surge-arrival--desperate::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #07060a;
+      animation: surge-darkness 4600ms both;
+    }
+
+    .surge-fissure {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      animation: surge-fissure 4600ms both;
+    }
+
+    .surge-stage[data-phase="revealed"][data-kind="desperate"] .surge-result {
+      animation: surge-result-arrive 1300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes surge-normal-flash {
+      0% { opacity: 0; }
+      46%, 54% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes surge-darkness {
+      0% { opacity: 0; }
+      12%, 66% { opacity: 1; }
+      80%, 100% { opacity: 0; }
+    }
+
+    @keyframes surge-fissure {
+      0%, 12% { opacity: 0; clip-path: inset(0 calc(50% - 1px)); }
+      36%, 52% { opacity: 1; clip-path: inset(0 calc(50% - 1px)); }
+      58%, 66% { opacity: 1; clip-path: inset(0 0); }
+      100% { opacity: 0; clip-path: inset(0 0); }
+    }
+
+    @keyframes surge-result-arrive {
+      from { opacity: 0; transform: scale(1.035); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      .surge-result h2 { margin-bottom: 20px; }
+      .surge-result p { line-height: 1.45; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dm-ui *, .dm-ui *::before, .dm-ui *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .surge-arrival { display: none; }
     }
 
     ::-webkit-scrollbar {
@@ -58,7 +298,7 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #0a0a0f;
+      background: var(--bg);
     }
 
     ::-webkit-scrollbar-thumb {
@@ -114,29 +354,6 @@
 
     .animate-flash {
       animation: flash 0.6s ease;
-    }
-
-    .gradient-text {
-      background: linear-gradient(270deg, #d100ff, #7a00ff, #00c3ff, #d100ff);
-      background-size: 400% 400%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradient-flow 10s linear infinite;
-    }
-
-    @keyframes gradient-flow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes critical-pulse {
-      0%, 100% { text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff; }
-      50% { text-shadow: 0 0 40px #00bfff, 0 0 80px #00bfff; }
-    }
-
-    .critical-label {
-      animation: critical-pulse 2.5s ease-in-out infinite;
     }
 
     @keyframes breathe-opacity {
@@ -390,6 +607,35 @@
       </TablerIconBase>
     );
 
+    const IconLock = (props) => (
+      <TablerIconBase {...props}>
+        <path d="M5 11m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+        <path d="M8 11v-4a4 4 0 0 1 8 0v4" />
+        <path d="M12 15v2" />
+      </TablerIconBase>
+    );
+
+    const IconLockOpen = (props) => (
+      <TablerIconBase {...props}>
+        <path d="M5 11m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+        <path d="M8 11v-4a4 4 0 0 1 7.6 -1.8" />
+        <path d="M12 15v2" />
+      </TablerIconBase>
+    );
+
+    const IconCopy = (props) => (
+      <TablerIconBase {...props}>
+        <path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+        <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" />
+      </TablerIconBase>
+    );
+
+    const IconChevronRight = (props) => (
+      <TablerIconBase {...props}>
+        <path d="M9 6l6 6l-6 6" />
+      </TablerIconBase>
+    );
+
     const IconX = (props) => (
       <TablerIconBase {...props}>
         <path d="M18 6l-12 12" />
@@ -401,7 +647,7 @@
       <button
         type="button"
         onClick={onClick}
-        className="h-10 w-10 shrink-0 rounded-lg border border-white/10 bg-[#13131a]/90 text-white/70 transition hover:border-white/30 hover:text-white"
+        className="h-10 w-10 shrink-0 rounded-lg border border-white/10 bg-[#1a2022] text-white/70 transition hover:border-white/30 hover:text-white"
         aria-label="Open navigation"
         title="Open navigation"
       >
@@ -423,13 +669,13 @@
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full bg-[#13131a]/90 border border-white/10 rounded-lg px-3 py-2 pr-10 text-sm text-white/80 outline-none focus:border-pink-500 transition"
+          className="w-full bg-[#1a2022] border border-white/10 rounded-lg px-3 py-2 pr-10 text-sm text-white/80 outline-none focus:border-pink-500 transition"
         />
         {value && (
           <button
             type="button"
             onClick={() => onChange("")}
-            className="absolute right-2 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-white/40 transition hover:bg-white/10 hover:text-white"
+            className="absolute right-2 top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-[#aab8ba] transition hover:bg-white/10 hover:text-white"
             aria-label="Clear search"
             title="Clear search"
           >
@@ -518,29 +764,18 @@
 
     const getAudioTagColors = (tag) => AUDIO_TAG_COLORS[tag] || colorFromString(tag || "Tag");
 
-    const getAudioTagStyle = (tag, active = false) => {
+    const getAudioTagStyle = (tag) => {
       const colors = getAudioTagColors(tag);
-      return {
-        "--tag-from": colors.from,
-        "--tag-to": colors.to,
-        background: active
-          ? `linear-gradient(135deg, ${colors.from}, ${colors.to})`
-          : `linear-gradient(135deg, color-mix(in srgb, ${colors.from} 18%, transparent), color-mix(in srgb, ${colors.to} 14%, transparent))`,
-        borderColor: active ? "transparent" : `color-mix(in srgb, ${colors.from} 45%, transparent)`,
-        boxShadow: active ? `0 5px 13px color-mix(in srgb, ${colors.from} 11%, transparent)` : "none"
-      };
+      return { "--tag-color": colors.from };
     };
 
     const CategoryTabButton = ({ label, active, onClick }) => (
       <button
         type="button"
         onClick={onClick}
-        style={getAudioTagStyle(label, active)}
-        className={`shrink-0 rounded-lg border px-3 py-2 text-sm font-semibold transition ${
-          active
-            ? "text-white"
-            : "text-white/75 hover:text-white"
-        }`}
+        aria-pressed={active}
+        style={getAudioTagStyle(label)}
+        className="audio-category category-tab shrink-0 rounded-lg px-3 py-2 text-sm font-medium"
       >
         {label}
       </button>
@@ -549,7 +784,7 @@
     const TagPill = ({ tag, onClick, className = "" }) => {
       const sharedProps = {
         style: getAudioTagStyle(tag),
-        className: `max-w-full rounded border px-2 py-0.5 text-[10px] leading-tight text-white/80 transition ${onClick ? "cursor-pointer hover:text-white" : ""} ${className}`
+        className: `tag-pill max-w-full rounded-md px-2 py-1 text-xs leading-tight transition ${onClick ? "cursor-pointer hover:text-white" : ""} ${className}`
       };
       if (onClick) {
         return (
@@ -562,36 +797,24 @@
     };
 
     const WAVEFORM_PEAK_CACHE = new Map();
-    let waveformAudioContext = null;
-    const getWaveformAudioContext = () => {
-      if (!waveformAudioContext) {
-        waveformAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const decodeWaveformPeaks = (encodedPeaks) => {
+      if (!encodedPeaks) return [];
+      const cached = WAVEFORM_PEAK_CACHE.get(encodedPeaks);
+      if (cached) return cached;
+      try {
+        const binary = atob(encodedPeaks);
+        const peaks = Array.from(binary, (value) => value.charCodeAt(0) / 255);
+        WAVEFORM_PEAK_CACHE.set(encodedPeaks, peaks);
+        return peaks;
+      } catch (err) {
+        return [];
       }
-      return waveformAudioContext;
-    };
-
-    const buildWaveformPeaks = (audioBuffer, peakCount = 220) => {
-      const channel = audioBuffer.getChannelData(0);
-      const blockSize = Math.max(1, Math.floor(channel.length / peakCount));
-      const peaks = [];
-      for (let i = 0; i < peakCount; i++) {
-        const start = i * blockSize;
-        const end = Math.min(channel.length, start + blockSize);
-        let peak = 0;
-        for (let j = start; j < end; j++) {
-          const value = Math.abs(channel[j]);
-          if (value > peak) peak = value;
-        }
-        peaks.push(peak);
-      }
-      const maxPeak = Math.max(0.01, ...peaks);
-      return peaks.map((peak) => peak / maxPeak);
     };
 
     const MusicWaveform = ({ track, currentTime, duration, onSeek }) => {
       const canvasRef = useRef(null);
-      const [peaks, setPeaks] = useState([]);
       const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+      const peaks = useMemo(() => decodeWaveformPeaks(track?.waveform), [track?.file, track?.waveform]);
 
       const seekFromPointer = (event) => {
         if (!track || !duration || !onSeek) return;
@@ -621,34 +844,6 @@
         observer.observe(canvas);
         return () => observer.disconnect();
       }, []);
-
-      useEffect(() => {
-        let cancelled = false;
-        setPeaks([]);
-        if (!track?.file) return;
-        const cached = WAVEFORM_PEAK_CACHE.get(track.file);
-        if (cached) {
-          setPeaks(cached);
-          return;
-        }
-
-        fetch(resolveAssetUrl(track.file))
-          .then((response) => response.arrayBuffer())
-          .then((arrayBuffer) => getWaveformAudioContext().decodeAudioData(arrayBuffer))
-          .then((audioBuffer) => {
-            if (cancelled) return;
-            const nextPeaks = buildWaveformPeaks(audioBuffer);
-            WAVEFORM_PEAK_CACHE.set(track.file, nextPeaks);
-            setPeaks(nextPeaks);
-          })
-          .catch(() => {
-            if (!cancelled) setPeaks([]);
-          });
-
-        return () => {
-          cancelled = true;
-        };
-      }, [track?.file]);
 
       useEffect(() => {
         const canvas = canvasRef.current;
@@ -710,10 +905,58 @@
       );
     };
 
+    const MusicProgressWaveform = React.memo(({ track, isPlaying, isTransitioning, activeAudioRef, incomingAudioRef, onSeek }) => {
+      const [progress, setProgress] = useState({ currentTime: 0, duration: 0 });
+      const [isDocumentVisible, setIsDocumentVisible] = useState(() => document.visibilityState !== "hidden");
+
+      useEffect(() => {
+        const handleVisibilityChange = () => setIsDocumentVisible(document.visibilityState !== "hidden");
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+      }, []);
+
+      useEffect(() => {
+        const updateProgress = () => {
+          const audio = activeAudioRef.current || incomingAudioRef.current;
+          const currentTime = audio?.currentTime || 0;
+          const duration = Number.isFinite(audio?.duration) ? audio.duration : 0;
+          setProgress((previous) => {
+            const nextProgress = {
+              currentTime: Math.round(currentTime * 2) / 2,
+              duration: Math.round(duration * 2) / 2
+            };
+            return previous.currentTime === nextProgress.currentTime && previous.duration === nextProgress.duration
+              ? previous
+              : nextProgress;
+          });
+        };
+
+        updateProgress();
+        if (!track || !isDocumentVisible || (!isPlaying && !isTransitioning)) return;
+        const interval = setInterval(updateProgress, 500);
+        return () => clearInterval(interval);
+      }, [track?.file, isPlaying, isTransitioning, isDocumentVisible, activeAudioRef, incomingAudioRef]);
+
+      const seek = (nextTime) => {
+        const nextProgress = onSeek(nextTime);
+        if (nextProgress) setProgress(nextProgress);
+      };
+
+      return (
+        <MusicWaveform
+          track={track}
+          currentTime={progress.currentTime}
+          duration={progress.duration}
+          onSeek={seek}
+        />
+      );
+    });
+
     const NAV_ITEMS = [
       { id: "ambience", label: "Ambience" },
       { id: "music", label: "Music" },
       { id: "sfx", label: "SFX" },
+      { id: "npc", label: "NPC Generator" },
       { id: "loot", label: "Loot Roller" },
       { id: "surge", label: "Arcane Surge" },
       { id: "notes", label: "Notes" },
@@ -721,15 +964,6 @@
       { id: "background", label: "Background" },
       { id: "portrait", label: "Portrait" }
     ];
-    const getNavItemStyle = (id, active) => {
-      return {
-        background: active
-          ? "linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.08))"
-          : "rgba(255,255,255,0.045)",
-        borderColor: active ? "rgba(255,255,255,0.24)" : "rgba(255,255,255,0.08)",
-        boxShadow: active ? "0 12px 30px rgba(0,0,0,0.18)" : "none"
-      };
-    };
     const PAGE_PARAMS = new URLSearchParams(window.location.search);
     const QUERY_VIEW = PAGE_PARAMS.get("view");
     const AUDIO_MANIFEST = window.DM_AUDIO_MANIFEST || { ambienceCategories: [], ambience: [], musicCategories: [], music: [], sfx: [] };
@@ -1146,90 +1380,8 @@
       return parts;
     };
 
-    const SURGE_EFFECTS = [
-      "CRUSHING FORCE DAMAGES YOU EQUAL TO 1D4 X SPELL LEVEL",
-      "YOU GROW DEMONIC FOR 1 MIN; ADVANTAGE ON INTIMIDATION, DISADVANTAGE ON PERSUASION",
-      "A RANDOM ELEMENTAL SURGE BURSTS WITHIN 10 FEET",
-      "YOU AND A CLOSEST CREATURE BLINK OUT OF EXISTENCE FOR 1D4 ROUNDS",
-      "MANA WRAITH APPEARS AND ATTACKS YOU",
-      "YOUR NEXT SPELL IS CAST 1 LEVEL HIGHER BUT DEALS SPELL LEVEL DAMAGE TO YOU",
-      "VOID TAINT: SMALL CREATURES ARE FRIGHTENED BY YOU FOR 24 HOURS",
-      "ARCANE EXPLOSION: 10 FEET, DEX SAVE OR TAKE FORCE DAMAGE = CASTER LEVEL",
-      "FRIENDLY WISP GRANTS ADVANTAGE ON YOUR NEXT SAVING THROW",
-      "LEY LINE BURNOUT: YOU CAN'T CAST SPELLS UNTIL LONG REST",
-      "YOU AND ONE RANDOM ENEMY SWITCH PLACES INSTANTLY",
-      "MAGICAL FEEDBACK: TAKE 1D6 FORCE DAMAGE PER SPELL LEVEL CAST",
-      "SPEAK IN TONGUES; NO ONE UNDERSTANDS YOU FOR 1D4 HOURS",
-      "A RANDOM MAGIC ITEM IN YOUR POSSESSION IS TEMPORARILY SILENCED",
-      "RANDOM WEAPON NEARBY GLOWS BRIGHTLY FOR 1 MINUTE",
-      "SPELL MISFIRES INTO A RANDOM SCHOOL OF MAGIC",
-      "YOU SHRIEK A PIERCING TONE; ALL WITHIN 20 FT MAKE A CON SAVE OR BE DEAFENED 1 MIN",
-      "TELEPORT 10 FEET IN A RANDOM DIRECTION",
-      "YOU GAIN DARKVISION 60 FT FOR 1 HOUR",
-      "CONJURE A MINOR ILLUSION THAT FOLLOWS YOU FOR 1 HOUR",
-      "YOU BECOME SILENT; YOU CANNOT SPEAK FOR 1D4 ROUNDS",
-      "FORCEDLY SPEAK THOUGHTS OUT FOR 1 HOUR",
-      "TREMOR SHAKES GROUND; CREATURES WITHIN 30 FT DEX SAVE OR FALL PRONE",
-      "MIRROR IMAGE APPEARS AND MIMICS YOU FOR 1 MINUTE",
-      "MOUTH BURNS IN FEL FLAMES FOR 1 MINUTE; 1D4 DMG EACH ROUND",
-      "RECOVER 1D8 MANA IMMEDIATELY",
-      "AGE OR DE-AGE 1D10 YEARS (50/50 CHANCE)",
-      "NEXT ATTACK OR SPELL ATTACK AUTOMATICALLY MISSES",
-      "YOU BECOME EXTREMELY HUNGRY; MUST EAT WITHIN 1 HOUR OR TAKE EXHAUSTION",
-      "GLIMPSE TWISTING NETHER; STUNNED FOR 1 ROUND",
-      "SHADOW DETACHES AND DANCES FOR 1 MINUTE",
-      "PULLED 30 FEET IN A RANDOM DIRECTION",
-      "ALLERGIC TO MAGIC: DISADVANTAGE ON SPELL SAVES FOR 1D4 ROUNDS",
-      "MINOR LEY LINE AWAKENS: ALL CASTERS REGAIN 1D8 MANA",
-      "EXPLODE WITH LIGHT; HEAL ALL WITHIN 30 FEET FOR 10 HP",
-      "YOUR SPOKEN WORD BECOMES GHOSTLY AND UNINTELLIGIBLE FOR 1 HOUR",
-      "YOU VOMIT VIOLENTLY, BECOMING PRONE AND INCAPACITATED FOR 1 ROUND",
-      "ARCANE MISSILES LAUNCH AT EVERY CREATURE WITHIN 30 FEET (1D8 DAMAGE EACH)",
-      "YOU BECOME MAGICALLY BLINDED FOR 1D4 ROUNDS",
-      "YOUR HANDS GROW MASSIVE AND FOR 1 MIN (DISADVANTAGE WITH HAND PRECISION)",
-      "YOU SHRINK TO 1/4 SIZE FOR 1D6 MINUTES",
-      "ITEM IN HAND EXPLODES IN A PUFF OF PURPLE SMOKE (NO DAMAGE, JUST GONE)",
-      "YOU BEGIN FLOATING UPSIDE DOWN 3 FEET ABOVE THE GROUND FOR 1 MINUTE",
-      "YOUR NEXT SPELL IS REVERSED IN EFFECT (GM DETERMINES OUTCOME)",
-      "A SMALL PORTAL OPENS AND A RANDOM PIECE OF FURNITURE FALLS ON YOU (1D6 DAMAGE)",
-      "YOU BECOME A RANDOM ANIMAL FOR 1D4 MINUTES",
-      "ALL TEXT AND SYMBOLS AROUND YOU REARRANGE INTO NONSENSE FOR 10 MINUTES",
-      "A MYSTERIOUS ARCANE HAND SLAPS YOU (1D4 DAMAGE, NO SAVE)",
-      "YOU RANDOMLY SWAP BODIES WITH AN ALLY FOR 1D4 ROUNDS (MENTAL STATS STAY, PHYSICAL CHANGE)",
-      "A RANDOM WILD BEAST (CR 4) IS SUMMONED NEAR YOU AND STARTLES EVERYONE",
-      "YOU BECOME ETHEREAL FOR 1 ROUND, UNABLE TO TOUCH OR BE TOUCHED",
-      "YOU CHANT THE NAME OF YOUR DEITY LOUDLY AND INCOHERENTLY FOR 1D4 ROUNDS",
-      "YOUR ARMOR OR CLOTHES SEPARATE AND BEGIN DANCING FOR 1 MINUTE",
-      "YOUR BODY CHANGES GENDER FOR 24 HOURS",
-      "EVERYTHING YOU TOUCH FEELS EXTREMELY SLIPPERY FOR 10 MINUTES",
-      "TRAPPED IN A MAGICAL BUBBLE; FLOAT 10 FEET UP FOR 1 MINUTE",
-      "A SPECTER OF YOUR FAMILY MEMBER APPEARS AND REACTS TO YOUR NEXT ACTION",
-      "YOUR FEET LIGHT ON FIRE, CAUSING YOU TO RUN RANDOMLY FOR 1 ROUND (NO DAMAGE)",
-      "SPELL WILDLY SUCCESSFUL: DOUBLE RANGE, DURATION, OR POWER (YOUR CHOICE)",
-      "YOU DISINTEGRATE INTO PURE ARCANE ENERGY UNTIL SOMEONE CASTS A SPELL"
-    ];
+    const { rollArcaneSurge } = window.ARCANE_SURGES;
 
-    const CRITICAL_EFFECTS = [
-      "ALL CREATURES WITHIN 120 FEET ARE TELEPORTED RANDOMLY UP TO 1 MILE AWAY",
-      "TIME WARPS: EVERY CREATURE IN 30 FEET TAKES 1 EXTRA TURN IMMEDIATELY",
-      "A BLACK HOLE FORMS, GROWING 10 FEET EACH TURN FOR 1 HOUR",
-      "ALL MAGICAL EFFECTS IN 1000 FEET ARE IMMEDIATELY DISPELLED",
-      "YOUR MIND BRIEFLY TOUCHES THE VOID: YOU GAIN A MADNESS EFFECT",
-      "YOU GAIN A SINGLE USE OF WISH, FOR A PRICE",
-      "YOU FLOOD WITH RAW MAGIC: ARCANE SURGE EVERY ROUND FOR 1D6 ROUNDS",
-      "A COLLAPSE IN REALITY ERASES 30 FT OF TERRAIN INTO NOTHINGNESS",
-      "YOU ARE GRANTED POWERS OF A DEMIGOD FOR 1 MINUTE (ALL ABILITY SCORES SET TO 24)",
-      "TIME FREEZES FOR ALL CREATURES EXCEPT YOU FOR 1 ROUND",
-      "A RANDOM ALLY WITHIN 60 FEET IS TURNED TO STONE FOR 1D6 ROUNDS (NO SAVE)",
-      "YOU BECOME A LIVING ARCANE STORM; 3D10 LIGHTNING DAMAGE TO ALL CREATURES WITHIN 30 FEET EACH ROUND FOR 1 MIN",
-      "YOU ARE FULLY HEALED AND REGAIN ALL MANA - IMMEDIATELY SUFFER 1D4 LEVEL OF EXHAUSTION",
-      "PLANES COLLIDE: 10D10 PLANAR RIFTS APPEAR",
-      "THE NEXT SPELL YOU CAST INSTANTLY MAXIMIZES DAMAGE, RANGE, AND DURATION - BUT YOU TAKE HALF THE DAMAGE YOURSELF",
-      "A MASSIVE EARTHQUAKE ERUPTS CENTERED ON YOU (DMG EARTHQUAKE SPELL EFFECTS)",
-      "YOU LOSE ALL SENSE OF SELF: CONTROL OF YOUR CHARACTER PASSES TO THE GM FOR 1D4 ROUNDS",
-      "TWISTING NETHER APPEARS IN THE SKY FOR 1D6 HOURS, CAUSING MASSIVE ENVIRONMENTAL CHAOS",
-      "THE BARRIER BETWEEN LIFE AND DEATH WEAKENS: 1D100 DEAD CREATURES WITHIN 1 KM RISE AS UNDEAD FOR 24 HOURS"
-    ];
 
     const BACKGROUND_ARTSTYLE_PRIMER = "Blizzard and Hearthstone-inspired cinematic digital illustration, 8k concept art. Instead of realistic grit, surfaces have painterly brushstrokes and soft gradients. Hand-painted textures, vibrant saturated colors, chunky whimsical design, soft cinematic lighting, rim lighting, clean bold shapes, high-quality game art style. Voluminous fluffy smudgy clouds if clouds are seen. Spatious and wide establishing shot, painterly finish, hand-painted materials and textures, storytelling props. No text, no outlines, no linework, no lineart, no humans, no people, no logos, no watermarks, no UI elements.";
     const REF_STYLE_ARTSTYLE_PRIMER = "Spatious and wide establishing shot. No text, no outlines, no linework, no lineart, no humans, no people, no logos, no watermarks, no UI elements.";
@@ -1258,6 +1410,7 @@
       styleId: "dm_background_style_id",
       prompt: "dm_background_prompt",
       context: "dm_background_context",
+      rawPrompt: "dm_background_raw_prompt",
       styleOverrides: "dm_background_style_overrides",
       temperature: "dm_background_temperature"
     };
@@ -1411,7 +1564,7 @@
       const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
       return (
-        <div className="min-h-screen ambient-bg">
+        <div className="dm-ui min-h-screen">
           <div
             className={`fixed inset-0 z-30 bg-black/55 backdrop-blur-sm transition-opacity duration-200 ${isSidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
             onClick={() => setIsSidebarOpen(false)}
@@ -1419,7 +1572,7 @@
           />
 
           <aside
-            className={`fixed inset-y-0 left-0 z-40 w-[min(18rem,84vw)] bg-[#0d0d14]/95 border-r border-white/10 px-6 py-6 flex flex-col gap-6 overflow-y-auto transition-transform duration-250 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+            className={`fixed inset-y-0 left-0 z-40 w-[min(18rem,84vw)] bg-[#151a1c] border-r border-white/10 px-6 py-6 flex flex-col gap-6 overflow-y-auto transition-transform duration-250 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
           >
               <nav className="flex flex-col gap-2">
                 {NAV_ITEMS.map((item) => {
@@ -1431,8 +1584,8 @@
                         setActiveView(item.id);
                         setIsSidebarOpen(false);
                       }}
-                      style={getNavItemStyle(item.id, isActive)}
-                      className={`w-full text-left px-4 py-3 rounded-xl border transition-all text-sm ${
+                      aria-current={isActive ? "page" : undefined}
+                      className={`nav-item w-full text-left px-4 py-3 rounded-xl transition-all text-sm ${
                         isActive
                           ? "text-white"
                           : "text-white/70 hover:text-white"
@@ -1452,8 +1605,8 @@
                   onClick={() => setIsApiKeyModalOpen(true)}
                   className="w-full rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-2 text-left transition"
                 >
-                  <div className="text-[10px] uppercase tracking-[0.3em] text-white/50">Gemini API Key</div>
-                  <div className={`text-xs mt-1 ${hasApiKey ? "text-emerald-300/80" : "text-white/50"}`}>
+                  <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Gemini API Key</div>
+                  <div className={`text-xs mt-1 ${hasApiKey ? "text-emerald-300/80" : "text-[#aab8ba]"}`}>
                     {hasApiKey ? "Saved locally" : "Not set"}
                   </div>
                 </button>
@@ -1466,12 +1619,12 @@
               onClick={() => setIsApiKeyModalOpen(false)}
             >
               <div
-                className="w-full max-w-lg bg-[#13131a] border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4"
+                className="w-full max-w-lg bg-[#1a2022] border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4"
                 onClick={(event) => event.stopPropagation()}
               >
                 <div className="flex items-center justify-between gap-4">
                   <div>
-                    <div className="text-xs uppercase tracking-[0.3em] text-white/50">Gemini API Key</div>
+                    <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Gemini API Key</div>
                     <div className="text-sm text-white/70 mt-1">
                       {window.dmDesktop?.isDesktop
                         ? "Stored encrypted in this Windows user profile, outside the project."
@@ -1481,7 +1634,7 @@
                   <button
                     type="button"
                     onClick={() => setIsApiKeyModalOpen(false)}
-                    className="text-white/40 hover:text-white transition"
+                    className="text-[#aab8ba] hover:text-white transition"
                     aria-label="Close API key modal"
                   >
                     <X className="w-4 h-4" />
@@ -1489,7 +1642,7 @@
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[10px] uppercase tracking-[0.25em] text-white/50">Key</label>
+                  <label className="text-xs uppercase tracking-wide text-[#aab8ba]">Key</label>
                   <div className="flex items-center gap-2">
                     <input
                       type={showApiKey ? "text" : "password"}
@@ -1523,21 +1676,21 @@
                   <button
                     type="button"
                     onClick={clearApiKey}
-                    className="px-4 py-2 rounded-xl border border-rose-400/20 text-xs uppercase tracking-[0.3em] text-rose-200/70 hover:text-rose-100 hover:border-rose-300/40 transition"
+                    className="px-4 py-2 rounded-xl border border-rose-400/20 text-xs uppercase tracking-wide text-rose-200/70 hover:text-rose-100 hover:border-rose-300/40 transition"
                   >
                     Clear
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsApiKeyModalOpen(false)}
-                    className="px-4 py-2 rounded-xl border border-white/10 text-xs uppercase tracking-[0.3em] text-white/50 hover:text-white hover:border-white/30 transition"
+                    className="px-4 py-2 rounded-xl border border-white/10 text-xs uppercase tracking-wide text-[#aab8ba] hover:text-white hover:border-white/30 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={saveApiKey}
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white text-xs uppercase tracking-[0.3em] shadow-lg"
+                    className="px-5 py-2 rounded-xl btn-primary text-white text-xs uppercase tracking-wide shadow-lg"
                   >
                     Save
                   </button>
@@ -1557,23 +1710,26 @@
               <div className={activeView === "sfx" ? "block" : "hidden"}>
                 <SfxPanel onOpenSidebar={toggleSidebar} isActive={activeView === "sfx"} />
               </div>
+              <div className={activeView === "npc" ? "flex h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] min-h-0" : "hidden"}>
+                <NpcGeneratorPanel onOpenSidebar={toggleSidebar} isActive={activeView === "npc"} />
+              </div>
               <div className={activeView === "loot" ? "flex h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] min-h-0" : "hidden"}>
-                <LootRollerPanel onOpenSidebar={toggleSidebar} />
+                <LootRollerPanel onOpenSidebar={toggleSidebar} isActive={activeView === "loot"} />
               </div>
               <div className={activeView === "surge" ? "flex h-[calc(100vh-1.5rem)] sm:h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] min-h-0" : "hidden"}>
-                <ArcaneSurgePanel onOpenSidebar={toggleSidebar} />
+                <ArcaneSurgePanel onOpenSidebar={toggleSidebar} isActive={activeView === "surge"} />
               </div>
               <div className={activeView === "notes" ? "block" : "hidden"}>
-                <NotesPanel onOpenSidebar={toggleSidebar} />
+                <NotesPanel onOpenSidebar={toggleSidebar} isActive={activeView === "notes"} />
               </div>
               <div className={activeView === "rules" ? "block" : "hidden"}>
                 <RulesPanel onOpenSidebar={toggleSidebar} isActive={activeView === "rules"} />
               </div>
               <div className={activeView === "background" ? "block" : "hidden"}>
-                <BackgroundPanel apiKey={geminiApiKey} onOpenSidebar={toggleSidebar} />
+                <BackgroundPanel apiKey={geminiApiKey} onOpenSidebar={toggleSidebar} isActive={activeView === "background"} />
               </div>
               <div className={activeView === "portrait" ? "block" : "hidden"}>
-                <PortraitPanel apiKey={geminiApiKey} onOpenSidebar={toggleSidebar} />
+                <PortraitPanel apiKey={geminiApiKey} onOpenSidebar={toggleSidebar} isActive={activeView === "portrait"} />
               </div>
             </div>
           </main>
@@ -1741,6 +1897,8 @@
         });
       }, [ambienceTracks, query, activeCategory, sortMode]);
 
+      if (!isActive) return null;
+
       return (
         <div className="h-[calc(100vh-1.5rem)] flex flex-col gap-3 sm:gap-4">
           <div className="flex flex-col gap-3">
@@ -1768,7 +1926,7 @@
 
           <div className="music-list-grid flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-1 pb-24">
             {visibleTracks.length === 0 && (
-              <div className="rounded-xl border border-white/5 bg-[#13131a]/90 p-4 text-sm text-white/40">
+              <div className="rounded-xl border border-white/5 bg-[#1a2022] p-4 text-sm text-[#aab8ba]">
                 No ambience found.
               </div>
             )}
@@ -1782,8 +1940,8 @@
                   disabled={isPending}
                   className={`text-left rounded-xl border p-2.5 transition ${
                     isActive
-                      ? "bg-gradient-to-br from-pink-600/80 via-purple-600/80 to-indigo-600/80 text-white border-transparent shadow-lg shadow-pink-500/20"
-                      : "bg-[#13131a]/90 border-white/5 text-white/80 hover:bg-white/10"
+                      ? "bg-pink-500/20 text-white"
+                      : "bg-[#1a2022] border-white/5 text-white/80 hover:bg-white/10"
                   } ${isPending ? "opacity-70 cursor-wait" : ""}`}
                 >
                   <div className="text-sm font-semibold leading-tight break-words">{track.title}</div>
@@ -1799,7 +1957,7 @@
             })}
           </div>
 
-          <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#0d0d14]/95 p-3 sm:p-4">
+          <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#151a1c] p-3 sm:p-4">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center">
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold text-white/90">
@@ -1810,7 +1968,7 @@
                     {activeUrls.map((url) => {
                       const track = ambienceTracks.find((item) => item.file === url);
                       return (
-                        <span key={url} className="shrink-0 rounded bg-white/5 px-2 py-0.5 text-[10px] text-white/50">
+                        <span key={url} className="shrink-0 rounded bg-white/5 px-2 py-0.5 text-xs text-[#aab8ba]">
                           {track ? track.title : "Track"}
                         </span>
                       );
@@ -1848,7 +2006,7 @@
                     onChange={(e) => setMasterVolume(Number(e.target.value) / 100)}
                     className="w-32 accent-pink-500"
                   />
-                  <span className="w-10 text-right text-xs text-white/50">{Math.round(masterVolume * 100)}%</span>
+                  <span className="w-10 text-right text-xs text-[#aab8ba]">{Math.round(masterVolume * 100)}%</span>
                 </div>
               </div>
             </div>
@@ -1857,12 +2015,15 @@
       );
     };
 
+    const MUSIC_TUNE_STEPS = [0.25, ...Array.from({ length: 13 }, (_, index) => (index + 3) / 10)];
+
     const MusicPanel = ({ onOpenSidebar, isActive, onActivate }) => {
       const musicTracks = AUDIO_MANIFEST.music || [];
       const categories = AUDIO_MANIFEST.musicCategories || [];
       const activeAudioRef = useRef(null);
       const incomingAudioRef = useRef(null);
       const musicAudiosRef = useRef(new Set());
+      const playbackRequestedRef = useRef(false);
       const timeoutsRef = useRef([]);
       const controlResetTimersRef = useRef({});
       const loopCrossfadeRef = useRef(false);
@@ -1878,9 +2039,10 @@
       const [isTransitioning, setIsTransitioning] = useState(false);
       const [volume, setVolume] = useState(0.75);
       const [tune, setTune] = useState(1);
+      const [drunkEnabled, setDrunkEnabled] = useState(false);
       const volumeRef = useRef(volume);
       const tuneRef = useRef(tune);
-      const [musicProgress, setMusicProgress] = useState({ currentTime: 0, duration: 0 });
+      const drunkEffectRef = useRef({ phase: 0, mix: 0, multiplier: 1 });
       const [copiedTrackFile, setCopiedTrackFile] = useState("");
       const [musicTagOverrides, setMusicTagOverrides] = useState(() => {
         try {
@@ -1974,12 +2136,40 @@
       };
 
       const applyTune = (audio, nextTune) => {
-        if (!audio) return;
-        audio.playbackRate = nextTune;
+        if (!audio || audio._dmStopped) return;
         audio.preservesPitch = false;
         audio.mozPreservesPitch = false;
         audio.webkitPreservesPitch = false;
+        audio.playbackRate = nextTune * drunkEffectRef.current.multiplier;
       };
+
+      useEffect(() => {
+        const effect = drunkEffectRef.current;
+        if (!drunkEnabled && effect.mix === 0) return;
+        let lastUpdate = performance.now();
+
+        // Share one five-second wobble across every track, including crossfades.
+        const timer = setInterval(() => {
+          const now = performance.now();
+          const elapsed = (now - lastUpdate) / 1000;
+          lastUpdate = now;
+          const audios = [...musicAudiosRef.current];
+          if (audios.some((audio) => !audio.paused && !audio._dmStopped)) {
+            effect.phase = (effect.phase + elapsed * Math.PI * 2 / 5) % (Math.PI * 2);
+          }
+          // Ease the effect in and out without moving the user's Tune slider.
+          effect.mix = Math.max(0, Math.min(1, effect.mix + (drunkEnabled ? 1 : -1) * elapsed / 0.4));
+          effect.multiplier = 1 + Math.sin(effect.phase) * 0.04 * effect.mix;
+          audios.forEach((audio) => applyTune(audio, tuneRef.current));
+          activeAudioRef.current?._dmScheduleLoopCrossfade?.();
+          if (!drunkEnabled && effect.mix === 0) {
+            effect.phase = 0;
+            clearInterval(timer);
+          }
+        }, 50);
+
+        return () => clearInterval(timer);
+      }, [drunkEnabled]);
 
       useEffect(() => {
         return () => {
@@ -2007,33 +2197,9 @@
 
       useEffect(() => {
         tuneRef.current = tune;
-        applyTune(activeAudioRef.current, tune);
-        applyTune(incomingAudioRef.current, tune);
+        musicAudiosRef.current.forEach((audio) => applyTune(audio, tune));
         activeAudioRef.current?._dmScheduleLoopCrossfade?.();
       }, [tune]);
-
-      useEffect(() => {
-        if (!currentTrack) {
-          setMusicProgress({ currentTime: 0, duration: 0 });
-          return;
-        }
-
-        const updateProgress = () => {
-          const audio = activeAudioRef.current || incomingAudioRef.current;
-          const currentTime = audio?.currentTime || 0;
-          const duration = Number.isFinite(audio?.duration) ? audio.duration : 0;
-          setMusicProgress((prev) => {
-            const nextCurrent = Math.round(currentTime * 10) / 10;
-            const nextDuration = Math.round(duration * 10) / 10;
-            if (prev.currentTime === nextCurrent && prev.duration === nextDuration) return prev;
-            return { currentTime: nextCurrent, duration: nextDuration };
-          });
-        };
-
-        updateProgress();
-        const interval = setInterval(updateProgress, 150);
-        return () => clearInterval(interval);
-      }, [currentTrack, isPlaying, isTransitioning]);
 
       const fadeVolume = (audio, from, to, durationMs, onDone) => {
         if (!audio || audio._dmStopped) return;
@@ -2073,14 +2239,14 @@
         };
         const scheduleLoopCrossfade = () => {
           clearTimeout(audio._dmLoopTimer);
-          if (audio._dmStopped || activeAudioRef.current !== audio) return;
+          if (audio._dmStopped || audio.paused || !playbackRequestedRef.current || activeAudioRef.current !== audio) return;
           if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
           const msUntilFade = Math.max(0, getWallMsUntilEnd() - loopFadeDuration);
           audio._dmLoopTimer = setTimeout(() => startLoopCrossfade(false), msUntilFade);
         };
         audio._dmScheduleLoopCrossfade = scheduleLoopCrossfade;
         const startLoopCrossfade = (fallback = false) => {
-          if (loopCrossfadeRef.current || activeAudioRef.current !== audio) return;
+          if (loopCrossfadeRef.current || !playbackRequestedRef.current || activeAudioRef.current !== audio) return;
           if (!fallback && Number.isFinite(audio.duration) && getWallMsUntilEnd() > loopFadeDuration + 120) return;
 
           const transitionId = transitionIdRef.current;
@@ -2135,6 +2301,7 @@
       };
 
       const playTrack = (track) => {
+        playbackRequestedRef.current = true;
         const transitionId = transitionIdRef.current + 1;
         transitionIdRef.current = transitionId;
         clearTransitionTimers();
@@ -2191,6 +2358,7 @@
         const incoming = incomingAudioRef.current;
 
         if (isPlaying || isTransitioning) {
+          playbackRequestedRef.current = false;
           transitionIdRef.current += 1;
           clearTransitionTimers();
           loopCrossfadeRef.current = false;
@@ -2221,6 +2389,7 @@
         if (!audio) return;
 
         try {
+          playbackRequestedRef.current = true;
           const transitionId = transitionIdRef.current + 1;
           transitionIdRef.current = transitionId;
           clearTransitionTimers();
@@ -2252,6 +2421,7 @@
       }, [isActive, isPlaying, isTransitioning, currentTrack, volume]);
 
       const stopMusic = () => {
+        playbackRequestedRef.current = false;
         transitionIdRef.current += 1;
         clearTransitionTimers();
         loopCrossfadeRef.current = false;
@@ -2327,10 +2497,13 @@
 
       const seekMusic = (nextTime) => {
         const audio = activeAudioRef.current || incomingAudioRef.current;
-        if (!audio || !Number.isFinite(audio.duration)) return;
+        if (!audio || !Number.isFinite(audio.duration)) return null;
         const boundedTime = Math.min(Math.max(nextTime, 0), Math.max(0, audio.duration - 0.05));
         audio.currentTime = boundedTime;
-        setMusicProgress({ currentTime: Math.round(boundedTime * 10) / 10, duration: Math.round(audio.duration * 10) / 10 });
+        return {
+          currentTime: Math.round(boundedTime * 2) / 2,
+          duration: Math.round(audio.duration * 2) / 2
+        };
       };
 
       const folderBrowserActive = activeCategory === "All" && query.trim().length === 0;
@@ -2413,6 +2586,8 @@
         setSelectedTag(null);
       };
 
+      if (!isActive) return null;
+
       return (
         <div className="h-[calc(100vh-1.5rem)] flex flex-col gap-3 sm:gap-4">
           <div className="flex flex-col gap-3">
@@ -2451,7 +2626,7 @@
                   <IconArrowLeft className="h-5 w-5 shrink-0" />
                   <span>Back</span>
                 </div>
-                <div className="mt-2 truncate text-xs text-white/35">{folderLabel}</div>
+                <div className="mt-2 truncate text-xs text-[#aab8ba]">{folderLabel}</div>
               </button>
             )}
             {visibleFolders.map((folder) => (
@@ -2468,7 +2643,7 @@
               </button>
             ))}
             {visibleFolders.length === 0 && visibleTracks.length === 0 && (
-              <div className="rounded-xl border border-white/5 bg-[#13131a]/90 p-4 text-sm text-white/40">
+              <div className="rounded-xl border border-white/5 bg-[#1a2022] p-4 text-sm text-[#aab8ba]">
                 No music found.
               </div>
             )}
@@ -2483,13 +2658,13 @@
                   className={`text-left rounded-xl border p-2.5 transition ${
                     selected
                       ? "bg-pink-500/20 border-pink-400/40 text-white"
-                      : "bg-[#13131a]/90 border-white/5 text-white/80 hover:bg-white/10"
+                      : "bg-[#1a2022] border-white/5 text-white/80 hover:bg-white/10"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 text-sm font-semibold leading-tight break-words">{track.title}</div>
                     {copiedTrackFile === track.file && (
-                      <span className="shrink-0 rounded bg-emerald-400/15 px-1.5 py-0.5 text-[10px] text-emerald-200">
+                      <span className="shrink-0 rounded bg-emerald-400/15 px-1.5 py-0.5 text-xs text-emerald-200">
                         Copied
                       </span>
                     )}
@@ -2506,7 +2681,7 @@
             })}
           </div>
 
-          <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#0d0d14]/95 p-3 sm:p-4">
+          <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-[#151a1c] p-3 sm:p-4">
             <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center">
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold text-white/90">
@@ -2521,7 +2696,7 @@
                           onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
                         />
                         {selectedTag === tag && (
-                          <div className="absolute bottom-full left-0 z-40 mb-2 flex gap-1 rounded-lg border border-white/10 bg-[#111118] p-1 shadow-xl">
+                          <div className="absolute bottom-full left-0 z-40 mb-2 flex gap-1 rounded-lg border border-white/10 bg-[#252e31] p-1 shadow-xl">
                             <button
                               type="button"
                               onClick={() => openTagEditor("edit", tag)}
@@ -2547,7 +2722,7 @@
                     <button
                       type="button"
                       onClick={() => openTagEditor("add")}
-                      className="inline-flex h-5 w-5 items-center justify-center rounded bg-white/5 text-white/45 transition hover:bg-white/10 hover:text-white"
+                      className="inline-flex h-5 w-5 items-center justify-center rounded bg-white/5 text-[#aab8ba] transition hover:bg-white/10 hover:text-white"
                       aria-label="Add tag"
                       title="Add tag"
                     >
@@ -2568,25 +2743,51 @@
                     onChange={(e) => setVolume(Number(e.target.value) / 100)}
                     className="w-28 accent-pink-500"
                   />
-                  <span className="w-10 text-right text-xs text-white/50">{Math.round(volume * 100)}%</span>
+                  <span className="w-10 text-right text-xs text-[#aab8ba]">{Math.round(volume * 100)}%</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <input
                     aria-label="Music tune"
+                    aria-valuemin={0.25}
+                    aria-valuemax={1.5}
+                    aria-valuenow={tune}
+                    aria-valuetext={`${tune.toFixed(2)} times`}
                     onContextMenu={(event) => resetControl(event, "tune", tune, 1, setTune)}
                     type="range"
-                    min="50"
-                    max="150"
-                    value={Math.round(tune * 100)}
-                    onChange={(e) => setTune(Number(e.target.value) / 100)}
+                    min="0"
+                    max={MUSIC_TUNE_STEPS.length - 1}
+                    step="1"
+                    value={tune < 0.275 ? 0 : Math.round(tune * 10) - 2}
+                    onChange={(event) => {
+                      clearInterval(controlResetTimersRef.current.tune);
+                      setTune(MUSIC_TUNE_STEPS[Number(event.target.value)]);
+                    }}
                     className="w-28 accent-cyan-400"
                   />
-                  <span className="w-12 text-right text-xs text-white/50">{tune.toFixed(2)}x</span>
+                  <span className="w-12 text-right text-xs text-[#aab8ba]">{tune.toFixed(2)}x</span>
                 </div>
-                <MusicWaveform
+                <button
+                  type="button"
+                  aria-pressed={drunkEnabled}
+                  onClick={() => setDrunkEnabled((enabled) => !enabled)}
+                  onKeyDown={(event) => {
+                    if (event.key === " " || event.key === "Enter") event.stopPropagation();
+                  }}
+                  title="Slowly wobble pitch up and down"
+                  className={`inline-flex h-10 shrink-0 items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 ${
+                    drunkEnabled
+                      ? "border-cyan-300/40 bg-cyan-400/15 text-cyan-100 hover:bg-cyan-400/20"
+                      : "border-white/10 text-white/70 hover:border-white/30 hover:text-white"
+                  }`}
+                >
+                  Drunk <span className={drunkEnabled ? "text-cyan-200" : "text-white/60"}>{drunkEnabled ? "On" : "Off"}</span>
+                </button>
+                <MusicProgressWaveform
                   track={currentTrack}
-                  currentTime={musicProgress.currentTime}
-                  duration={musicProgress.duration}
+                  isPlaying={isPlaying}
+                  isTransitioning={isTransitioning}
+                  activeAudioRef={activeAudioRef}
+                  incomingAudioRef={incomingAudioRef}
                   onSeek={seekMusic}
                 />
                 <button
@@ -2612,7 +2813,7 @@
           {tagEditor && (
             <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-4" onClick={() => setTagEditor(null)}>
               <div
-                className="w-full max-w-md rounded-xl border border-white/10 bg-[#111118] p-4 shadow-2xl"
+                className="w-full max-w-md rounded-xl border border-white/10 bg-[#252e31] p-4 shadow-2xl"
                 onClick={(event) => event.stopPropagation()}
               >
                 <div className="mb-3 text-sm font-semibold text-white/80">{tagEditor.mode === "edit" ? "Edit tag" : "Add tag"}</div>
@@ -2620,7 +2821,7 @@
                   {tagSuggestion && (
                     <div className="pointer-events-none absolute inset-0 rounded-lg border border-transparent bg-black/35 px-3 py-2 text-sm text-transparent">
                       <span>{tagEditor.value}</span>
-                      <span className="text-white/25">{tagSuggestion.slice(tagEditor.value.length)}</span>
+                      <span className="text-[#aab8ba]">{tagSuggestion.slice(tagEditor.value.length)}</span>
                     </div>
                   )}
                   <input
@@ -2687,6 +2888,8 @@
         volumeResetRef.current = animateNumber(volume, 0.8, setVolume);
       };
 
+      if (!isActive) return null;
+
       return (
         <div className="h-[calc(100vh-1.5rem)] flex flex-col gap-3 sm:gap-4">
           <PageTopBar onOpenSidebar={onOpenSidebar}>
@@ -2698,7 +2901,7 @@
               inputRef={searchInputRef}
             />
             <SortModeButton sortMode={sortMode} onToggle={() => setSortMode((prev) => (prev === "name" ? "latest" : "name"))} />
-            <div className="flex items-center gap-2 rounded-lg bg-[#13131a]/90 border border-white/10 px-3 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-[#1a2022] border border-white/10 px-3 py-2">
               <input
                 aria-label="SFX volume"
                 onContextMenu={resetVolume}
@@ -2709,7 +2912,7 @@
                 onChange={(e) => setVolume(Number(e.target.value) / 100)}
                 className="w-32 accent-pink-500"
               />
-              <span className="w-10 text-right text-xs text-white/50">{Math.round(volume * 100)}%</span>
+              <span className="w-10 text-right text-xs text-[#aab8ba]">{Math.round(volume * 100)}%</span>
             </div>
           </PageTopBar>
 
@@ -2718,7 +2921,7 @@
               <button
                 key={item.file}
                 onClick={() => playSfx(item)}
-                className="aspect-square rounded-xl border border-white/5 bg-[#13131a]/90 p-2 text-sm font-semibold leading-tight text-white/80 transition hover:bg-white/10 hover:text-white"
+                className="aspect-square rounded-xl border border-white/5 bg-[#1a2022] p-2 text-sm font-semibold leading-tight text-white/80 transition hover:bg-white/10 hover:text-white"
               >
                 <span className="line-clamp-4 break-words">{item.title}</span>
               </button>
@@ -2728,7 +2931,434 @@
       );
     };
 
-    const LootRollerPanel = ({ onOpenSidebar }) => {
+    const NPC_STORAGE_KEYS = {
+      draft: "dm_npc_generator_draft_v1",
+      locks: "dm_npc_generator_locks_v1",
+      history: "dm_npc_generator_history_v1"
+    };
+    const NPC_FIELD_KEYS = ["factionId", "jobId", "raceId", "name", "genderId", "ageTierId", "trait-0", "trait-1", "trait-2", "appearance", "mannerism"];
+    const EMPTY_NPC = { name: "", raceId: "", genderId: "", ageTierId: "", factionId: "", jobId: "", traits: ["", "", ""], appearance: "", mannerism: "" };
+    const readNpcStorage = (key, fallback) => {
+      try {
+        const stored = JSON.parse(localStorage.getItem(key) || "null");
+        return stored ?? fallback;
+      } catch (error) {
+        return fallback;
+      }
+    };
+    const sanitizeNpcRecord = (value) => {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return { ...EMPTY_NPC };
+      const safeString = (field) => typeof value[field] === "string" ? value[field].slice(0, 500) : "";
+      const record = {
+        name: safeString("name"),
+        raceId: safeString("raceId"),
+        genderId: safeString("genderId"),
+        ageTierId: safeString("ageTierId"),
+        factionId: safeString("factionId"),
+        jobId: safeString("jobId"),
+        traits: Array.isArray(value.traits) ? [0, 1, 2].map((index) => typeof value.traits[index] === "string" ? value.traits[index].slice(0, 500) : "") : ["", "", ""],
+        appearance: safeString("appearance"),
+        mannerism: safeString("mannerism")
+      };
+      if (typeof value.id === "string" && value.id) record.id = value.id.slice(0, 200);
+      if (typeof value.createdAt === "string") record.createdAt = value.createdAt.slice(0, 100);
+      return record;
+    };
+    const sanitizeNpcLocks = (value) => {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+      return NPC_FIELD_KEYS.reduce((result, key) => ({ ...result, [key]: value[key] === true }), {});
+    };
+    const sanitizeNpcHistory = (value) => {
+      if (!Array.isArray(value)) return [];
+      return value
+        .filter((entry) => entry && typeof entry === "object" && !Array.isArray(entry) && typeof entry.id === "string")
+        .map(sanitizeNpcRecord)
+        .slice(0, 20);
+    };
+    const writeNpcStorage = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        // Storage can be unavailable or full; the in-memory generator should keep working.
+      }
+    };
+
+    const NpcSearchSelect = ({ value, options, onChange, placeholder = "Select...", ariaLabel }) => {
+      const [open, setOpen] = useState(false);
+      const [query, setQuery] = useState("");
+      const rootRef = useRef(null);
+      const inputRef = useRef(null);
+      const selected = options.find((option) => option.value === value);
+      const filtered = useMemo(() => {
+        const normalized = query.trim().toLowerCase();
+        if (!normalized) return options;
+        return options.filter((option) => option.label.toLowerCase().includes(normalized));
+      }, [options, query]);
+
+      useEffect(() => {
+        if (!open) return;
+        const close = (event) => {
+          if (rootRef.current && !rootRef.current.contains(event.target)) setOpen(false);
+        };
+        const escape = (event) => { if (event.key === "Escape") setOpen(false); };
+        document.addEventListener("mousedown", close);
+        document.addEventListener("keydown", escape);
+        setTimeout(() => inputRef.current?.focus(), 0);
+        return () => {
+          document.removeEventListener("mousedown", close);
+          document.removeEventListener("keydown", escape);
+        };
+      }, [open]);
+
+      return (
+        <div ref={rootRef} className="relative min-w-0 flex-1">
+          <button
+            type="button"
+            onClick={() => { setQuery(""); setOpen((previous) => !previous); }}
+            className="flex h-10 w-full items-center justify-between gap-3 rounded-lg bg-black/30 px-3 text-left text-sm text-white/85 outline-none transition hover:bg-black/40 focus-visible:ring-2 focus-visible:ring-pink-400/70"
+            aria-label={ariaLabel}
+            aria-haspopup="listbox"
+            aria-expanded={open}
+          >
+            <span className={selected ? "truncate" : "truncate text-[#aab8ba]"}>{selected?.label || placeholder}</span>
+            <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-[#aab8ba] transition ${open ? "rotate-180" : ""}`} />
+          </button>
+          {open && (
+            <div className="absolute left-0 right-0 top-full z-[120] mt-2 overflow-hidden rounded-xl border border-white/10 bg-[#252e31] shadow-[0_18px_45px_rgba(0,0,0,0.55)]">
+              <div className="border-b border-white/10 p-2">
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Filter options..."
+                  className="h-9 w-full rounded-lg border border-white/10 bg-black/35 px-3 text-sm text-white/85 outline-none placeholder:text-[#aab8ba] focus:border-pink-400/60"
+                />
+              </div>
+              <div className="max-h-64 overflow-y-auto custom-scrollbar" role="listbox">
+                {filtered.length ? filtered.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => { onChange(option.value); setOpen(false); }}
+                    className={`block w-full px-3 py-2.5 text-left text-sm transition ${option.value === value ? "bg-pink-500/15 text-pink-100" : "text-white/70 hover:bg-white/[0.06] hover:text-white"}`}
+                    role="option"
+                    aria-selected={option.value === value}
+                  >
+                    {option.label}
+                  </button>
+                )) : <div className="px-3 py-5 text-center text-xs text-[#aab8ba]">No matching options</div>}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const NpcFieldFrame = ({ label, fieldKey, locked, onToggleLock, onReroll, flash, children }) => (
+      <div className="npc-field rounded-xl transition-colors duration-200 motion-reduce:transition-none" data-locked={locked} data-flash={Boolean(flash)}>
+        <div className="flex items-center justify-between gap-3 px-3 pt-2">
+          <span className="text-xs font-bold uppercase tracking-wide text-[#aab8ba]">{label}</span>
+          <span className={`text-[11px] font-semibold uppercase tracking-wide ${locked ? "text-pink-200/75" : "text-[#aab8ba]"}`}>{locked ? "Locked" : "Open"}</span>
+        </div>
+        <div className="flex items-center gap-1.5 p-1.5 pt-1">
+          {children}
+          <button
+            type="button"
+            onClick={onToggleLock}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/70 ${locked ? "bg-pink-400/15 text-pink-100 hover:bg-pink-400/25" : "text-[#aab8ba] hover:bg-white/10 hover:text-white"}`}
+            aria-label={`${locked ? "Unlock" : "Lock"} ${label}`}
+            title={`${locked ? "Unlock" : "Lock"} ${label} for full generation`}
+          >
+            {locked ? <IconLock className="h-4 w-4" /> : <IconLockOpen className="h-4 w-4" />}
+          </button>
+          <button
+            type="button"
+            onClick={onReroll}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.045] text-[#aab8ba] transition hover:bg-cyan-400/15 hover:text-cyan-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70 active:scale-95"
+            aria-label={`Reroll ${label}`}
+            title={`Reroll ${label} only`}
+          >
+            <Dice className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    );
+
+    const NpcTextControl = ({ value, onChange, ariaLabel }) => (
+      <input
+        value={value || ""}
+        onChange={(event) => onChange(event.target.value)}
+        aria-label={ariaLabel}
+        className="h-10 min-w-0 flex-1 rounded-lg bg-black/30 px-3 text-sm text-white/85 outline-none placeholder:text-[#aab8ba] hover:bg-black/40 focus-visible:ring-2 focus-visible:ring-pink-400/70"
+        placeholder="Generate or type a value..."
+      />
+    );
+
+    const NpcHistoryCard = ({ npc, expanded, copied, onToggle, onCopy, onRemove, data, races, engine }) => {
+      const race = engine.displayValue(races, npc.raceId);
+      const job = engine.displayValue(data.jobs, npc.jobId);
+      return (
+        <div className="border-b border-white/[0.07] last:border-b-0">
+          <div className="flex items-center gap-1 py-1.5">
+            <button
+              type="button"
+              onClick={onToggle}
+              className="group flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 text-left transition hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400/60"
+              aria-expanded={expanded}
+            >
+              <IconChevronRight className={`h-3.5 w-3.5 shrink-0 text-[#aab8ba] transition ${expanded ? "rotate-90" : ""}`} />
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold text-white/85">{npc.name || "Unnamed NPC"}</span>
+                <span className="block truncate text-[11px] text-[#aab8ba]">{race} · {job}</span>
+              </span>
+            </button>
+            <button type="button" onClick={onCopy} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#aab8ba] transition hover:bg-white/10 hover:text-white" aria-label={`Copy ${npc.name || "NPC"}`} title="Copy NPC">
+              {copied ? <Check className="h-4 w-4 text-emerald-300" /> : <IconCopy className="h-4 w-4" />}
+            </button>
+            <button type="button" onClick={onRemove} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#aab8ba] transition hover:bg-red-400/10 hover:text-red-200" aria-label={`Remove ${npc.name || "NPC"}`} title="Remove from history">
+              <IconTrash className="h-4 w-4" />
+            </button>
+          </div>
+          {expanded && (
+            <div className="mb-3 ml-7 space-y-2 rounded-xl bg-black/20 px-3 py-3 text-xs text-white/60">
+              <div><span className="text-[#aab8ba]">Faction:</span> {engine.displayValue(data.factions, npc.factionId)}</div>
+              <div><span className="text-[#aab8ba]">Gender:</span> {engine.displayValue(data.genders, npc.genderId)} · <span className="text-[#aab8ba]">Age:</span> {engine.displayValue(data.ageProfiles[data.raceProfiles[npc.raceId]?.ageProfileId] || [], npc.ageTierId)}</div>
+              <div><span className="text-[#aab8ba]">Traits:</span> {(npc.traits || []).join(", ")}</div>
+              <div className="leading-relaxed"><span className="text-[#aab8ba]">Appearance:</span> {npc.appearance}</div>
+              <div className="leading-relaxed"><span className="text-[#aab8ba]">Mannerism:</span> {npc.mannerism}</div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const NpcGeneratorPanel = ({ onOpenSidebar, isActive }) => {
+      const data = window.NPC_GENERATOR_DATA;
+      const names = window.NPC_NAME_POOLS;
+      const engine = window.NPC_GENERATOR_ENGINE;
+      const races = window.WOW_CHARACTER_OPTIONS?.races || [];
+      const [draft, setDraft] = useState(() => sanitizeNpcRecord(readNpcStorage(NPC_STORAGE_KEYS.draft, {})));
+      const [locks, setLocks] = useState(() => sanitizeNpcLocks(readNpcStorage(NPC_STORAGE_KEYS.locks, {})));
+      const [history, setHistory] = useState(() => sanitizeNpcHistory(readNpcStorage(NPC_STORAGE_KEYS.history, [])));
+      const [expandedId, setExpandedId] = useState(null);
+      const [copiedId, setCopiedId] = useState(null);
+      const [flashField, setFlashField] = useState("");
+
+      useEffect(() => { writeNpcStorage(NPC_STORAGE_KEYS.draft, draft); }, [draft]);
+      useEffect(() => { writeNpcStorage(NPC_STORAGE_KEYS.locks, locks); }, [locks]);
+      useEffect(() => { writeNpcStorage(NPC_STORAGE_KEYS.history, history.slice(0, 20)); }, [history]);
+      useEffect(() => {
+        if (!draft.id) return;
+        setHistory((previous) => previous.map((entry) => entry.id === draft.id ? { ...entry, ...draft } : entry));
+      }, [draft]);
+
+      const raceOptions = useMemo(() => races.map((race) => ({ value: race.id, label: race.name })).sort((a, b) => a.label.localeCompare(b.label)), [races]);
+      const factionOptions = useMemo(() => data.factions.map((entry) => ({ value: entry.id, label: entry.label })).sort((a, b) => a.label.localeCompare(b.label)), [data]);
+      const jobOptions = useMemo(() => data.jobs.map((entry) => ({ value: entry.id, label: entry.label })).sort((a, b) => a.label.localeCompare(b.label)), [data]);
+      const genderOptions = useMemo(() => data.genders.map((entry) => ({ value: entry.id, label: entry.label })), [data]);
+      const ageOptions = useMemo(() => {
+        const profile = data.ageProfiles[data.raceProfiles[draft.raceId]?.ageProfileId] || data.ageProfiles.humanLike;
+        return profile.map((entry) => ({ value: entry.id, label: entry.label }));
+      }, [data, draft.raceId]);
+      const allLocked = NPC_FIELD_KEYS.every((key) => locks[key]);
+
+      const showFieldFlash = (field) => {
+        setFlashField(field);
+        window.setTimeout(() => setFlashField((current) => current === field ? "" : current), 260);
+      };
+      const updateDraft = (patch) => setDraft((previous) => ({ ...previous, ...patch }));
+      const updateNextContext = (patch) => setDraft((previous) => {
+        const { id, createdAt, ...detached } = previous;
+        return { ...detached, ...patch };
+      });
+      const updateTrait = (index, value) => setDraft((previous) => {
+        const nextTraits = [...(previous.traits || ["", "", ""] )];
+        nextTraits[index] = value;
+        return { ...previous, traits: nextTraits };
+      });
+      const toggleLock = (field) => setLocks((previous) => ({ ...previous, [field]: !previous[field] }));
+
+      const createHistoryEntry = (npc) => {
+        const entry = { ...npc, id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, createdAt: new Date().toISOString() };
+        setDraft(entry);
+        setHistory((previous) => [entry, ...previous.filter((item) => item.id !== entry.id)].slice(0, 20));
+        return entry;
+      };
+
+      const generateNpc = () => {
+        if (allLocked) return;
+        const generated = engine.createNpc({
+          lockedValues: draft,
+          locks,
+          data,
+          names,
+          races,
+          recentNames: history.slice(0, 5).map((entry) => entry.name)
+        });
+        createHistoryEntry(generated);
+        showFieldFlash("all");
+      };
+
+      const rerollField = (field) => {
+        let base = draft;
+        if (!draft.raceId || !draft.factionId || !draft.jobId || !draft.genderId || !draft.ageTierId) {
+          base = engine.createNpc({ lockedValues: draft, locks, data, names, races, recentNames: history.slice(0, 5).map((entry) => entry.name) });
+        }
+        const next = engine.rerollNpcField({ npc: base, field, data, names, races, recentNames: history.slice(0, 5).map((entry) => entry.name) });
+        if (draft.id) setDraft({ ...next, id: draft.id, createdAt: draft.createdAt });
+        else createHistoryEntry(next);
+        showFieldFlash(field);
+      };
+
+      const copyNpc = async (npc, id) => {
+        await copyTextToClipboard(engine.formatNpcForClipboard(npc, data, races));
+        setCopiedId(id);
+        window.setTimeout(() => setCopiedId((current) => current === id ? null : current), 1400);
+      };
+
+      const fieldProps = (label, fieldKey) => ({
+        label,
+        fieldKey,
+        locked: Boolean(locks[fieldKey]),
+        onToggleLock: () => toggleLock(fieldKey),
+        onReroll: () => rerollField(fieldKey),
+        flash: flashField === fieldKey || flashField === "all"
+      });
+
+      if (!isActive) return null;
+
+      if (!data || !names || !engine || !races.length) {
+        return <div className="flex h-full w-full items-center justify-center rounded-3xl border border-red-300/20 bg-[#1a2022] text-sm text-red-200">NPC generator data could not be loaded.</div>;
+      }
+
+      return (
+        <div className="relative flex h-full min-h-0 w-full flex-col overflow-hidden rounded-3xl border border-white/5 bg-[#101214] text-white panel-glow">
+          <div className="flex shrink-0 items-center gap-3 border-b border-white/[0.07] px-4 py-4 sm:px-6">
+            <PageTopBar onOpenSidebar={onOpenSidebar} />
+            <div className="min-w-0">
+              <h1 className="truncate text-lg font-bold tracking-[-0.02em] text-white/95">NPC Generator</h1>
+              <p className="truncate text-xs text-[#aab8ba]">Lock what you know. Roll the rest.</p>
+            </div>
+            {draft.name && (
+              <button type="button" onClick={() => copyNpc(draft, "current")} className="ml-auto flex h-10 items-center gap-2 rounded-lg border border-white/10 px-3 text-xs text-[#aab8ba] transition hover:border-white/20 hover:bg-white/[0.05] hover:text-white">
+                {copiedId === "current" ? <Check className="h-4 w-4 text-emerald-300" /> : <IconCopy className="h-4 w-4" />}
+                <span className="hidden sm:inline">{copiedId === "current" ? "Copied" : "Copy NPC"}</span>
+              </button>
+            )}
+          </div>
+
+          <div className="min-h-0 flex-1 overflow-y-auto custom-scrollbar">
+            <div className="grid min-h-full grid-cols-1 xl:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.75fr)]">
+              <section className="min-w-0 px-4 py-5 sm:px-6 sm:py-6 xl:border-r xl:border-white/[0.07]">
+                <button
+                  type="button"
+                  onClick={generateNpc}
+                  disabled={allLocked}
+                  className="group relative flex h-16 w-full items-center justify-center overflow-hidden rounded-2xl btn-primary text-white transition hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:saturate-0 disabled:opacity-45 motion-reduce:transition-none"
+                >
+                  <span className="relative flex items-center gap-3 text-base font-semibold tracking-wide">
+                    <Dice className="h-5 w-5" />
+                    {allLocked ? "UNLOCK A FIELD" : "GENERATE NPC"}
+                  </span>
+                </button>
+
+                <div className="mt-7">
+                  <div className="mb-3 flex items-end justify-between gap-4">
+                    <div>
+                      <h2 className="text-sm font-bold text-white/90">Context</h2>
+                      <p className="mt-1 text-xs text-[#aab8ba]">Set the role and allegiance already true in your scene.</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                    <NpcFieldFrame {...fieldProps("Faction", "factionId")}>
+                      <NpcSearchSelect value={draft.factionId} options={factionOptions} onChange={(value) => updateNextContext({ factionId: value })} ariaLabel="Faction" />
+                    </NpcFieldFrame>
+                    <NpcFieldFrame {...fieldProps("Job", "jobId")}>
+                      <NpcSearchSelect value={draft.jobId} options={jobOptions} onChange={(value) => updateNextContext({ jobId: value })} ariaLabel="Job" />
+                    </NpcFieldFrame>
+                  </div>
+                </div>
+
+                <div className="mt-7 border-t border-white/[0.07] pt-6">
+                  <h2 className="mb-3 text-sm font-bold text-white/90">Identity</h2>
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                    <NpcFieldFrame {...fieldProps("Race", "raceId")}>
+                      <NpcSearchSelect value={draft.raceId} options={raceOptions} onChange={(value) => updateDraft({ raceId: value, ageTierId: "" })} ariaLabel="Race" />
+                    </NpcFieldFrame>
+                    <NpcFieldFrame {...fieldProps("Name", "name")}>
+                      <NpcTextControl value={draft.name} onChange={(value) => updateDraft({ name: value })} ariaLabel="Name" />
+                    </NpcFieldFrame>
+                    <NpcFieldFrame {...fieldProps("Gender", "genderId")}>
+                      <NpcSearchSelect value={draft.genderId} options={genderOptions} onChange={(value) => updateDraft({ genderId: value })} ariaLabel="Gender" />
+                    </NpcFieldFrame>
+                    <NpcFieldFrame {...fieldProps("Age tier", "ageTierId")}>
+                      <NpcSearchSelect value={draft.ageTierId} options={ageOptions} onChange={(value) => updateDraft({ ageTierId: value })} ariaLabel="Age tier" />
+                    </NpcFieldFrame>
+                  </div>
+                </div>
+
+                <div className="mt-7 border-t border-white/[0.07] pt-6">
+                  <h2 className="mb-3 text-sm font-bold text-white/90">At the table</h2>
+                  <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
+                    {[0, 1, 2].map((index) => (
+                      <NpcFieldFrame key={index} {...fieldProps(`Trait ${index + 1}`, `trait-${index}`)}>
+                        <NpcTextControl value={draft.traits?.[index]} onChange={(value) => updateTrait(index, value)} ariaLabel={`Trait ${index + 1}`} />
+                      </NpcFieldFrame>
+                    ))}
+                  </div>
+                  <div className="mt-2 grid grid-cols-1 gap-2">
+                    <NpcFieldFrame {...fieldProps("Appearance", "appearance")}>
+                      <NpcTextControl value={draft.appearance} onChange={(value) => updateDraft({ appearance: value })} ariaLabel="Appearance" />
+                    </NpcFieldFrame>
+                    <NpcFieldFrame {...fieldProps("Voice / mannerism", "mannerism")}>
+                      <NpcTextControl value={draft.mannerism} onChange={(value) => updateDraft({ mannerism: value })} ariaLabel="Voice or mannerism" />
+                    </NpcFieldFrame>
+                  </div>
+                </div>
+              </section>
+
+              <aside className="min-w-0 bg-[#151a1c] px-4 py-5 sm:px-6 sm:py-6">
+                <div className="flex items-end justify-between gap-4 border-b border-white/[0.07] pb-3">
+                  <div>
+                    <h2 className="text-sm font-bold text-white/90">Recent NPCs</h2>
+                    <p className="mt-1 text-xs text-[#aab8ba]">{history.length ? `${history.length} saved locally` : "Generated characters will collect here"}</p>
+                  </div>
+                  {history.length > 0 && (
+                    <button type="button" onClick={() => { if (window.confirm("Clear all recent NPCs?")) { setHistory([]); setDraft(EMPTY_NPC); } }} className="rounded-lg px-2 py-1.5 text-[11px] text-[#aab8ba] transition hover:bg-red-400/10 hover:text-red-200">Clear</button>
+                  )}
+                </div>
+                {history.length ? (
+                  <div className="mt-2">
+                    {history.map((npc) => (
+                      <NpcHistoryCard
+                        key={npc.id}
+                        npc={npc}
+                        expanded={expandedId === npc.id}
+                        copied={copiedId === npc.id}
+                        onToggle={() => setExpandedId((current) => current === npc.id ? null : npc.id)}
+                        onCopy={() => copyNpc(npc, npc.id)}
+                        onRemove={() => { setHistory((previous) => previous.filter((entry) => entry.id !== npc.id)); if (draft.id === npc.id) setDraft(EMPTY_NPC); }}
+                        data={data}
+                        races={races}
+                        engine={engine}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex min-h-64 flex-col items-center justify-center px-5 text-center">
+                    <Dice className="h-9 w-9 text-white/10" />
+                    <p className="mt-4 text-sm font-semibold text-[#aab8ba]">Start with what you know</p>
+                    <p className="mt-2 max-w-[28ch] text-xs leading-relaxed text-[#aab8ba]">Choose and lock a faction or job, then generate the gaps.</p>
+                  </div>
+                )}
+              </aside>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const LootRollerPanel = ({ onOpenSidebar, isActive }) => {
       const [instantRoll, setInstantRoll] = useState(() => localStorage.getItem("loot_roller_instant_roll") === "true");
       const [showSettings, setShowSettings] = useState(false);
       const [activeTab, setActiveTab] = useState("Random");
@@ -2755,7 +3385,9 @@
       const currentIntervalRef = useRef(null);
       const flashTimeoutRef = useRef(null);
       const flashClearTimeoutRef = useRef(null);
-      useEffect(() => { loadData(false); }, []);
+      useEffect(() => {
+        if (isActive && !isLoaded) loadData(false);
+      }, [isActive]);
 
       const normalizeItem = (rawItem, category) => {
         const rarity = normalizeRarity(rawItem.rarity || rawItem.Rarity);
@@ -3014,21 +3646,21 @@
 
       const SettingsModal = () => (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in-up">
-          <div className="bg-[#1a1a20] border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onClick={() => setShowSettings(false)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X className="w-4 h-4" /></button>
+          <div className="bg-[#252e31] border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onClick={() => setShowSettings(false)} className="absolute top-4 right-4 text-[#aab8ba] hover:text-white"><X className="w-4 h-4" /></button>
             <h2 className="text-xl font-bold mb-6 flex items-center gap-2"><Settings className="w-5 h-5 text-pink-400" /> Settings</h2>
             <div className="space-y-6">
               <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                 <div className="flex flex-col">
                   <span className="text-sm font-bold text-white/90">Instant Roll</span>
-                  <span className="text-[10px] text-white/40">Skip animation</span>
+                  <span className="text-xs text-[#aab8ba]">Skip animation</span>
                 </div>
                 <button onClick={() => setInstantRoll(!instantRoll)} className={`w-12 h-6 rounded-full relative transition-colors duration-300 ${instantRoll ? "bg-pink-600" : "bg-white/10"}`}>
                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300 ${instantRoll ? "left-7" : "left-1"}`}></div>
                 </button>
               </div>
 
-              <button onClick={() => saveSettings(instantRoll)} className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-pink-900/20 transition-all active:scale-95">Save Changes</button>
+              <button onClick={() => saveSettings(instantRoll)} className="w-full btn-primary text-white font-bold py-3 rounded-xl shadow-lg shadow-pink-900/20 transition-all active:scale-95">Save Changes</button>
               <button onClick={() => { setShowSettings(false); loadData(true); }} className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold py-3 rounded-xl border border-white/10 transition-all active:scale-95">
                 <RefreshCw className="w-4 h-4" /> Refresh Loot Tables
               </button>
@@ -3037,13 +3669,14 @@
         </div>
       );
 
+      if (!isActive) return null;
+
       return (
-        <div className="relative flex h-full min-h-0 w-full flex-col bg-[#0a0a0f] text-white rounded-3xl border border-white/5 p-6 panel-glow overflow-visible">
+        <div className="relative flex h-full min-h-0 w-full flex-col bg-[#101214] text-white rounded-3xl border border-white/5 p-6 panel-glow overflow-visible">
           <div
             className={`fixed inset-0 pointer-events-none z-[45] transition-opacity duration-[5400ms] ease-out ${bgFlash?.visible ? "opacity-100" : "opacity-0"}`}
             style={bgFlash?.style || undefined}
           ></div>
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-[-1] bg-gradient-to-br from-[#0a0a0f] via-[#15151e] to-[#0a0a0f]"></div>
 
           {showSettings && <SettingsModal />}
 
@@ -3051,9 +3684,9 @@
             <PageTopBar onOpenSidebar={onOpenSidebar}>
               <div className="ml-auto flex items-center gap-2">
                 {!isLoaded ? (
-                  <span className="text-xs text-white/40 flex items-center gap-1"><RefreshCw className="w-3 h-3 animate-spin" /> {loadingStatusText || `Loading ${loadProgress}%`}</span>
+                  <span className="text-xs text-[#aab8ba] flex items-center gap-1"><RefreshCw className="w-3 h-3 animate-spin" /> {loadingStatusText || `Loading ${loadProgress}%`}</span>
                 ) : null}
-                <button onClick={() => setShowSettings(true)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-colors">
+                <button onClick={() => setShowSettings(true)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-[#aab8ba] hover:text-white transition-colors">
                   <Settings className="w-4 h-4" />
                 </button>
               </div>
@@ -3061,12 +3694,12 @@
             <div className="hidden justify-between items-center h-8">
               <div className="flex items-center gap-2">
                 {!isLoaded ? (
-                  <span className="text-xs text-white/40 flex items-center gap-1"><RefreshCw className="w-3 h-3 animate-spin" /> {loadingStatusText || `Loading ${loadProgress}%`}</span>
+                  <span className="text-xs text-[#aab8ba] flex items-center gap-1"><RefreshCw className="w-3 h-3 animate-spin" /> {loadingStatusText || `Loading ${loadProgress}%`}</span>
                 ) : null}
                 {(error || failedTabs.length > 0) && (
                   <div className="relative group">
                     <AlertCircle className="w-5 h-5 text-red-500 cursor-help" />
-                    <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-red-900/90 text-white text-[10px] rounded border border-red-500/50 hidden group-hover:block z-50">
+                    <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-red-900/90 text-white text-xs rounded border border-red-500/50 hidden group-hover:block z-50">
                       {error && <div className="mb-1 font-bold">{error}</div>}
                       {failedTabs.length > 0 && (
                         <div>
@@ -3078,60 +3711,48 @@
                   </div>
                 )}
               </div>
-              <button onClick={() => setShowSettings(true)} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Settings className="w-5 h-5 text-white/50" /></button>
+              <button onClick={() => setShowSettings(true)} className="p-2 hover:bg-white/10 rounded-full transition-colors"><Settings className="w-5 h-5 text-[#aab8ba]" /></button>
             </div>
 
-            <div className="relative z-30 flex shrink-0 flex-col gap-4 w-full bg-[#13131a]/80 backdrop-blur-md p-4 rounded-3xl border border-white/5 shadow-xl">
+            <div className="relative z-30 flex shrink-0 flex-col gap-4 w-full bg-[#1a2022] p-4 rounded-2xl">
               <div className="w-full overflow-x-auto pt-1 pb-1 custom-scrollbar -mx-1 px-1">
                 <div className="flex gap-2 min-w-max">
                   {UI_CATEGORIES.map((tab) => (
-                    <button key={tab} onClick={() => !isRolling && setActiveTab(tab)} disabled={isRolling} className={`px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all duration-200 border ${activeTab === tab ? "bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)] scale-105" : "bg-white/5 text-white/40 border-transparent hover:bg-white/10 hover:text-white"}`}>
+                    <button key={tab} onClick={() => !isRolling && setActiveTab(tab)} disabled={isRolling} aria-pressed={activeTab === tab} className="category-tab px-4 py-2.5 rounded-lg text-sm font-medium">
                       {tab}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <button onClick={triggerRoll} disabled={!isRolling && (!isLoaded || allItems.length === 0)} className={`group relative w-full h-28 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg ${(!isRolling && allItems.length === 0) ? "scale-[0.99] opacity-90 cursor-not-allowed grayscale" : isRolling ? "opacity-75 brightness-90 saturate-50 hover:opacity-100 hover:brightness-100 hover:saturate-100" : "hover:scale-[1.01] active:scale-[0.98] hover:shadow-pink-500/20"}`}>
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 animate-gradient-x" style={{ backgroundSize: "400% 400%" }}></div>
-                <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-30"></div>
-                <style>{`
-                  @keyframes gradient-x {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                  }
-                  .animate-gradient-x {
-                    animation: gradient-x 3s ease infinite;
-                  }
-                `}</style>
+              <button onClick={triggerRoll} disabled={!isRolling && (!isLoaded || allItems.length === 0)} className={`btn-primary group relative w-full h-20 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg ${(!isRolling && allItems.length === 0) ? "scale-[0.99] opacity-90 cursor-not-allowed grayscale" : isRolling ? "opacity-75 brightness-90 saturate-50 hover:opacity-100 hover:brightness-100 hover:saturate-100" : "hover:scale-[1.01] active:scale-[0.98] hover:shadow-pink-500/20"}`}>
                 <div className="relative z-10 flex items-center justify-center h-full gap-3">
-                  {isRolling ? (<><RefreshCw className="w-6 h-6 animate-spin text-white/80" /><span className="text-lg font-black tracking-[0.2em] text-white drop-shadow-md">ROLLING...</span></>) : (<span className="text-lg font-black tracking-[0.2em] text-white drop-shadow-md">ROLL FOR LOOT</span>) }
+                  {isRolling ? (<><RefreshCw className="w-6 h-6 animate-spin text-white/80" /><span className="text-lg font-semibold tracking-wide text-white drop-shadow-md">ROLLING...</span></>) : (<span className="text-lg font-semibold tracking-wide text-white drop-shadow-md">ROLL FOR LOOT</span>) }
                 </div>
               </button>
 
               <div className="relative z-40 flex flex-col md:flex-row justify-between items-center gap-3">
                 <div className="grid w-full flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
-                  <div className="relative z-40 bg-black/40 rounded-xl border border-white/5 group transition-colors hover:border-white/10">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Sparkles className="w-3.5 h-3.5 text-white/30" /></div>
+                  <div className="relative z-40 bg-[#252e31] rounded-xl group">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Sparkles className="w-3.5 h-3.5 text-[#aab8ba]" /></div>
                     <CustomSelect
                       value={activeTheme}
                       onChange={handleThemeChange}
                       disabled={isRolling}
                       className="w-full"
-                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
+                      buttonClassName="w-full bg-[#252e31] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
                       optionClassName="uppercase tracking-wide text-xs font-bold"
                       options={LOOT_THEME_OPTIONS}
                     />
                   </div>
-                  <div className="relative z-40 bg-black/40 rounded-xl border border-white/5 group transition-colors hover:border-white/10">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Filter className="w-3.5 h-3.5 text-white/30" /></div>
+                  <div className="relative z-40 bg-[#252e31] rounded-xl group">
+                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"><Filter className="w-3.5 h-3.5 text-[#aab8ba]" /></div>
                     <CustomSelect
                       value={activeRarity}
                       onChange={setActiveRarity}
                       disabled={isRolling}
                       className="w-full"
-                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
+                      buttonClassName="w-full bg-[#252e31] border border-white/10 text-xs font-bold uppercase tracking-wide text-white/90 py-3 pl-10 pr-10 rounded-xl outline-none shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20"
                       optionClassName="uppercase tracking-wide text-xs font-bold"
                       options={[
                         { value: "Any", label: "Any Rarity" },
@@ -3160,7 +3781,7 @@
               </div>
             </div>
 
-            <div className="relative z-0 min-h-0 flex-1 overflow-hidden rounded-3xl bg-[#13131a]/50 border border-white/5 shadow-inner">
+            <div className="relative z-0 min-h-0 flex-1 overflow-hidden rounded-3xl bg-[#1a2022]/50 border border-white/5 shadow-inner">
               <div className="absolute inset-0 overflow-y-auto overflow-x-hidden p-3 custom-scrollbar">
                 {isRolling && rollingItem && (
                   <div className="mb-3">
@@ -3168,7 +3789,7 @@
                   </div>
                 )}
                 {history.length === 0 && !isRolling && (
-                  <div className="flex flex-col items-center justify-center h-full text-white/10 italic text-sm">
+                  <div className="flex flex-col items-center justify-center h-full text-[#aab8ba] text-sm">
                     <History className="w-12 h-12 mb-3 opacity-30" />
                     <p>Loot history will appear here</p>
                   </div>
@@ -3189,9 +3810,9 @@
       const parts = formatMoney(copper);
       if (Array.isArray(parts)) {
         return (
-          <div className="inline-flex items-center gap-1.5 bg-black/30 px-2 py-1 rounded-md border border-white/5 min-w-fit">
+          <div className="status-label inline-flex items-center gap-1.5 bg-black/30 px-2 py-1 rounded-md min-w-fit">
             {parts.map((p, idx) => (
-              <span key={idx} className={`flex items-baseline gap-0.5 text-[10px] font-bold ${p.color}`}>
+              <span key={idx} className={`flex items-baseline gap-0.5 text-xs font-bold ${p.color}`}>
                 {p.val}<span className="text-[1em] uppercase opacity-70 tracking-tighter">{p.unit}</span>
               </span>
             ))}
@@ -3223,33 +3844,33 @@
           <div className="p-3 md:p-4 flex items-center justify-between cursor-pointer gap-4" onClick={isExpanded && !isRollingView ? onToggle : undefined}>
             <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
               <div className={`w-2 h-2 rounded-full shrink-0 ${rarityBgDot}`} />
-              <span className={`font-semibold text-sm md:text-base truncate transition-colors ${isRollingView ? "text-white/50" : rarityTextColor}`}>
+              <span className={`font-semibold text-sm md:text-base truncate transition-colors ${isRollingView ? "text-[#aab8ba]" : rarityTextColor}`}>
                 {item.name}
               </span>
             </div>
             {!isRollingView && (
               <div className="flex items-center gap-3 shrink-0 animate-fade-in-up">
                 {item.value > 0 && <ValueDisplay copper={item.value} />}
-                <span className={`hidden sm:inline-flex px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${rarityTextColor} bg-white/5 border border-white/5`}>
+                <span className={`hidden sm:inline-flex px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${rarityTextColor} bg-white/5 border border-white/5`}>
                   {rarityKey}
                 </span>
-                <div className={`text-white/30 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}><ChevronDown className="w-4 h-4" /></div>
+                <div className={`text-[#aab8ba] transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}><ChevronDown className="w-4 h-4" /></div>
               </div>
             )}
           </div>
           <div className={`overflow-hidden transition-[max-height] duration-500 ease-in-out ${isExpanded && !isRollingView ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
             <div className="px-4 pb-4 pt-0">
               <div className="h-px w-full bg-white/5 mb-3"></div>
-              <div className="sm:hidden mb-2"><span className={`text-[10px] font-bold uppercase tracking-wider opacity-60 ${rarityTextColor}`}>{rarityKey}</span></div>
+              <div className="sm:hidden mb-2"><span className={`text-xs font-bold uppercase tracking-wider opacity-60 ${rarityTextColor}`}>{rarityKey}</span></div>
               <p className="text-sm leading-relaxed text-slate-300 font-medium">{item.description}</p>
-              <div className="mt-3 flex justify-end"><span className="text-[10px] text-white/20 uppercase tracking-widest">{item.category}</span></div>
+              <div className="mt-3 flex justify-end"><span className="text-xs text-[#aab8ba] uppercase tracking-widest">{item.category}</span></div>
             </div>
           </div>
         </div>
       );
     };
 
-    const NotesPanel = ({ onOpenSidebar }) => {
+    const NotesPanel = ({ onOpenSidebar, isActive }) => {
       const STORAGE_KEY = "dm_notes_v1";
       const [notes, setNotes] = useState(() => {
         try {
@@ -3308,6 +3929,8 @@
         });
       };
 
+      if (!isActive) return null;
+
       return (
         <div className="flex flex-col gap-3 sm:gap-4">
           <PageTopBar onOpenSidebar={onOpenSidebar}>
@@ -3319,7 +3942,7 @@
             </button>
           </PageTopBar>
           <div className="grid grid-cols-1 xl:grid-cols-[minmax(12rem,20rem)_minmax(0,1fr)] gap-3 sm:gap-4">
-            <div className="bg-[#13131a]/90 border border-white/5 rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3">
+            <div className="bg-[#1a2022] border border-white/5 rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3">
               <div className="flex flex-col gap-2 overflow-y-auto custom-scrollbar max-h-[calc(100vh-7rem)]">
                 {notes.map((note) => (
                   <button
@@ -3332,13 +3955,13 @@
                     }`}
                   >
                     <div className="text-sm font-semibold leading-tight break-words opacity-80">{note.title || "Untitled Note"}</div>
-                    <div className="text-[10px] opacity-50 mt-1">{new Date(note.updatedAt).toLocaleString()}</div>
+                    <div className="text-xs opacity-50 mt-1">{new Date(note.updatedAt).toLocaleString()}</div>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="bg-[#13131a]/90 border border-white/5 rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3">
+            <div className="bg-[#1a2022] border border-white/5 rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="text-base sm:text-lg font-semibold text-white/90 break-words">{activeNote?.title || "Untitled Note"}</div>
                 <button
@@ -3428,6 +4051,8 @@
         });
       }, [rules, normalizedQuery]);
 
+      if (!isActive) return null;
+
       return (
         <div className="flex flex-col gap-3 sm:gap-4">
           <PageTopBar onOpenSidebar={onOpenSidebar}>
@@ -3448,14 +4073,14 @@
 
           <div className="rules-card-grid sm:gap-4">
             {visibleRules.length === 0 && (
-              <div className="rounded-xl border border-white/5 bg-[#13131a]/90 p-4 text-sm text-white/40">
+              <div className="rounded-xl border border-white/5 bg-[#1a2022] p-4 text-sm text-[#aab8ba]">
                 No matches.
               </div>
             )}
             {visibleRules.map((rule) => (
               <div
                 key={rule.id}
-                className={`bg-[#13131a]/90 border rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3 min-h-[14rem] ${
+                className={`bg-[#1a2022] border rounded-xl p-3 sm:p-4 panel-glow flex flex-col gap-3 min-h-[14rem] ${
                   rule.pinned ? "border-pink-400/30" : "border-white/5"
                 }`}
               >
@@ -3482,7 +4107,7 @@
                     onClick={() => updateRule(rule.id, { pinned: !rule.pinned })}
                     className={`px-3 py-2 rounded-lg border text-sm transition ${
                       rule.pinned
-                        ? "bg-pink-500 text-white border-pink-400"
+                        ? "bg-pink-500 text-white"
                         : "border-white/10 text-white/60 hover:text-white hover:border-white/30"
                     }`}
                   >
@@ -3616,7 +4241,7 @@
         >
           <div className="flex items-center gap-2">
             <button
-              className="text-white/40 hover:text-white cursor-grab active:cursor-grabbing px-1 self-center"
+              className="text-[#aab8ba] hover:text-white cursor-grab active:cursor-grabbing px-1 self-center"
               draggable
               onDragStart={() => onDragStart(row.id)}
               title="Drag to reorder"
@@ -3629,11 +4254,11 @@
               value={row.name}
               onChange={(e) => onUpdate(row.id, { name: e.target.value })}
               placeholder="Name"
-              className="flex-1 bg-transparent text-white/80 text-xs outline-none placeholder:text-white/30"
+              className="flex-1 bg-transparent text-white/80 text-xs outline-none placeholder:text-[#aab8ba]"
             />
             <button
               onClick={() => onRemove(row.id)}
-              className="text-white/40 hover:text-white px-1 ml-auto"
+              className="text-[#aab8ba] hover:text-white px-1 ml-auto"
               title="Remove"
               type="button"
             >
@@ -3647,7 +4272,7 @@
               className="w-14 bg-black/40 border border-white/10 rounded-lg text-center text-xs text-white/80 outline-none"
               inputMode="numeric"
             />
-            <span className="text-white/30">/</span>
+            <span className="text-[#aab8ba]">/</span>
             <input
               value={row.max}
               onChange={(e) => onUpdate(row.id, { max: parseValue(e.target.value) })}
@@ -3701,12 +4326,12 @@
           >
             <div className="flex items-center justify-between gap-3">
               <span className="truncate">{selected?.label || "Select..."}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-[#aab8ba] transition-transform ${open ? "rotate-180" : ""}`} />
             </div>
           </button>
 
           {open && !disabled && (
-            <div className="absolute z-[100] mt-2 w-full rounded-xl border border-white/10 bg-[#12121a] shadow-[0_18px_40px_rgba(0,0,0,0.45)] overflow-hidden">
+            <div className="absolute z-[100] mt-2 w-full rounded-xl border border-white/10 bg-[#252e31] shadow-[0_18px_40px_rgba(0,0,0,0.45)] overflow-hidden">
               <div className="max-h-60 overflow-y-auto custom-scrollbar">
                 {options.map((opt) => (
                   <button
@@ -3727,100 +4352,136 @@
       );
     };
 
-    const ArcaneSurgePanel = ({ onOpenSidebar }) => {
-      const [forceCritical, setForceCritical] = useState(false);
-      const [isRolling, setIsRolling] = useState(false);
-      const [result, setResult] = useState("");
-      const [overlayOpacity, setOverlayOpacity] = useState(0);
-      const [overlayTransition, setOverlayTransition] = useState("none");
+    const ArcaneSurgePanel = ({ onOpenSidebar, isActive }) => {
+      const [forceDesperate, setForceDesperate] = useState(false);
+      const [roll, setRoll] = useState(null);
+      const [phase, setPhase] = useState("idle");
       const revealTimersRef = useRef([]);
-      const revealFrameRef = useRef(null);
+      const rollingRef = useRef(false);
+      const rollIdRef = useRef(0);
+      const contentRef = useRef(null);
+      const isRolling = phase === "charging" || phase === "revealed";
+      const showResult = roll && phase !== "charging";
 
       const clearRevealTimers = () => {
         revealTimersRef.current.forEach((timerId) => clearTimeout(timerId));
         revealTimersRef.current = [];
-        if (revealFrameRef.current !== null) {
-          cancelAnimationFrame(revealFrameRef.current);
-          revealFrameRef.current = null;
-        }
       };
 
-      useEffect(() => clearRevealTimers, []);
-
-      const rollSurge = () => {
-        if (isRolling) return;
+      const finishReveal = () => {
         clearRevealTimers();
+        rollingRef.current = false;
+        setPhase("settled");
+      };
 
-        const isCritical = forceCritical || Math.random() < 0.1;
-        const nextResult = isCritical
-          ? CRITICAL_EFFECTS[Math.floor(Math.random() * CRITICAL_EFFECTS.length)]
-          : SURGE_EFFECTS[Math.floor(Math.random() * SURGE_EFFECTS.length)];
+      useEffect(() => {
+        const handleVisibility = () => {
+          if (document.hidden && rollingRef.current) finishReveal();
+        };
+        const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const handleMotionChange = () => {
+          if (motionPreference.matches && rollingRef.current) finishReveal();
+        };
+        document.addEventListener("visibilitychange", handleVisibility);
+        motionPreference.addEventListener("change", handleMotionChange);
+        return () => {
+          clearRevealTimers();
+          document.removeEventListener("visibilitychange", handleVisibility);
+          motionPreference.removeEventListener("change", handleMotionChange);
+        };
+      }, []);
 
-        setIsRolling(true);
-        setResult("");
-        setOverlayTransition("none");
-        setOverlayOpacity(0);
+      useEffect(() => {
+        if (!isActive && rollingRef.current) finishReveal();
+      }, [isActive]);
 
-        revealFrameRef.current = requestAnimationFrame(() => {
-          setOverlayTransition("opacity 2000ms cubic-bezier(0.16, 1, 0.3, 1)");
-          setOverlayOpacity(1);
-          revealFrameRef.current = null;
-        });
+      const rollSurge = (event) => {
+        // A second press reveals the pending result; it never draws a second roll.
+        if (rollingRef.current) {
+          finishReveal();
+          return;
+        }
+        clearRevealTimers();
+        const nextRoll = { ...rollArcaneSurge({ desperate: forceDesperate }), id: ++rollIdRef.current };
+        setRoll(nextRoll);
+        if (contentRef.current) contentRef.current.scrollTop = 0;
 
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || event.detail === 0) {
+          setPhase("settled");
+          return;
+        }
+
+        rollingRef.current = true;
+        setPhase("charging");
+        const isDesperate = nextRoll.kind === "desperate";
         revealTimersRef.current = [
-          setTimeout(() => {
-            setResult(nextResult);
-          }, 2000),
-          setTimeout(() => {
-            setOverlayTransition("opacity 2000ms cubic-bezier(0.05, 0.9, 0.05, 1)");
-            setOverlayOpacity(0);
-          }, 2350),
-          setTimeout(() => {
-            setIsRolling(false);
-          }, 4350)
+          setTimeout(() => setPhase("revealed"), isDesperate ? 2800 : 2000),
+          setTimeout(finishReveal, isDesperate ? 4600 : 4350)
         ];
       };
 
+      if (!isActive) return null;
+
       return (
-        <div className="flex min-h-0 w-full flex-col gap-3 sm:gap-4">
+        <div className="flex min-h-0 w-full flex-col gap-3 sm:gap-4" onKeyDown={(event) => {
+          if (event.key === "Escape" && rollingRef.current) {
+            event.preventDefault();
+            finishReveal();
+          }
+        }}>
           <PageTopBar onOpenSidebar={onOpenSidebar} className="w-full justify-between">
-            <label className="ml-auto inline-flex h-10 items-center gap-3 rounded-lg border border-white/10 bg-[#13131a]/90 px-3 text-sm text-white/70 transition hover:border-white/20 hover:text-white">
+            <label className="ml-auto inline-flex h-10 items-center gap-3 rounded-lg bg-[#1a2022] px-3 text-sm text-white/70" title="Guarantee a desperate surge. Normal rolls have a 10% chance.">
               <input
                 type="checkbox"
-                checked={forceCritical}
-                onChange={(e) => setForceCritical(e.target.checked)}
+                checked={forceDesperate}
+                disabled={isRolling}
+                onChange={(e) => setForceDesperate(e.target.checked)}
+                aria-describedby="surge-mode-help"
                 className="h-4 w-4 accent-pink-500"
               />
               Desperate
             </label>
+            <span id="surge-mode-help" className="sr-only">Guarantees a desperate surge. Unchecked rolls have a 10% chance of a desperate surge.</span>
           </PageTopBar>
 
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-xl p-3 sm:p-4">
+          <div className="bg-[#1a2022] rounded-xl p-3 sm:p-4">
             <button
+              type="button"
               onClick={rollSurge}
-              disabled={isRolling}
-              className={`relative block w-full overflow-hidden rounded-lg px-4 py-5 text-base sm:text-lg font-bold transition-all ${
-                isRolling ? "opacity-50 cursor-wait" : "hover:scale-[1.005] hover:brightness-110"
-              } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white`}
+              data-desperate={isRolling ? roll?.kind === "desperate" : forceDesperate}
+              className="surge-trigger block w-full rounded-lg px-4 py-5 text-base sm:text-lg font-bold btn-primary"
             >
-              Arcane Surge
+              {isRolling ? "Reveal now" : "Arcane Surge"}
             </button>
           </div>
 
-          <div className="relative bg-[#13131a]/90 border border-white/5 rounded-xl p-4 sm:p-6 flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden">
-            <div className="relative z-10 max-w-5xl text-center text-3xl font-semibold leading-relaxed text-[#ffffff] md:text-5xl" aria-live="polite">
-              {result}
+          <div className="surge-stage" data-kind={roll?.kind || "normal"} data-phase={phase}>
+            <div ref={contentRef} className="surge-content custom-scrollbar" role="region" aria-label="Arcane surge result" aria-live="polite" aria-atomic="true" aria-busy={phase === "charging"} tabIndex={showResult ? 0 : -1}>
+              {showResult && (
+                <article key={roll.id} className="surge-result">
+                  {roll.kind === "desperate" ? (
+                    <>
+                      <h2>{roll.effect.title}</h2>
+                      {roll.effect.text.split("\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                      {roll.effect.usesSave && <p className="surge-save">Save DC: your spell save DC, or 15 if you have none.</p>}
+                    </>
+                  ) : <div className="surge-normal-text">{roll.effect.text}</div>}
+                </article>
+              )}
             </div>
-            <div
-              className="pointer-events-none absolute inset-0 z-20 bg-[#ffffff]"
-              style={{ opacity: overlayOpacity, transition: overlayTransition }}
-            />
+            {isRolling && (
+              <div key={roll.id} className={`surge-arrival surge-arrival--${roll.kind}`} aria-hidden="true">
+                {roll.kind === "desperate" && <>
+                  <div className="surge-fissure" />
+                </>}
+              </div>
+            )}
           </div>
         </div>
       );
     };
 
-    const BackgroundPanel = ({ apiKey, onOpenSidebar }) => {
+    const BackgroundPanel = ({ apiKey, onOpenSidebar, isActive }) => {
       const [selectedStyleId, setSelectedStyleId] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.styleId) || BACKGROUND_STYLES[0].id);
       const [styleOverrides, setStyleOverrides] = useState(() => {
         try {
@@ -3831,6 +4492,7 @@
       });
       const [userPrompt, setUserPrompt] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.prompt) || "");
       const [sceneContext, setSceneContext] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.context) || "any");
+      const [isRawPromptMode, setIsRawPromptMode] = useState(() => localStorage.getItem(BACKGROUND_STORAGE_KEYS.rawPrompt) === "true");
       const [temperature, setTemperature] = useState(() => {
         const storedRaw = localStorage.getItem(BACKGROUND_STORAGE_KEYS.temperature);
         const stored = Number(storedRaw);
@@ -3864,6 +4526,10 @@
       useEffect(() => {
         localStorage.setItem(BACKGROUND_STORAGE_KEYS.context, sceneContext);
       }, [sceneContext]);
+
+      useEffect(() => {
+        localStorage.setItem(BACKGROUND_STORAGE_KEYS.rawPrompt, String(isRawPromptMode));
+      }, [isRawPromptMode]);
 
       useEffect(() => {
         localStorage.setItem(BACKGROUND_STORAGE_KEYS.temperature, String(temperature));
@@ -3961,6 +4627,8 @@
       }, [isGenerating]);
 
       const buildPrompt = () => {
+        if (isRawPromptMode) return userPrompt;
+
         const artstylePrimer = referenceStyleImage ? REF_STYLE_ARTSTYLE_PRIMER : BACKGROUND_ARTSTYLE_PRIMER;
         const lines = [
           artstylePrimer,
@@ -3984,6 +4652,12 @@
       };
 
       const buildReferenceParts = () => {
+        if (isRawPromptMode) {
+          return [...referenceImages, ...(referenceStyleImage ? [referenceStyleImage] : [])].map((image) => ({
+            inlineData: { mimeType: image.mimeType, data: image.data }
+          }));
+        }
+
         const parts = [];
         referenceImages.forEach((image, index) => {
           parts.push({
@@ -4010,6 +4684,7 @@
             "x-goog-api-key": apiKey.trim()
           },
           body: JSON.stringify({
+            store: false,
             contents: [
               {
                 role: "user",
@@ -4078,7 +4753,6 @@
         setCompletedGenerationCount(0);
         setGeneratedImages([]);
         const fullPrompt = buildPrompt();
-        console.log("[Background Generator] Prompt:\n", fullPrompt);
         const nextImages = [];
 
         try {
@@ -4109,6 +4783,7 @@
               "x-goog-api-key": apiKey.trim()
             },
             body: JSON.stringify({
+              store: false,
               contents: [
                 {
                   role: "user",
@@ -4253,6 +4928,7 @@
               "x-goog-api-key": apiKey.trim()
             },
             body: JSON.stringify({
+              store: false,
               contents: [
                 {
                   role: "user",
@@ -4344,14 +5020,16 @@
         }
       };
 
+      if (!isActive) return null;
+
       return (
         <div className="flex flex-col gap-6">
           <PageTopBar onOpenSidebar={onOpenSidebar} />
           {isEditingStyles && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6">
-              <div className="w-full max-w-3xl bg-[#13131a] border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
+              <div className="w-full max-w-3xl bg-[#1a2022] border border-white/10 rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                  <div className="text-xs uppercase tracking-[0.4em] text-white/50">Edit Prompts</div>
+                  <div className="text-xs uppercase tracking-[0.4em] text-[#aab8ba]">Edit Prompts</div>
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
@@ -4362,14 +5040,14 @@
                         ];
                         setEditDraft(next);
                       }}
-                      className="text-[10px] uppercase tracking-[0.3em] text-white/50 hover:text-white transition"
+                      className="text-xs uppercase tracking-wide text-[#aab8ba] hover:text-white transition"
                     >
                       Add Style
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsEditingStyles(false)}
-                      className="text-white/40 hover:text-white transition"
+                      className="text-[#aab8ba] hover:text-white transition"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -4380,7 +5058,7 @@
                   {editDraft.map((style, styleIndex) => (
                     <div key={`${style.label || "style"}-${styleIndex}`} className="border border-white/5 rounded-2xl p-4 bg-black/30">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-xs uppercase tracking-[0.3em] text-white/50">{style.label || "Style"}</div>
+                        <div className="text-xs uppercase tracking-wide text-[#aab8ba]">{style.label || "Style"}</div>
                         <button
                           type="button"
                           onClick={() => {
@@ -4388,7 +5066,7 @@
                             const next = editDraft.filter((_, idx) => idx !== styleIndex);
                             setEditDraft(next);
                           }}
-                          className="text-[10px] uppercase tracking-[0.3em] text-rose-300/70 hover:text-rose-200 transition"
+                          className="text-xs uppercase tracking-wide text-rose-300/70 hover:text-rose-200 transition"
                         >
                           Remove
                         </button>
@@ -4416,7 +5094,7 @@
                         placeholder="Style primer..."
                       />
                       <div className="mt-3 flex items-center justify-between">
-                        <div className="text-[10px] uppercase tracking-[0.3em] text-white/40">Contexts</div>
+                        <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Contexts</div>
                         <button
                           type="button"
                           onClick={() => {
@@ -4426,7 +5104,7 @@
                             next[styleIndex] = { ...next[styleIndex], contexts: nextContexts };
                             setEditDraft(next);
                           }}
-                          className="text-[10px] uppercase tracking-[0.3em] text-white/50 hover:text-white transition"
+                          className="text-xs uppercase tracking-wide text-[#aab8ba] hover:text-white transition"
                         >
                           Add Context
                         </button>
@@ -4436,7 +5114,7 @@
                           {style.contexts.map((ctx, ctxIndex) => (
                             <div key={`${style.label || "style"}-${ctx.label || "context"}-${ctxIndex}`} className="bg-black/30 border border-white/5 rounded-xl p-3">
                               <div className="flex items-center justify-between mb-2">
-                                <div className="text-[10px] uppercase tracking-[0.3em] text-white/50">{ctx.label || "Context"}</div>
+                                <div className="text-xs uppercase tracking-wide text-[#aab8ba]">{ctx.label || "Context"}</div>
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -4447,7 +5125,7 @@
                                     next[styleIndex] = { ...next[styleIndex], contexts: nextContexts };
                                     setEditDraft(next);
                                   }}
-                                  className="text-[10px] uppercase tracking-[0.3em] text-rose-300/70 hover:text-rose-200 transition"
+                                  className="text-xs uppercase tracking-wide text-rose-300/70 hover:text-rose-200 transition"
                                 >
                                   Remove
                                 </button>
@@ -4490,14 +5168,14 @@
                   <button
                     type="button"
                     onClick={() => setIsEditingStyles(false)}
-                    className="px-4 py-2 rounded-xl border border-white/10 text-xs uppercase tracking-[0.3em] text-white/50 hover:text-white hover:border-white/30 transition"
+                    className="px-4 py-2 rounded-xl border border-white/10 text-xs uppercase tracking-wide text-[#aab8ba] hover:text-white hover:border-white/30 transition"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={saveStyleEditor}
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white text-xs uppercase tracking-[0.3em] shadow-lg"
+                    className="px-5 py-2 rounded-xl btn-primary text-white text-xs uppercase tracking-wide shadow-lg"
                   >
                     Save
                   </button>
@@ -4505,28 +5183,30 @@
               </div>
             </div>
           )}
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-5 sm:p-6 panel-glow flex flex-col gap-5">
+          <div className="bg-[#1a2022] border border-white/5 rounded-3xl p-5 sm:p-6 panel-glow flex flex-col gap-5">
             <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_21rem] gap-5 items-start">
               <div className="flex flex-col gap-4 min-w-0">
                 <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-3 items-end">
                   <div className="flex flex-col gap-2 min-w-0">
-                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/35">Style</div>
+                    <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Style</div>
                     <CustomSelect
                       value={selectedStyleId}
                       onChange={setSelectedStyleId}
+                      disabled={isRawPromptMode}
                       className="w-full"
-                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                      buttonClassName="w-full bg-[#252e31] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors"
                       optionClassName="text-sm"
                       options={mergedStyles.map((style) => ({ value: style.id, label: style.label }))}
                     />
                   </div>
                   <div className="flex flex-col gap-2 min-w-0">
-                    <div className="text-[10px] uppercase tracking-[0.3em] text-white/35">Context</div>
+                    <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Context</div>
                     <CustomSelect
                       value={sceneContext}
                       onChange={setSceneContext}
+                      disabled={isRawPromptMode}
                       className="w-full"
-                      buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                      buttonClassName="w-full bg-[#252e31] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors"
                       optionClassName="text-sm"
                       options={[
                         { value: "any", label: "Any" },
@@ -4540,11 +5220,38 @@
                   <button
                     type="button"
                     onClick={openStyleEditor}
-                    className="h-[46px] px-4 rounded-xl border border-white/10 bg-white/5 text-[10px] uppercase tracking-[0.3em] text-white/55 hover:text-white hover:border-white/25 hover:bg-white/10 transition"
+                    disabled={isRawPromptMode}
+                    className={`h-[46px] px-4 rounded-xl border text-xs uppercase tracking-wide transition ${
+                      isRawPromptMode
+                        ? "border-white/10 bg-white/5 text-[#aab8ba] cursor-not-allowed"
+                        : "border-white/10 bg-white/5 text-[#aab8ba] hover:text-white hover:border-white/25 hover:bg-white/10"
+                    }`}
                   >
                     Edit
                   </button>
                 </div>
+
+                <label className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl border px-3 py-2.5 transition ${
+                  isRawPromptMode
+                    ? "border-cyan-300/35 bg-cyan-400/[0.08]"
+                    : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05]"
+                }`}>
+                  <span className="min-w-0">
+                    <span className={`block text-xs font-semibold ${isRawPromptMode ? "text-cyan-100" : "text-white/75"}`}>Raw prompt</span>
+                    <span className={`mt-0.5 block text-[11px] leading-4 ${isRawPromptMode ? "text-cyan-100/65" : "text-[#aab8ba]"}`}>
+                      {isRawPromptMode
+                        ? "Only your exact text and attached images are sent."
+                        : "Built-in style, context, and constraints are active."}
+                    </span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={isRawPromptMode}
+                    onChange={(event) => setIsRawPromptMode(event.target.checked)}
+                    disabled={isGenerating}
+                    className="h-4 w-4 shrink-0 accent-cyan-400"
+                  />
+                </label>
 
                 <textarea
                   value={userPrompt}
@@ -4555,7 +5262,7 @@
                       handleGenerate(1);
                     }
                   }}
-                  placeholder="Describe the location..."
+                  placeholder={isRawPromptMode ? "Enter the exact prompt to send..." : "Describe the location..."}
                   className="min-h-[150px] bg-black/40 border border-white/10 rounded-xl px-3 py-3 text-sm text-white/80 outline-none focus:border-pink-500 transition resize-y"
                 />
 
@@ -4572,7 +5279,7 @@
                     disabled={!userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference}
                     className={`h-[38px] rounded-xl border text-xs font-semibold transition ${
                       !userPrompt.trim() || !transformEnvironmentTarget.trim() || isTransformingEnvironment || isGenerating || isExtractingReference
-                        ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                        ? "border-white/10 bg-white/5 text-[#aab8ba] cursor-not-allowed"
                         : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
                     }`}
                   >
@@ -4599,12 +5306,12 @@
                   />
 
                   <div className="flex items-center justify-between gap-3">
-                    <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">Location refs</div>
+                    <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Location refs</div>
                     {referenceImages.length > 0 && (
                       <button
                         type="button"
                         onClick={clearReferenceImages}
-                        className="text-[10px] uppercase tracking-[0.2em] text-white/40 hover:text-white/70 transition"
+                        className="text-xs uppercase tracking-wide text-[#aab8ba] hover:text-white/70 transition"
                       >
                         Clear all
                       </button>
@@ -4641,7 +5348,7 @@
                               className="absolute inset-0 h-full w-full object-cover"
                             />
                             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                              <div className="truncate text-[10px] text-white/80">{image.name}</div>
+                              <div className="truncate text-xs text-white/80">{image.name}</div>
                             </div>
                             <button
                               type="button"
@@ -4656,9 +5363,9 @@
                             </button>
                           </>
                         ) : (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white/35">
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-[#aab8ba]">
                             <ImageIcon className="h-5 w-5" />
-                            <span className="text-[10px] uppercase tracking-[0.2em]">Slot {index + 1}</span>
+                            <span className="text-xs uppercase tracking-wide">Slot {index + 1}</span>
                           </div>
                         )}
                       </div>
@@ -4666,7 +5373,7 @@
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">Art style</div>
+                    <div className="text-xs uppercase tracking-wide text-[#aab8ba]">Art style</div>
                     <div
                       role="button"
                       tabIndex={0}
@@ -4693,11 +5400,11 @@
                             alt="Art style reference"
                             className="absolute inset-0 h-full w-full object-cover"
                           />
-                          <div className="absolute left-2 top-2 rounded-lg border border-cyan-300/40 bg-black/65 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-cyan-100">
+                          <div className="status-label absolute left-2 top-2 rounded-lg bg-black/65 px-2 py-1 text-xs uppercase tracking-wide text-cyan-100">
                             Style lock
                           </div>
                           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                            <div className="truncate text-[10px] text-white/80">{referenceStyleImage.name}</div>
+                            <div className="truncate text-xs text-white/80">{referenceStyleImage.name}</div>
                           </div>
                           <button
                             type="button"
@@ -4714,7 +5421,7 @@
                       ) : (
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-cyan-100/45">
                           <ImageIcon className="h-5 w-5" />
-                          <span className="text-[10px] uppercase tracking-[0.2em]">Style slot</span>
+                          <span className="text-xs uppercase tracking-wide">Style slot</span>
                         </div>
                       )}
                     </div>
@@ -4724,9 +5431,9 @@
                     type="button"
                     onClick={handleExtractReferenceDetails}
                     disabled={!referenceImages.length || isExtractingReference || isGenerating}
-                    className={`w-full min-h-[42px] px-4 rounded-xl border text-xs uppercase tracking-[0.24em] transition ${
+                    className={`w-full min-h-[42px] px-4 rounded-xl border text-xs uppercase tracking-wide transition ${
                       !referenceImages.length || isExtractingReference || isGenerating
-                        ? "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                        ? "border-white/10 bg-white/5 text-[#aab8ba] cursor-not-allowed"
                         : "border-cyan-400/30 bg-cyan-500/10 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-300/40"
                     }`}
                   >
@@ -4737,7 +5444,7 @@
                 <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between text-xs text-white/60">
-                      <span className="uppercase tracking-[0.24em]">Temperature</span>
+                      <span className="uppercase tracking-wide">Temperature</span>
                       <span className="font-mono text-white/80">{temperature.toFixed(2)}</span>
                     </div>
                     <input
@@ -4756,9 +5463,9 @@
                     <button
                       onClick={() => handleGenerate(1)}
                       disabled={!canGenerate}
-                      className={`relative w-full min-h-[52px] overflow-hidden rounded-xl px-5 text-sm font-black tracking-[0.24em] uppercase transition-all ${
+                      className={`relative w-full min-h-[52px] overflow-hidden rounded-xl px-5 text-sm font-semibold tracking-wide uppercase transition-all ${
                         canGenerate ? "hover:scale-[1.01] hover:shadow-pink-500/20" : "opacity-50 cursor-not-allowed"
-                      } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white shadow-lg`}
+                      } btn-primary text-white shadow-lg`}
                     >
                       {isGenerating ? `Generating ${completedGenerationCount}/${generationTargetCount}` : "Generate"}
                     </button>
@@ -4766,10 +5473,10 @@
                       type="button"
                       onClick={() => handleGenerate(4)}
                       disabled={!canGenerate}
-                      className={`w-full min-h-[44px] px-5 rounded-xl border text-xs uppercase tracking-[0.24em] transition ${
+                      className={`w-full min-h-[44px] px-5 rounded-xl border text-xs uppercase tracking-wide transition ${
                         canGenerate
-                          ? "border-pink-400/30 bg-pink-500/10 text-pink-100 hover:bg-pink-500/20 hover:border-pink-300/40"
-                          : "border-white/10 bg-white/5 text-white/30 cursor-not-allowed"
+                          ? "border-pink-400/30 bg-pink-500/10 text-pink-100 hover:bg-[#263e39] hover:border-pink-300/40"
+                          : "border-white/10 bg-white/5 text-[#aab8ba] cursor-not-allowed"
                       }`}
                     >
                       Generate 4
@@ -4787,7 +5494,7 @@
 
           </div>
 
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-4">
+          <div className="bg-[#1a2022] border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-4">
             <div className={`relative w-full ${generatedImages.length >= 4 ? "grid grid-cols-2 gap-3" : "aspect-[16/9]"} rounded-2xl border border-white/10 bg-black/40 overflow-hidden p-0`}>
               {generatedImages.length > 0 && generatedImages.length < 4 && (
                 <img
@@ -4806,7 +5513,7 @@
                 </div>
               ))}
               {(!generatedImages.length || isGenerating) && (
-                <div className={`absolute inset-0 flex flex-col items-center justify-center text-white/20 text-sm ${isGenerating ? "animate-breathe" : ""}`}>
+                <div className={`absolute inset-0 flex flex-col items-center justify-center text-[#aab8ba] text-sm ${isGenerating ? "animate-breathe" : ""}`}>
                   <ImageIcon className="w-20 h-20 mb-3 opacity-50" />
                 </div>
               )}
@@ -4823,7 +5530,7 @@
       );
     };
 
-    const PortraitPanel = ({ apiKey, onOpenSidebar }) => {
+    const PortraitPanel = ({ apiKey, onOpenSidebar, isActive }) => {
       const [selectedStyleId, setSelectedStyleId] = useState(() => localStorage.getItem(PORTRAIT_STORAGE_KEYS.styleId) || PORTRAIT_STYLES[0].id);
       const [selectedRaceId, setSelectedRaceId] = useState(() => localStorage.getItem(PORTRAIT_STORAGE_KEYS.raceId) || PORTRAIT_RACES[0].id);
       const [userPrompt, setUserPrompt] = useState(() => localStorage.getItem(PORTRAIT_STORAGE_KEYS.prompt) || "");
@@ -4889,7 +5596,6 @@
         setIsGenerating(true);
         setError("");
         const fullPrompt = buildPrompt();
-        console.log("[Portrait Generator] Prompt:\n", fullPrompt);
 
         try {
           const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent";
@@ -4900,6 +5606,7 @@
               "x-goog-api-key": apiKey.trim()
             },
             body: JSON.stringify({
+              store: false,
               contents: [
                 {
                   role: "user",
@@ -5011,17 +5718,19 @@
         }
       };
 
+      if (!isActive) return null;
+
       return (
         <div className="flex flex-col gap-6">
           <PageTopBar onOpenSidebar={onOpenSidebar} />
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-6">
+          <div className="bg-[#1a2022] border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-6">
             <div className="grid grid-cols-1 lg:grid-cols-[0.5fr_1.5fr] gap-4">
               <div className="flex flex-col h-full justify-between gap-4">
                 <CustomSelect
                   value={selectedStyleId}
                   onChange={setSelectedStyleId}
                   className="w-full flex-1"
-                  buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                  buttonClassName="w-full bg-[#252e31] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors"
                   optionClassName="text-sm"
                   options={PORTRAIT_STYLES.map((style) => ({ value: style.id, label: style.label }))}
                 />
@@ -5030,7 +5739,7 @@
                   value={selectedRaceId}
                   onChange={setSelectedRaceId}
                   className="w-full flex-1"
-                  buttonClassName="w-full bg-gradient-to-b from-[#191924] to-[#111118] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:from-[#1f1f2b] hover:to-[#14141c] transition-colors"
+                  buttonClassName="w-full bg-[#252e31] border border-white/10 rounded-xl px-3 py-3 text-sm text-white/90 outline-none focus:border-pink-500/70 focus:ring-2 focus:ring-pink-500/20 shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:border-white/20 hover:bg-[#303d40] transition-colors"
                   optionClassName="text-sm"
                   options={PORTRAIT_RACES.map((race) => ({ value: race.id, label: race.label }))}
                 />
@@ -5056,7 +5765,7 @@
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-[0.3em] text-white/70 hover:text-white transition"
+                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-wide text-white/70 hover:text-white transition"
                       >
                         Reference
                       </button>
@@ -5070,7 +5779,7 @@
                       <button
                         type="button"
                         onClick={() => fileInputStyleRef.current?.click()}
-                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-[0.3em] text-white/70 hover:text-white transition"
+                        className="w-full px-4 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs uppercase tracking-wide text-white/70 hover:text-white transition"
                       >
                         Ref style
                       </button>
@@ -5088,7 +5797,7 @@
                         <button
                           type="button"
                           onClick={clearReferenceImage}
-                          className="px-2 py-1 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition"
+                          className="px-2 py-1 rounded-lg border border-white/10 text-[#aab8ba] hover:text-white hover:border-white/30 transition"
                         >
                           Clear
                         </button>
@@ -5096,12 +5805,12 @@
                     )}
                     {referenceStyleImage && (
                       <div className="flex items-center gap-2 text-xs text-white/60">
-                        <span className="px-2 py-1 rounded-lg border border-cyan-300/40 bg-cyan-400/10 text-cyan-200 text-[10px] uppercase tracking-[0.2em]">Style lock on</span>
+                        <span className="status-label px-2 py-1 rounded-lg border border-cyan-300/40 bg-cyan-400/10 text-cyan-200 text-xs uppercase tracking-wide">Style lock on</span>
                         <span className="truncate max-w-[180px]">Ref style: {referenceStyleImage.name}</span>
                         <button
                           type="button"
                           onClick={clearReferenceStyleImage}
-                          className="px-2 py-1 rounded-lg border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition"
+                          className="px-2 py-1 rounded-lg border border-white/10 text-[#aab8ba] hover:text-white hover:border-white/30 transition"
                         >
                           Clear
                         </button>
@@ -5110,9 +5819,9 @@
                     <button
                       onClick={handleGenerate}
                       disabled={!canGenerate}
-                      className={`relative w-full overflow-hidden rounded-2xl px-6 py-4 text-sm font-black tracking-[0.3em] uppercase transition-all ${
+                      className={`relative w-full overflow-hidden rounded-2xl px-6 py-4 text-sm font-semibold tracking-wide uppercase transition-all ${
                         canGenerate ? "hover:scale-[1.02] hover:shadow-pink-500/20" : "opacity-50 cursor-not-allowed"
-                      } bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 text-white shadow-lg`}
+                      } btn-primary text-white shadow-lg`}
                     >
                       {isGenerating ? "Generating..." : "Generate"}
                     </button>
@@ -5128,7 +5837,7 @@
             )}
           </div>
 
-          <div className="bg-[#13131a]/90 border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-4">
+          <div className="bg-[#1a2022] border border-white/5 rounded-3xl p-6 panel-glow flex flex-col gap-4">
             <div className="relative w-full max-w-[50%] aspect-[3/4] rounded-2xl border border-white/10 bg-black/40 overflow-hidden">
               {imageUrl && (
                 <img
@@ -5138,7 +5847,7 @@
                 />
               )}
               {(!imageUrl || isGenerating) && (
-                <div className={`absolute inset-0 flex flex-col items-center justify-center text-white/20 text-sm ${isGenerating ? "animate-breathe" : ""}`}>
+                <div className={`absolute inset-0 flex flex-col items-center justify-center text-[#aab8ba] text-sm ${isGenerating ? "animate-breathe" : ""}`}>
                   <ImageIcon className="w-20 h-20 mb-3 opacity-50" />
                 </div>
               )}

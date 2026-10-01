@@ -2,11 +2,14 @@ const { app, BrowserWindow, Menu, ipcMain, safeStorage, shell } = require("elect
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
-const { generateAudioManifest } = require("../scripts/generate-audio-manifest.cjs");
+const { generateAudioManifest, generateAudioWaveforms } = require("../scripts/generate-audio-manifest.cjs");
 
 let mainWindow = null;
 let focusRefreshTimer = null;
 let pendingMusicCommand = null;
+let audioRefreshPromise = null;
+let queuedAudioRefresh = false;
+let queuedWaveformRefresh = false;
 const PROTOCOL = "dmtool";
 const GEMINI_API_KEY_FILE = "gemini-api-key.bin";
 const ASSET_BASE_URL_ENV = "DMTOOL_ASSET_BASE_URL";
@@ -205,18 +208,43 @@ function reloadMainWindow() {
   }
 }
 
-function refreshAudioManifestAndReloadIfChanged() {
+function refreshAudioManifestAndReloadIfChanged({ includeWaveforms = false } = {}) {
   if (app.isPackaged) {
-    return;
+    return Promise.resolve();
   }
 
-  const before = readAudioManifest();
-  generateAudioManifest(app.getAppPath());
-  const after = readAudioManifest();
-
-  if (before !== after) {
-    reloadMainWindow();
+  if (audioRefreshPromise) {
+    queuedAudioRefresh = true;
+    queuedWaveformRefresh = queuedWaveformRefresh || includeWaveforms;
+    return audioRefreshPromise;
   }
+
+  audioRefreshPromise = (async () => {
+    let shouldGenerateWaveforms = includeWaveforms;
+    do {
+      queuedAudioRefresh = false;
+      queuedWaveformRefresh = false;
+      const before = readAudioManifest();
+      if (shouldGenerateWaveforms) {
+        try {
+          const waveformResult = await generateAudioWaveforms(app.getAppPath());
+          if (waveformResult.generatedCount > 0 || waveformResult.failedCount > 0) {
+            console.log(`Waveforms: ${waveformResult.generatedCount} generated, ${waveformResult.reusedCount} reused, ${waveformResult.failedCount} failed.`);
+          }
+        } catch (err) {
+          console.warn(`Automatic waveform generation skipped: ${err.message || err}`);
+        }
+      }
+      generateAudioManifest(app.getAppPath());
+      const after = readAudioManifest();
+      if (before !== after) reloadMainWindow();
+      shouldGenerateWaveforms = queuedWaveformRefresh;
+    } while (queuedAudioRefresh);
+  })().finally(() => {
+    audioRefreshPromise = null;
+  });
+
+  return audioRefreshPromise;
 }
 
 function scheduleFocusRefresh() {
@@ -447,8 +475,12 @@ async function watchForDevReload() {
     clearTimeout(reloadTimer);
     reloadTimer = setTimeout(() => {
       const normalizedPath = changedPath ? changedPath.replace(/\\/g, "/") : "";
-      if (/^dnd music\//.test(normalizedPath) || /^sfx\//.test(normalizedPath)) {
-        refreshAudioManifestAndReloadIfChanged();
+      if (/^data\/audio-(?:manifest\.(?:js|json)|waveforms\.json)$/i.test(normalizedPath)) {
+        return;
+      }
+      if (/^dnd music\//i.test(normalizedPath) || /^sfx\//i.test(normalizedPath)) {
+        const includeWaveforms = /^dnd music\/(?!Ambience\/|_New\/)/i.test(normalizedPath);
+        refreshAudioManifestAndReloadIfChanged({ includeWaveforms });
         return;
       }
 
